@@ -6,11 +6,6 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
 	<classpathentry kind="src" output="target/test-classes" path="src/test/java">
 		<attributes>
 			<attribute name="optional" value="true"/>
@@ -32,5 +27,15 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/json-20090211.jar"/>
+	<classpathentry kind="lib" path="lib/httpcore-4.2.2.jar" sourcepath="E:/BaiduYunDownload/httpclient/httpcomponents-core-4.3.3-src.zip"/>
+	<classpathentry kind="lib" path="lib/httpcore-nio-4.2.2.jar" sourcepath="E:/BaiduYunDownload/httpclient/httpcomponents-core-4.3.3-src.zip"/>
+	<classpathentry kind="lib" path="lib/httpmime-4.2.3.jar"/>
+	<classpathentry kind="lib" path="lib/httpclient-4.2.5.jar" sourcepath="E:/BaiduYunDownload/httpclient/httpcomponents-client-4.3.6-src.zip"/>
+	<classpathentry kind="lib" path="lib/httpasyncclient-4.0-beta3.jar" sourcepath="C:/Users/Administrator/.m2/repository/org/apache/httpcomponents/httpasyncclient/4.0-beta3/httpasyncclient-4.0-beta3-sources.jar"/>
+	<classpathentry kind="lib" path="lib/slf4j-api-1.7.7.jar"/>
+	<classpathentry kind="lib" path="lib/logback-classic-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/logback-core-1.0.13.jar"/>
+	<classpathentry kind="lib" path="lib/commons-logging-1.1.3.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

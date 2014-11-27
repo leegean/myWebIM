@@ -70,7 +70,7 @@ public class WebQQClientTest {
      *
      */
     public static void main(String[] args) {
-        WebQQClientTest test = new WebQQClientTest("2010901309", "chen01234");
+        WebQQClientTest test = new WebQQClientTest("1002053815", "lj19861001");
         test.login();
     }
 	

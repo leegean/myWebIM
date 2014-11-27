@@ -68,15 +68,19 @@ import org.apache.http.HttpResponse;
 import org.apache.http.HttpVersion;
 import org.apache.http.NameValuePair;
 import org.apache.http.ProtocolException;
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.client.protocol.ClientContext;
 import org.apache.http.client.utils.URIUtils;
 import org.apache.http.concurrent.FutureCallback;
+import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.entity.mime.FormBodyPart;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
+import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
 import org.apache.http.impl.nio.client.DefaultHttpAsyncClient;
 import org.apache.http.message.BasicNameValuePair;
@@ -87,9 +91,11 @@ import org.apache.http.nio.conn.scheme.AsyncScheme;
 import org.apache.http.nio.conn.ssl.SSLLayeringStrategy;
 import org.apache.http.nio.protocol.BasicAsyncRequestProducer;
 import org.apache.http.nio.reactor.IOReactorException;
+import org.apache.http.nio.reactor.IOReactorStatus;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
 import org.apache.http.params.HttpProtocolParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HttpContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -132,6 +138,14 @@ public class ApacheHttpService extends AbstractService implements HttpService{
 	@Override
 	public Future<QQHttpResponse> executeHttpRequest(QQHttpRequest request, QQHttpListener listener)
 		throws QQException {
+//		if(asyncHttpClient.getConnectionManager().getStatus()==IOReactorStatus.SHUT_DOWN){
+//			try {
+//				asyncHttpClient = new DefaultHttpAsyncClient();
+//			} catch (IOReactorException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//		}
 		try {
 			URI uri = URI.create(request.getUrl());
 			
@@ -231,7 +245,9 @@ public class ApacheHttpService extends AbstractService implements HttpService{
 		try {
 			SSLContext sslContext = new QQSSLSocketFactory().getSSLContext();
 			SSLContext.setDefault(sslContext);
+			
 			asyncHttpClient = new DefaultHttpAsyncClient();
+			
 			
 			HttpParams httpParams = asyncHttpClient.getParams();
 	        HttpConnectionParams.setSoTimeout(httpParams, QQConstants.HTTP_TIME_OUT);
@@ -461,6 +477,7 @@ public class ApacheHttpService extends AbstractService implements HttpService{
 
 		@Override
 		public void failed(Exception ex) {
+			ex.printStackTrace();
 			if(ex instanceof IOException 
 					&& CANCEL_EX_STRING.equals(ex.getMessage())){
 				return;

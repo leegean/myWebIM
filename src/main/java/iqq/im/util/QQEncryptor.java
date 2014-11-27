@@ -95,6 +95,8 @@ public class QQEncryptor {
             engine.eval(js);
             Invocable inv = (Invocable) engine;
             s = (String) inv.invokeFunction("P", uin, ptwebqq);
+            
+            System.out.println("hash:    "+uin+"   "+ptwebqq+"   "+s);
         } catch (Exception e) {
             e.printStackTrace();
         }

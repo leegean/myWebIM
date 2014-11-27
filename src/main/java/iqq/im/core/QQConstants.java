@@ -144,10 +144,17 @@ public interface QQConstants {
 	/** Constant <code>REGXP_EMAIL_AUTH="ptui_auth_CB\\('(.*?)','(.*?)'\\)"</code> */
 	public static final String REGXP_EMAIL_AUTH = "ptui_auth_CB\\('(.*?)','(.*?)'\\)";
 	
+//	拒绝加群String "http://d.web2.qq.com/channel/op_group_join_req?group_uin=848492696&req_uin=3904214993&msg=no%20come%20in&op_type=3&clientid=5172539&psessionid=8368046764001d636f6e6e7365727665725f77656271714031302e3133392e372e3136340000444d000004ec016e0400b720ba3b6d0000000a403970744e50566654646d0000002877cd573fa047d3efb277b2002f1e30e5b476e29a0b5ad29c76bdec6915b0fd49a3be5855bae9cdaf&t=1419232988201";
+//同意加群		         http://d.web2.qq.com/channel/op_group_join_req?group_uin=848492696&req_uin=3904214993&msg=&op_type=2&clientid=5172539&psessionid=8368046764001d636f6e6e7365727665725f77656271714031302e3133392e372e3136340000444d000004ec016e0400b720ba3b6d0000000a403970744e50566654646d0000002877cd573fa047d3efb277b2002f1e30e5b476e29a0b5ad29c76bdec6915b0fd49a3be5855bae9cdaf&t=1419233377649
+	
+	
 	/** Constant <code>MAX_POLL_ERR_CNT=10</code> */
 	public static final int MAX_POLL_ERR_CNT = 10;
 	/** Constant <code>MAX_RETRY_TIMES=5</code> */
 	public static final int MAX_RETRY_TIMES = 5;
 	/** Constant <code>HTTP_TIME_OUT=80000</code> */
 	public static final int HTTP_TIME_OUT = 80000;
+	
+	
+	
 }

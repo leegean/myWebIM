@@ -137,6 +137,11 @@ public class PollMsgAction extends AbstractHttpAction {
 						notifyEvents.add(processBuddyMsg(pollData));
 					} else if (pollType.equals("group_message")) {
 						// 群消息
+//						被管理员禁言10分钟{"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":20986,"from_uin":848492696,"to_uin":1002053815,"msg_id2":128032,"msg_type":43,"reply_ip":176756755,"group_code":2227416282,"send_uin":1900986400,"seq":221,"time":1419225537,"info_seq":126658727,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5B8B\u4F53"}],"\u674E\u519B(1002053815) \u88AB\u7BA1\u7406\u5458\u7981\u8A0010\u5206\u949F "]}}]}
+//						被管理员禁言1小时  {"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":49336,"from_uin":848492696,"to_uin":1002053815,"msg_id2":198014,"msg_type":43,"reply_ip":176756884,"group_code":2227416282,"send_uin":1900986400,"seq":224,"time":1419225732,"info_seq":126658727,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5B8B\u4F53"}],"\u674E\u519B(1002053815) \u88AB\u7BA1\u7406\u5458\u7981\u8A001\u5C0F\u65F6 "]}}]}
+//						被管理员禁言解除    {"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":60841,"from_uin":848492696,"to_uin":1002053815,"msg_id2":340248,"msg_type":43,"reply_ip":176498277,"group_code":2227416282,"send_uin":1900986400,"seq":223,"time":1419225681,"info_seq":126658727,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5B8B\u4F53"}],"\u674E\u519B(1002053815) \u88AB\u7BA1\u7406\u5458\u89E3\u9664\u7981\u8A00 "]}}]}
+//						群单纯图片消息        {"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":14154,"from_uin":848492696,"to_uin":1002053815,"msg_id2":483355,"msg_type":43,"reply_ip":176489607,"group_code":2227416282,"send_uin":2388435354,"seq":226,"time":1419225894,"info_seq":126658727,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],["cface",{"name":"{99820253-D7C7-8EDC-3F1E-53B08AE5C390}.jpg","file_id":2610173877,"key":"                ","server":"183.60.50.34:80"}]," "]}}]}
+//						群文字与表情消息    {"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":14155,"from_uin":848492696,"to_uin":1002053815,"msg_id2":279741,"msg_type":43,"reply_ip":176886363,"group_code":2227416282,"send_uin":2388435354,"seq":227,"time":1419226485,"info_seq":126658727,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],"aa",["face",14]," "]}}]}
 						notifyEvents.add(processGroupMsg(pollData));
 					} else if (pollType.equals("discu_message")) {
 						// 讨论组消息
@@ -161,8 +166,20 @@ public class PollMsgAction extends AbstractHttpAction {
 										.getString("reason")));
 					} else if (pollType.equals("buddies_status_change")) {
 						notifyEvents.add(processBuddyStatusChange(pollData));
-					} else {
+					}else if (pollType.equals("system_message")) {
+//					其他人	添加你为好友					{"retcode":0,"result":[{"poll_type":"system_message","value":{"seq":49219,"type":"added_buddy_sig","uiuin":"","from_uin":2388435354,"account":569398403,"sig":"Ub\u008A\u00B8\u00D4\u0001\u008B\u0092Q\u001D\"*W\u00F6b\u00EA\u001E\u00F0\u009A\u0016gqb\u00C7","stat":20}}]}
+					} else if (pollType.equals("sys_g_msg")) {
+//					设置你为群管理员	{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":58825,"from_uin":848492696,"to_uin":1002053815,"msg_id2":584526,"msg_type":44,"reply_ip":180061855,"type":"group_admin_op","gcode":2227416282,"t_gcode":126658727,"op_type":1,"uin":1002053815,"t_uin":1002053815,"uin_flag":1}}]}
+//					取消你为群管理员	{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":9211,  "from_uin":848492696,"to_uin":1002053815,"msg_id2":265670,"msg_type":44,"reply_ip":176757008,"type":"group_admin_op","gcode":2227416282,"t_gcode":126658727,"op_type":0,"uin":1002053815,"t_uin":1002053815,"uin_flag":0}}]}
+//					设置群成员为群管理员	{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":40322,"from_uin":848492696,"to_uin":1002053815,"msg_id2":183897,"msg_type":44,"reply_ip":179406747,"type":"group_admin_op","gcode":2227416282,"t_gcode":126658727,"op_type":1,"uin":3904214993,"t_uin":2564781987,"uin_flag":1}}]}
+//					取消群成员为群管理员{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":13045,"from_uin":848492696,"to_uin":1002053815,"msg_id2":15288,"msg_type":44,"reply_ip":176756443,"type":"group_admin_op","gcode":2227416282,"t_gcode":126658727,"op_type":0,"uin":3904214993,"t_uin":2564781987,"uin_flag":0}}]}
+						
+//					你已经被移除群	{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":5515,"from_uin":848492696,"to_uin":1002053815,"msg_id2":634857,"msg_type":34,"reply_ip":176488602,"type":"group_leave","gcode":2227416282,"t_gcode":126658727,"op_type":3,"old_member":1002053815,"t_old_member":"","admin_uin":2388435354,"t_admin_uin":"","admin_nick":"\u521B\u5EFA\u8005"}}]}
+//					某人申请加入群	{"retcode":0,"result":[{"poll_type":"sys_g_msg","value":{"msg_id":9564,"from_uin":848492696,"to_uin":1002053815,"msg_id2":366710,"msg_type":35,"reply_ip":176884836,"type":"group_request_join","gcode":2227416282,"t_gcode":126658727,"request_uin":3904214993,"t_request_uin":"","msg":"gggggg"}}]}
+					}else {
 						// TODO ...
+						
+//	
 						LOG.warn("unknown pollType: " + pollType);
 					}
 				}

@@ -18,11 +18,10 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="warn" >
         <appender-ref ref="console" />
     </root>
-    <logger name="com.qunar.hotel" level="INFO">
+    <logger name="iqq.im" level="warn">
         <appender-ref ref="iqqAppender" />
     </logger>
-
 </configuration>

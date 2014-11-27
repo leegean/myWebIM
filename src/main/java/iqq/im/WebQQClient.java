@@ -202,6 +202,7 @@ public class WebQQClient implements QQClient, QQContext {
 	@Override
 	public void pushActor(QQActor actor) {
 		actorDispatcher.pushActor(actor);
+		
 	}
 
     /**
