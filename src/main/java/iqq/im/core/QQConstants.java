@@ -155,6 +155,13 @@ public interface QQConstants {
 	/** Constant <code>HTTP_TIME_OUT=80000</code> */
 	public static final int HTTP_TIME_OUT = 80000;
 	
+	public static final String URL_QM_LOGIN_SIG = "http://ui.ptlogin2.qq.com/cgi-bin/login?appid=715030901&daid=73&pt_no_auth=1&s_url=http%3A%2F%2Fqun.qq.com%2F";
+	public static final String REGXP_QM_LOGIN_SIG = "login_sig:\"(.*)\"";
+	public static final String URL_QM_CHECK_LOGIN_SIG = "http://check.ptlogin2.qq.com/check";
+	public static final String REGXP_QM_CHECK_VERIFY = "ptui_checkVC('[^']*','[^']*','[^']*','[^']*','[^']*');";
+	public static final String URL_QM_GET_CAPTCHA = "http://captcha.qq.com/getimage?uin={0}&aid={1}&cap_cd=0&{2}";
+	public static final String REGXP_QM_LOGIN = "ptuiCB('[^']*','[^']*','[^']*','[^']*','[^']*', '[^']*');";
+	
 	
 	
 }

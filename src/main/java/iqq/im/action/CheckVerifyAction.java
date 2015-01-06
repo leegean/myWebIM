@@ -79,6 +79,7 @@ public class CheckVerifyAction extends AbstractHttpAction {
 	/** {@inheritDoc} */
 	@Override
 	public QQHttpRequest buildRequest() {
+//		http://check.ptlogin2.qq.com/check?regmaster=&pt_tea=1&uin=1002053815&appid=715030901&js_ver=10106&js_type=1&login_sig=aRWz77AEo9rkn2UWz1DVJpU9cb5Lq*QY5dXw5i0WCkkbGzBUCDCyJKRTcGugwGzY&u1=http%3A%2F%2Fui.ptlogin2.qq.com%2Flogin_proxy.html&r=0.6111077913083136
 		String url = StringHelper.format(QQConstants.URL_CHECK_VERIFY, qqAccount, 
 				getContext().getSession().getLoginSig(), Math.random());
 		return createHttpRequest("GET", url);

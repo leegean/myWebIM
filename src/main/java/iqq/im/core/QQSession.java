@@ -47,6 +47,7 @@ public class QQSession {
 	private int pollErrorCnt;
 	private volatile State  state;
 	
+	private String qmLoginSig;
 	public enum State{ 
 		OFFLINE,
 		ONLINE,
@@ -269,5 +270,19 @@ public class QQSession {
 	 */
 	public void setEmailAuthKey(String emailAuthKey) {
 		this.emailAuthKey = emailAuthKey;
+	}
+
+	/**
+	 * @return the qmLoginSig
+	 */
+	public String getQmLoginSig() {
+		return qmLoginSig;
+	}
+
+	/**
+	 * @param qmLoginSig the qmLoginSig to set
+	 */
+	public void setQmLoginSig(String qmLoginSig) {
+		this.qmLoginSig = qmLoginSig;
 	}
 }
