@@ -1,0 +1,107 @@
+[17:00:52.076][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:00:52.093][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:01:52.248][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:01:52.250][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:02:52.404][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:02:52.405][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:03:16.676][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:03:16.678][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"message","value":{"msg_id":21931,"from_uin":2443409407,"to_uin":1002053815,"msg_id2":525997,"msg_type":9,"reply_ip":176884836,"time":1418979799,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],"kk "]}}]}
+
+[17:03:17.174][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:03:17.178][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":"ok"}
+
+[17:03:23.804][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:03:23.805][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"message","value":{"msg_id":21932,"from_uin":2443409407,"to_uin":1002053815,"msg_id2":716689,"msg_type":9,"reply_ip":176886380,"time":1418979806,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],"jjjj "]}}]}
+
+[17:03:24.331][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:03:24.331][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":"ok"}
+
+[17:03:34.734][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:03:34.734][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"buddies_status_change","value":{"uin":1107406274,"status":"online","client_type":1}}]}
+
+[17:03:34.734][WARN][QQNotifyHandlerProxy:78] Not found QQNotifyHandler for QQNotifyEvent = QQNotifyEvent [type=BUDDY_STATUS_CHANGE, target=QQUser [qq=0, uin=1107406274, nickname=飘动的心, status=ONLINE]]
+[17:04:38.149][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:04:38.150][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:05:23.180][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:05:23.181][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"message","value":{"msg_id":21933,"from_uin":2443409407,"to_uin":1002053815,"msg_id2":847291,"msg_type":9,"reply_ip":176886380,"time":1418979925,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],"ggg "]}}]}
+
+[17:05:23.333][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:05:23.334][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":"ok"}
+
+[17:05:35.870][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:05:35.871][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"message","value":{"msg_id":21934,"from_uin":2443409407,"to_uin":1002053815,"msg_id2":238826,"msg_type":9,"reply_ip":176886352,"time":1418979938,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],["offpic",{"success":1,"file_path":"/b698ba1e-3200-4448-8355-ca9c8bd15234"}]," "]}}]}
+
+[17:05:36.086][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:05:36.087][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":"ok"}
+
+[17:06:36.056][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:06:36.058][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:07:36.206][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:07:36.206][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:08:36.332][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:08:36.333][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:09:36.479][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:09:36.479][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:10:36.604][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:10:36.605][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:11:36.723][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:11:36.723][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:12:36.850][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:12:36.851][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:12:36.994][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:12:36.995][DEBUG][AbstractHttpAction:81] {"retcode":116,"p":"71c6bd7c64ebbb99ee3a5405bc130fb1a9e96ebb242303c4"}
+
+[17:13:47.056][WARN][ProcModule:296] poll msg error, retrying....
+iqq.im.QQException: IO_TIMEOUT
+	at iqq.im.action.AbstractHttpAction.doRetryIt(AbstractHttpAction.java:251) [classes/:na]
+	at iqq.im.action.AbstractHttpAction.onHttpError(AbstractHttpAction.java:102) [classes/:na]
+	at iqq.im.actor.HttpActor.execute(HttpActor.java:72) [classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.dispatchAction(ThreadActorDispatcher.java:71) [classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.run(ThreadActorDispatcher.java:84) [classes/:na]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_25]
+Caused by: java.net.SocketTimeoutException: null
+	at org.apache.http.nio.protocol.HttpAsyncRequestExecutor.timeout(HttpAsyncRequestExecutor.java:279) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.client.LoggingAsyncRequestExecutor.timeout(LoggingAsyncRequestExecutor.java:128) ~[httpasyncclient-4.0-beta3.jar:4.0-beta3]
+	at org.apache.http.impl.nio.DefaultHttpClientIODispatch.onTimeout(DefaultHttpClientIODispatch.java:136) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.DefaultHttpClientIODispatch.onTimeout(DefaultHttpClientIODispatch.java:50) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.AbstractIODispatch.timeout(AbstractIODispatch.java:169) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.BaseIOReactor.sessionTimedOut(BaseIOReactor.java:257) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.AbstractIOReactor.timeoutCheck(AbstractIOReactor.java:494) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.BaseIOReactor.validate(BaseIOReactor.java:207) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.AbstractIOReactor.execute(AbstractIOReactor.java:284) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.BaseIOReactor.execute(BaseIOReactor.java:106) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	at org.apache.http.impl.nio.reactor.AbstractMultiworkerIOReactor$Worker.run(AbstractMultiworkerIOReactor.java:604) ~[httpcore-nio-4.2.2.jar:4.2.2]
+	... 1 common frames omitted
+[17:14:48.691][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:14:48.691][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:15:48.825][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:15:48.825][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:16:48.972][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:16:48.973][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:17:29.550][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:17:29.551][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":[{"poll_type":"message","value":{"msg_id":21935,"from_uin":2443409407,"to_uin":1002053815,"msg_id2":445601,"msg_type":9,"reply_ip":176886363,"time":1418980652,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],"hh "]}}]}
+
+[17:17:29.700][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:17:29.701][DEBUG][AbstractHttpAction:81] {"retcode":0,"result":"ok"}
+
+[17:18:29.728][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:18:29.728][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:19:29.850][DEBUG][AbstractHttpAction:75] text/plain; charset=utf-8
+[17:19:29.850][DEBUG][AbstractHttpAction:81] {"retcode":102,"errmsg":""}
+
+[17:32:46.230][WARN][PollMsgAction:166] unknown pollType: system_message

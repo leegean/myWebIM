@@ -26,6 +26,7 @@
 package iqq.im;
 
 import iqq.im.actor.ThreadActorDispatcher;
+import iqq.im.bean.QQAccount;
 import iqq.im.bean.QQBuddy;
 import iqq.im.bean.QQCategory;
 import iqq.im.bean.QQDiscuz;
@@ -51,6 +52,8 @@ import java.util.List;
 
 import javax.imageio.ImageIO;
 
+import ch.qos.logback.core.net.server.Client;
+
 /**
  * Client测试类
  * 
@@ -59,10 +62,13 @@ import javax.imageio.ImageIO;
  */
 public class WebQQClientTest {
 	
-	QQClient client;
+	WebQQClient client;
 	
 	public WebQQClientTest(String user, String pwd){
-		client = new WebQQClient(user,pwd, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
+		QQAccount account = new QQAccount();
+		account.setWbUsername("569398403@qq.com");
+		account.setWbPassword("leegean19861001");
+		client = new WebQQClient(account, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
 	}
 
     /**
@@ -71,7 +77,24 @@ public class WebQQClientTest {
      */
     public static void main(String[] args) {
         WebQQClientTest test = new WebQQClientTest("1002053815", "lj19861001");
-        test.login();
+        test.prelogin();
+    }
+    public void prelogin(){
+    	client.loginWb(new QQActionListener() {
+			
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == Type.EVT_OK) {
+					//到这里就算是登录成功了
+					System.out.println("就算是登录成功微博了");
+					System.out.println(client.getSession().getPubkey());
+					
+				}else{
+					System.out.println(event.getTarget());
+				}
+			}
+		});
     }
 	
 	/**
@@ -239,6 +262,28 @@ public class WebQQClientTest {
 		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
 		client.setHttpUserAgent(ua);
 		client.login(QQStatus.ONLINE, listener);
+	}
+	
+	public void LoginQm(){
+
+		final QQActionListener listener = new QQActionListener() {
+			public void onActionEvent(QQActionEvent event) {
+				System.out.println("LOGIN_STATUS:" + event.getType() + ":" + event.getTarget());
+				if (event.getType() == Type.EVT_OK) {
+					//到这里就算是登录成功了
+					System.out.println("就算是登录成功了");
+					
+				}
+			}
+		};
+		
+		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
+		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
+		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
+		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
+		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
+		client.setHttpUserAgent(ua);
+		client.loginQm(listener);
 	}
 
     /**

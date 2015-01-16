@@ -27,7 +27,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="lib/json-20090211.jar"/>
+	<classpathentry kind="lib" path="lib/json-20090211.jar" sourcepath="E:/BaiduYunDownload/高德地图/json.zip"/>
 	<classpathentry kind="lib" path="lib/httpcore-4.2.2.jar" sourcepath="E:/BaiduYunDownload/httpclient/httpcomponents-core-4.3.3-src.zip"/>
 	<classpathentry kind="lib" path="lib/httpcore-nio-4.2.2.jar" sourcepath="E:/BaiduYunDownload/httpclient/httpcomponents-core-4.3.3-src.zip"/>
 	<classpathentry kind="lib" path="lib/httpmime-4.2.3.jar"/>

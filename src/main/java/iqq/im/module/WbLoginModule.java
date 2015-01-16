@@ -38,6 +38,8 @@ import iqq.im.action.qun.QmCheckVerifyAction;
 import iqq.im.action.qun.QmGetCaptchaImageAction;
 import iqq.im.action.qun.QmGetLoginSigAction;
 import iqq.im.action.qun.QmWebLoginAction;
+import iqq.im.action.weibo.WbLoginAction;
+import iqq.im.action.weibo.WbPreloginAction;
 import iqq.im.bean.QQStatus;
 import iqq.im.core.QQModule;
 import iqq.im.event.QQActionEvent;
@@ -49,55 +51,15 @@ import iqq.im.event.QQActionFuture;
  *
  * @author solosky
  */
-public class QmLoginModule extends AbstractModule {
+public class WbLoginModule extends AbstractModule {
 	
-	/**
-	 * <p>checkVerify.</p>
-	 *
-	 * @param qqAccount a {@link java.lang.String} object.
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture checkVerify(QQActionListener listener){
-		return pushHttpAction(new QmCheckVerifyAction(getContext(), listener));
-	}
-	
-	/**
-	 * <p>webLogin.</p>
-	 *
-	 * @param username a {@link java.lang.String} object.
-	 * @param password a {@link java.lang.String} object.
-	 * @param uin a long.
-	 * @param verifyCode a {@link java.lang.String} object.
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture webLogin(String username, String password, long uin, String verifyCode, QQActionListener listener){
-		return pushHttpAction(new QmWebLoginAction(getContext(), listener, username, password, uin, verifyCode));
+	public QQActionFuture login(QQActionListener listener, long prelt){
+		return pushHttpAction(new WbLoginAction(getContext(), listener, prelt));
 	}
 	
 	
-	/**
-	 * <p>getCaptcha.</p>
-	 *
-	 * @param uin a long.
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture getCaptcha(QQActionListener listener){
-		return pushHttpAction(new QmGetCaptchaImageAction(getContext(), listener));
+	public QQActionFuture prelogin(QQActionListener listener){
+		return pushHttpAction(new WbPreloginAction(getContext(), listener));
 	}
-	
-	
-	/**
-	 * <p>getLoginSig.</p>
-	 *
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture getLoginSig(QQActionListener listener){
-		return pushHttpAction(new QmGetLoginSigAction(getContext(), listener));
-	}
-	
 	
 }

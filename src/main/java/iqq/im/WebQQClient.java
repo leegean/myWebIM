@@ -59,7 +59,11 @@ import iqq.im.module.EmailModule;
 import iqq.im.module.GroupModule;
 import iqq.im.module.LoginModule;
 import iqq.im.module.ProcModule;
+import iqq.im.module.QmLoginModule;
+import iqq.im.module.QmProcModule;
 import iqq.im.module.UserModule;
+import iqq.im.module.WbLoginModule;
+import iqq.im.module.WbProcModule;
 import iqq.im.service.ApacheHttpService;
 import iqq.im.service.HttpService;
 import iqq.im.service.HttpService.ProxyType;
@@ -98,7 +102,7 @@ public class WebQQClient implements QQClient, QQContext {
 	 * @param notifyListener a {@link iqq.im.QQNotifyListener} object.
 	 * @param actorDispatcher a {@link iqq.im.actor.QQActorDispatcher} object.
 	 */
-	public WebQQClient(String username, String password,
+	public WebQQClient(QQAccount account,
 			QQNotifyListener notifyListener, QQActorDispatcher actorDispatcher) {
 		this.modules = new HashMap<QQModule.Type, QQModule>();
 		this.services = new HashMap<QQService.Type, QQService>();
@@ -112,12 +116,16 @@ public class WebQQClient implements QQClient, QQContext {
 		this.modules.put(QQModule.Type.CHAT, new ChatModule());
 		this.modules.put(QQModule.Type.DISCUZ, new DiscuzModule());
 		this.modules.put(QQModule.Type.EMAIL, new EmailModule());
+		
+		this.modules.put(QQModule.Type.QM_LOGIN, new QmLoginModule());
+		this.modules.put(QQModule.Type.QM_PROC, new QmProcModule());
+		
+		this.modules.put(QQModule.Type.WB_LOGIN, new WbLoginModule());
+		this.modules.put(QQModule.Type.WB_PROC, new WbProcModule());
 
 		this.services.put(QQService.Type.HTTP, new ApacheHttpService());
 
-		this.account = new QQAccount();
-		this.account.setUsername(username);
-		this.account.setPassword(password);
+		this.account = account;
 		this.session = new QQSession();
 		this.store = new QQStore();
 		this.notifyListener = notifyListener;
@@ -776,5 +784,16 @@ public class WebQQClient implements QQClient, QQContext {
 	@Override
 	public boolean isLogining() {
 		return getSession().getState() == QQSession.State.LOGINING;
+	}
+	
+	public QQActionFuture loginQm(final QQActionListener listener) {
+
+		QmProcModule procModule = (QmProcModule) getModule(QQModule.Type.QM_PROC);
+		return procModule.login(listener);
+	}
+	public QQActionFuture loginWb(final QQActionListener listener) {
+
+		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
+		return procModule.login(listener);
 	}
 }

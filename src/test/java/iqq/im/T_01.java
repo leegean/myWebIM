@@ -58,6 +58,8 @@ public class T_01 {
         } catch (Exception e) {   
             e.printStackTrace();  
         }
+        
+//      getResponseString()=ptuiCB('0','0','http://ptlogin4.qun.qq.com/check_sig?pttype=1&uin=1002053815&service=login&nodirect=0&ptsigx=4b34421ac10a828b8c2d6c4a1c7b2fe8b091dd5915d6af3ed954b782f574605ef61ead4d1425da32f6bb6d64b8f0a704803a45aa2717ec64c69e6eddd0f46878&s_url=http%3A%2F%2Fqun.qq.com%2Ftribe.html&f_url=&ptlang=2052&ptredirect=101&aid=1003903&daid=73&j_later=0&low_login_hour=0&regmaster=0&pt_login_type=1&pt_aid=0&pt_aaid=0&pt_light=0','1','登录成功！', '李军');
 	}
 
 }

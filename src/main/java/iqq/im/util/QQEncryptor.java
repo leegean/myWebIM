@@ -25,12 +25,28 @@
  */
 package iqq.im.util;
 
+import iqq.im.T_01;
+
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Scanner;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import javax.script.Bindings;
+import javax.script.Compilable;
+import javax.script.CompiledScript;
 import javax.script.Invocable;
+import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
+import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 
 /**
  * QQ加密解码
@@ -118,6 +134,33 @@ public class QQEncryptor {
 		String code = byte2HexString(md5(data));
 		data = md5((code + verify.toUpperCase()).getBytes());
 		return byte2HexString(data);
+	}
+	
+	public static String encryptQm(String password, String verify) {
+		ScriptEngineManager sem = new ScriptEngineManager();    /*script引擎管理*/  
+        ScriptEngine se = sem.getEngineByName("javascript");           /*script引擎*/  
+        
+        String callbackvalue = null;
+        try {  
+              
+            se.eval(" var $ = new Object(); var navigator = new Object();navigator.appName == 'Microsoft Internet Explorer';") ;                     /* 执行一段script */  
+              
+            Scanner s = new Scanner(T_01.class.getClassLoader().getResourceAsStream("js.txt"));
+            StringBuilder sb = new StringBuilder();
+            while(s.hasNextLine()){
+            	sb.append(s.nextLine());
+            }
+            s.close();
+            Object Encryption = se.eval(sb.toString()) ;      
+//            ";º ·"
+            String salt = String.valueOf(new char[]{(char)0,(char)0,(char)0,(char)0,(char)59,(char)186,(char)32,(char)183});
+            Invocable invocableEngine = (Invocable) se ;   
+            callbackvalue=(String)invocableEngine.invokeMethod(Encryption, "getEncryption",password, salt,verify);
+            
+        } catch (Exception e) {   
+            e.printStackTrace();  
+        }
+		return callbackvalue;
 	}
 
 	private static byte[] concat(byte[] bytes1, byte[] bytes2) {
@@ -215,4 +258,82 @@ public class QQEncryptor {
 		}
 		return ret;
 	}
+	
+	public static String getWbSu(String username){
+			String su = "";
+			ScriptEngine engine = initScriptEngine();
+			if(engine!=null){
+				try {
+					su = (String)engine.eval("sinaSSOEncoder.base64.encode('"+URLEncoder.encode(username, "utf-8")+"');");
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ScriptException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		return su;
+	}
+	public static String getWbSp(String password,String pubkey, long servertime,String nonce){
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if(engine!=null){
+			try {
+				su = (String)engine.eval("sinaSSOEncoder.base64.makeRequest('"+password+"','"+pubkey+"',"+servertime+",'"+nonce+"');");
+			}  catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	return su;
+}
+	private static ScriptEngine initScriptEngine() {
+		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
+		ScriptEngine engine = sem.getEngineByName("javascript"); /* script引擎 */
+		
+		Compilable compilable = (Compilable) engine;
+	    CompiledScript compiled;
+		try {
+			 engine.eval("var window = new Object();var navigator = new Object();navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';"); /* 执行一段script */
+			compiled = compilable.compile(new FileReader("js1.txt"));
+			compiled.eval();
+			return engine;
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ScriptException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+	    
+	}
+	
+	/** 
+	 * 把Unicode编码转换为汉字 
+	 *  
+	 * @param source 
+	 * @return 
+	 */  
+	public static String convertUnicodeToChar(String source) {  
+	    if (null == source || " ".equals(source)) {  
+	        return source;  
+	    }  
+	  
+	    StringBuffer sb = new StringBuffer();  
+	    int i = 0;  
+	    while (i < source.length()) {  
+	        if (source.charAt(i) == '\\') {  
+	            int j = Integer.parseInt(source.substring(i + 2, i + 6), 16);  
+	            sb.append((char) j);  
+	            i += 6;  
+	        } else {  
+	            sb.append(source.charAt(i));  
+	            i++;  
+	        }  
+	    }  
+	    return sb.toString();  
+	}  
+	  
 }

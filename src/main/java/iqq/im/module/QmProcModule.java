@@ -79,7 +79,7 @@ public class QmProcModule extends AbstractModule {
 	
 	
 	private void doGetLoginSig(final ProcActionFuture future){
-		LoginModule login = (LoginModule) getContext().getModule(QQModule.Type.LOGIN);
+		QmLoginModule login = (QmLoginModule) getContext().getModule(QQModule.Type.QM_LOGIN);
 		login.getLoginSig(new QQActionListener() {
 			@Override
 			public void onActionEvent(QQActionEvent event) {
@@ -99,8 +99,8 @@ public class QmProcModule extends AbstractModule {
 			return;
 		}
 		QQAccount account = getContext().getAccount();
-		LoginModule login = (LoginModule) getContext().getModule(QQModule.Type.LOGIN);
-		login.getCaptcha(account.getUin(), new QQActionListener() {
+		QmLoginModule login = (QmLoginModule) getContext().getModule(QQModule.Type.QM_LOGIN);
+		login.getCaptcha(new QQActionListener() {
 			public void onActionEvent(QQActionEvent event) {
 				if(event.getType()==QQActionEvent.Type.EVT_OK){
 					QQNotifyEventArgs.ImageVerify verify = new QQNotifyEventArgs.ImageVerify();
@@ -127,9 +127,9 @@ public class QmProcModule extends AbstractModule {
 			return;
 		}
 
-		LoginModule login = getContext().getModule(QQModule.Type.LOGIN);
+		QmLoginModule login = getContext().getModule(QQModule.Type.QM_LOGIN);
 		final QQAccount account = getContext().getAccount();
-		login.checkVerify(account.getUsername(), new QQActionListener() {
+		login.checkVerify(new QQActionListener() {
 			public void onActionEvent(QQActionEvent event) {
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
 					QQActionEventArgs.CheckVerifyArgs args = 
@@ -151,13 +151,13 @@ public class QmProcModule extends AbstractModule {
 	}
 
 	private void doWebLogin(String verifyCode, final ProcActionFuture future) {
-		LoginModule login =  getContext().getModule(QQModule.Type.LOGIN);
+		QmLoginModule login =  getContext().getModule(QQModule.Type.QM_LOGIN);
 		QQAccount account = getContext().getAccount();
 		login.webLogin(account.getUsername(), account.getPassword(),
 				account.getUin(), verifyCode, new QQActionListener() {
 					public void onActionEvent(QQActionEvent event) {
 						if (event.getType() == QQActionEvent.Type.EVT_OK) {
-							doCheckLoginSig( (String) event.getTarget(),future);
+							future.notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
 						} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
 							QQException ex = (QQException) (event.getTarget());
 							if(ex.getError()==QQErrorCode.WRONG_CAPTCHA){
@@ -172,141 +172,6 @@ public class QmProcModule extends AbstractModule {
 				});
 	}
 	
-	private void doCheckLoginSig(String checkSigUrl, final ProcActionFuture future){
-		LoginModule login =  getContext().getModule(QQModule.Type.LOGIN);
-		login.checkLoginSig(checkSigUrl, new QQActionListener() {
-			@Override
-			public void onActionEvent(QQActionEvent event) {
-				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					doChannelLogin(future);
-				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
-						future.notifyActionEvent(
-								QQActionEvent.Type.EVT_ERROR,
-								(QQException) event.getTarget());
-				}
-				
-			}
-		});
-	}
 
-	private void doChannelLogin(final ProcActionFuture future) {
-		LoginModule login = getContext().getModule(QQModule.Type.LOGIN);
-		login.channelLogin(getContext().getAccount().getStatus(), new QQActionListener() {
-			public void onActionEvent(QQActionEvent event) {
-				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
-				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
-					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,
-							(QQException) event.getTarget());
-				}
-			}
-		});
-	}
-	
-	/**
-	 * <p>relogin.</p>
-	 *
-	 * @param status a {@link iqq.im.bean.QQStatus} object.
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture relogin(QQStatus status, final QQActionListener listener){
-		getContext().getAccount().setStatus(status);
-		getContext().getSession().setState(QQSession.State.LOGINING);
-		LoginModule login = getContext().getModule(QQModule.Type.LOGIN);
-		LOG.info("iqq client relogin...");
-		QQActionFuture future = login.channelLogin(status, new QQActionListener() {
-			
-			@Override
-			public void onActionEvent(QQActionEvent event) {
-				if(event.getType() == QQActionEvent.Type.EVT_ERROR) {
-					LOG.info("iqq client reloginChannel fail!!! use relogin.");
-					login(listener);
-				} else {
-					listener.onActionEvent(event);
-				}
-			}
-		});
-		return future;
-	}
-	
-	/**
-	 * <p>relogin.</p>
-	 */
-	public void relogin() {
-		QQSession session = getContext().getSession();
-		if(session.getState() == QQSession.State.LOGINING) return;
-		// 登录失效，重新登录
-		relogin(getContext().getAccount().getStatus(), new QQActionListener() {
 
-			@Override
-			public void onActionEvent(QQActionEvent event) {
-				if(event.getType() == QQActionEvent.Type.EVT_OK) {
-					// 重新登录成功重新POLL
-					getContext().fireNotify(new QQNotifyEvent(QQNotifyEvent.Type.RELOGIN_SUCCESS, null));
-				} else if(event.getType() == QQActionEvent.Type.EVT_ERROR) {
-					getContext().fireNotify(new QQNotifyEvent(QQNotifyEvent.Type.UNKNOWN_ERROR, null));
-				}
-			}
-			
-		});
-	}
-
-	/**
-	 * <p>doPollMsg.</p>
-	 */
-	public void doPollMsg() {
-		final LoginModule login = getContext().getModule(QQModule.Type.LOGIN);
-		login.pollMsg(new QQActionListener() {
-			public void onActionEvent(QQActionEvent event) {
-				// 回调通知事件函数
-				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					List<QQNotifyEvent> events = (List<QQNotifyEvent>) event.getTarget();
-					for (QQNotifyEvent evt : events) {
-						getContext().fireNotify(evt);
-					}
-					
-					// 准备提交下次poll请求
-					QQSession session = getContext().getSession();
-					if(session.getState() == QQSession.State.ONLINE) {
-						doPollMsg();
-					} else if(session.getState() != QQSession.State.KICKED) {
-						relogin();
-					}
-				}else if(event.getType() == QQActionEvent.Type.EVT_ERROR){
-					QQSession session = getContext().getSession();
-					QQAccount account = getContext().getAccount();
-					session.setState(QQSession.State.OFFLINE);
-					account.setStatus(QQStatus.OFFLINE);
-					//因为自带了错误重试机制，如果出现了错误回调，表明已经超时多次均失败，这里直接返回网络错误的异常
-					QQException ex = (QQException) event.getTarget();
-					QQErrorCode code = ex.getError();
-					if(code == QQErrorCode.INVALID_LOGIN_AUTH) {
-						relogin();
-					} else if(code == QQErrorCode.IO_ERROR || code == QQErrorCode.IO_TIMEOUT){
-						//粗线了IO异常，直接报网络错误
-						getContext().fireNotify(new QQNotifyEvent(QQNotifyEvent.Type.NET_ERROR, ex));
-					}else{
-						LOG.warn("poll msg unexpected error, ignore it ...", ex);
-						relogin();
-						doPollMsg();
-					}
-				}else if(event.getType() == QQActionEvent.Type.EVT_RETRY){
-					System.err.println("Poll Retry:" + this);
-					LOG.warn("poll msg error, retrying....", (QQException) event.getTarget());
-				}
-			}
-		});
-	}
-
-	/**
-	 * <p>doLogout.</p>
-	 *
-	 * @param listener a {@link iqq.im.QQActionListener} object.
-	 * @return a {@link iqq.im.event.QQActionFuture} object.
-	 */
-	public QQActionFuture doLogout(QQActionListener listener) {
-		LoginModule login = (LoginModule) getContext().getModule(QQModule.Type.LOGIN);
-		return login.logout(listener);
-	}
 }

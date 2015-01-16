@@ -36,6 +36,8 @@ public class QQAccount extends QQUser {
 	
 	private String password;
 	private String username;
+	private String wbUsername;
+	private String wbPassword;
 
 	/**
 	 * <p>Getter for the field <code>password</code>.</p>
@@ -71,5 +73,21 @@ public class QQAccount extends QQUser {
 	 */
 	public void setUsername(String username) {
 		this.username = username;
+	}
+
+	public String getWbUsername() {
+		return wbUsername;
+	}
+
+	public void setWbUsername(String wbUsername) {
+		this.wbUsername = wbUsername;
+	}
+
+	public String getWbPassword() {
+		return wbPassword;
+	}
+
+	public void setWbPassword(String wbPassword) {
+		this.wbPassword = wbPassword;
 	}
 }

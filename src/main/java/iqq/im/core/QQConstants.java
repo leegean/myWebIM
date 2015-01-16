@@ -156,11 +156,19 @@ public interface QQConstants {
 	public static final int HTTP_TIME_OUT = 80000;
 	
 	public static final String URL_QM_LOGIN_SIG = "http://ui.ptlogin2.qq.com/cgi-bin/login?appid=715030901&daid=73&pt_no_auth=1&s_url=http%3A%2F%2Fqun.qq.com%2F";
-	public static final String REGXP_QM_LOGIN_SIG = "login_sig:\"(.*)\"";
-	public static final String URL_QM_CHECK_LOGIN_SIG = "http://check.ptlogin2.qq.com/check";
-	public static final String REGXP_QM_CHECK_VERIFY = "ptui_checkVC('[^']*','[^']*','[^']*','[^']*','[^']*');";
+	public static final String REGXP_QM_LOGIN_SIG = "login_sig:\"([^\"]*)\"";
+	public static final String URL_QM_CHECK_VERIFY = "http://check.ptlogin2.qq.com/check";
+	public static final String REGXP_QM_CHECK_VERIFY = "ptui_checkVC\\('([^']*)','([^']*)','([^']*)','([^']*)','([^']*)'\\);";
 	public static final String URL_QM_GET_CAPTCHA = "http://captcha.qq.com/getimage?uin={0}&aid={1}&cap_cd=0&{2}";
-	public static final String REGXP_QM_LOGIN = "ptuiCB('[^']*','[^']*','[^']*','[^']*','[^']*', '[^']*');";
+	public static final String REGXP_QM_LOGIN = "ptuiCB\\('([^']*)','([^']*)','([^']*)','([^']*)','([^']*)', '([^']*)'\\);";
+	public static final String URL_QM_UI_LOGIN = "http://ptlogin2.qq.com/login";
+	public static final String QM_APPID = "715030901";
+	public static final String QM_JS_VER = "10107";
+	public static final String URL_QM_SEATCH_GROUP_MEMBERS = "http://qun.qq.com/cgi-bin/qun_mgr/search_group_members";
+	public static final String URL_QM_SET_GROUP_CARD = "http://qun.qq.com/cgi-bin/qun_mgr/set_group_card";
+	public static final String URL_QM_DELETE_GROUP_MEMBER = "http://qun.qq.com/cgi-bin/qun_mgr/delete_group_member";
+	public static final String URL_WB_PRELOGIN = "http://login.sina.com.cn/sso/prelogin.php?entry=weibo&callback=sinaSSOController.preloginCallBack&su={0}&rsakt=mod&client=ssologin.js(v1.4.18)&_={1}";
+	public static final String URL_WB_LOGIN = "http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&_={0}";
 	
 	
 	

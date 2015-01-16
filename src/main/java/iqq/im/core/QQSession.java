@@ -47,6 +47,15 @@ public class QQSession {
 	private int pollErrorCnt;
 	private volatile State  state;
 	
+	int exectime;
+	private long servertime ;
+	private String nonce ;
+	private String pubkey ;
+	private long rsakv ;
+	private String su;
+	private String sp;
+	
+	private long starttime;
 	private String qmLoginSig;
 	public enum State{ 
 		OFFLINE,
@@ -284,5 +293,69 @@ public class QQSession {
 	 */
 	public void setQmLoginSig(String qmLoginSig) {
 		this.qmLoginSig = qmLoginSig;
+	}
+
+	public long getServertime() {
+		return servertime;
+	}
+
+	public void setServertime(long servertime) {
+		this.servertime = servertime;
+	}
+
+	public String getNonce() {
+		return nonce;
+	}
+
+	public void setNonce(String nonce) {
+		this.nonce = nonce;
+	}
+
+	public String getPubkey() {
+		return pubkey;
+	}
+
+	public void setPubkey(String pubkey) {
+		this.pubkey = pubkey;
+	}
+
+	public long getRsakv() {
+		return rsakv;
+	}
+
+	public void setRsakv(long rsakv) {
+		this.rsakv = rsakv;
+	}
+
+	public String getSu() {
+		return su;
+	}
+
+	public void setSu(String su) {
+		this.su = su;
+	}
+
+	public String getSp() {
+		return sp;
+	}
+
+	public void setSp(String sp) {
+		this.sp = sp;
+	}
+
+	public long getStarttime() {
+		return starttime;
+	}
+
+	public void setStarttime(long starttime) {
+		this.starttime = starttime;
+	}
+
+	public int getExectime() {
+		return exectime;
+	}
+
+	public void setExectime(int exectime) {
+		this.exectime = exectime;
 	}
 }

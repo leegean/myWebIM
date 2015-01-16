@@ -398,4 +398,6 @@ public interface QQClient {
 	 * @return a boolean.
 	 */
 	public boolean isLogining();
+	
+	public QQActionFuture loginQm(final QQActionListener listener) ;
 }

@@ -60,7 +60,7 @@ public class ThreadActorDispatcher implements QQActorDispatcher, Runnable {
 	@Override
 	public void pushActor(QQActor actor){
 		this.actorQueue.add(actor);
-		System.out.println("push:    "+actor);
+//		System.out.println("push:    "+actor);
 	}
 	
 	/**
@@ -69,7 +69,7 @@ public class ThreadActorDispatcher implements QQActorDispatcher, Runnable {
 	private boolean dispatchAction(QQActor actor){
 		try {
 			actor.execute();
-			System.out.println("take:    "+actor);
+//			System.out.println("take:    "+actor);
 		} catch (Throwable e) {
 			LOG.warn("QQActor dispatchAction Error!", e);
 		}
