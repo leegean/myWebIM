@@ -57,6 +57,14 @@ public class WbLoginAction extends AbstractHttpAction{
 		case 2092:
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, "抱歉！登录失败，请稍候再试");
 			break;
+//			{"retcode":"4049","reason":"\u4e3a\u4e86\u60a8\u7684\u5e10\u53f7\u5b89\u5168\uff0c\u8bf7\u8f93\u5165\u9a8c\u8bc1\u7801"}
+//			为了您的帐号安全，请输入验证码
+//			{"retcode":"2070","reason":"\u8f93\u5165\u7684\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e"}
+//			输入的验证码不正确
+//			{"retcode":"4401","reason":"\u62b1\u6b49\uff01\u767b\u5f55\u5931\u8d25\uff0c\u8bf7\u7a0d\u5019\u518d\u8bd5"}
+//			抱歉！登录失败，请稍候再试
+//			{"retcode":"20","reason":"\u8bf7\u8f93\u5165\u6b63\u786e\u7684\u767b\u5f55\u540d"}
+//			请输入正确的登录名
 		default:
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, response.getResponseString());
 			break;
@@ -98,7 +106,7 @@ public class WbLoginAction extends AbstractHttpAction{
 		req.addPostValue("savestate","7");
 		req.addPostValue("useticket","1");
 		req.addPostValue("pagerefer","http://passport.weibo.com/visitor/visitor?entry=miniblog&a=enter&url=http%3A%2F%2Fweibo.com%2F&domain=.weibo.com&ua=php-sso_sdk_client-0.6.9&_rand=1421390373.5412");
-		req.addPostValue("wsseretry","servertime_error");
+//		req.addPostValue("wsseretry","servertime_error");
 		req.addPostValue("vsnf","1");
 		req.addPostValue("su",""+session.getSu());
 		req.addPostValue("service","miniblog");

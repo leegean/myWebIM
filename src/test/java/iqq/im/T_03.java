@@ -45,16 +45,26 @@ public class T_03 {
 		
 //		String callbackvalue  = (String)engine.eval("sinaSSOEncoder.makeRequest('aaaaaaa');");
 //		String callbackvalue  = (String)engine.eval("sinaSSOEncoder.base64.makeRequest('aaaaaaa');");
-//		String callbackvalue  = (String)engine.eval("sinaSSOEncoder.base64.encode('"+URLEncoder.encode("569398403@qq.com", "utf-8")+"');");
+		String callbackvalue  = (String)engine.eval("sinaSSOEncoder.base64.encode('"+URLEncoder.encode("569398403@qq.com", "utf-8")+"');");
 //		String callbackvalue = (String) invocableEngine.invokeMethod(sinaSSOEncoder, "makeRequest", "aaaaaaa");
 //		String callbackvalue = (String) invocableEngine.invokeMethod(sinaSSOEncoder, "base64.encode", "569398403");
-//		System.out.println(callbackvalue);
+		System.out.println(callbackvalue);
 		
 		System.out.println(URLEncoder.encode("569398403@qq.com", "utf-8"));
 		String str = "{\"retcode\":\"101\",\"reason\":\"\u4e00\u53e5\u8bdd_\u7ecf\u5178\"}";
-		
 		System.out.println("" +str+
 				"e68bee9f683bb008ac7792d035f5236fe1f2ec689133caebd97e4f5289931284c8ef083ad06dcd878da6e60811c68e51d6e8a60b440b79c4fe385deb4293bf6b88ecb3b996cbad8ef79d4c36da6bd2b93ced2143ed01fe3f106faf1efba38825ac60c5876bdb388ab5e971cbdc4f61b3066894bec4238d3e4670a887de885156".length());
+		
+		String s1 = "a0d417d72b73c749ed7525c3e0c794107a9e1706b4717d1d1952c0e7e3d9ec688d37cd462e37d39242b1de8cb0e9d90a11ce69f30419b76dbf662bffb0314d0227068e26204215b53183c63ce8330ebb0573ae06931d7e2d1272b810806993d3ecd2d823b152e1f222d8eab75662b5ce48b47094e383ef0e5145879cf717ecdb";
+		String s2 = "a65db48facc49b62438a2aa82ff09a2064fa3d8333c4d9d130a07607954a655503fffd3abaf1d21e666018b3aaba292bcb058e61475b148e4f27c80a6f2c39acf23a322fe1c2ccf8298300cb17f2eb38bc987eacad7a3e9df6417aac810c9df7cb4ecfa896b9e4d43b735b9b7435cfc6e1d2ede0af912c8da84b735599480055";
+		String s3 = "e68bee9f683bb008ac7792d035f5236fe1f2ec689133caebd97e4f5289931284c8ef083ad06dcd878da6e60811c68e51d6e8a60b440b79c4fe385deb4293bf6b88ecb3b996cbad8ef79d4c36da6bd2b93ced2143ed01fe3f106faf1efba38825ac60c5876bdb388ab5e971cbdc4f61b3066894bec4238d3e4670a887de885156";
+		String s4 = "1de8b666bac9d90f75fef3bacf504ad99c44c4203d5aceeb6664772cbf3f241e5b0a56ec5f4ec1f6af12430f4e90566a173246ab9a23830c5eb3b54d35903e23afbee09ca81558d52db5efb599bbe4146ad69fb15f472f2d046097f6136ab9638c61448b3b4035eaa04853a065f12bbe7c8b28c90fa4b0c779b26d8ef5586326";
+		String s5 = "89234b5a1c10c0592b4c00b80a8f8af17e5c02cec10c90b2c171e95ffc2e547ba7df082a739595254ffbb323ca350640708c5908a7219664d47be0ee8706a503b0151119e0e028bcddf3f666aa5408aaf1eb29b58ac22d43165b5fd86d643e6652e82bf45e2fed48857cdf958f739b3eb67d5c712fbf6f4c69e3f4a462b715ac";
+		String s6 = "d99a7f77b541ce4880e543acb463de9687ea0a12a65e95a44881f91ee69ff5adbd7a8d92e3d9012c8ecfb6ade5065cef0b49f91d0df3dd6ca28952458262254631f6c601583a4895e6785ef63eed836cec1c50020db5c4fa5f013ac065ccea91d776dd4a75e68c734b1b16c897262e3534dd6fbba21969edfff59476ab950bdc";
+		
+		String s7 = "690512c6313172adf26375c7b77bf6c459f2893e32a74ab1cb6b61adfebe2787994698a38ccf35a2e03d689457507825aecc8d12f73e9aae912e807f3062dc6af94d7ad17dd1248986a11df310ae8f997b593ee02fffe72589d410b81dd4d4c47bb4d842ac42bc61010754949a99eae2166cdb852f12a6d30f90d16447ceb4bc";
+		
+		System.out.println(s1.length()+"  "+s1.length()+"  "+s2.length()+"  "+s3.length()+"  "+s4.length()+"  "+s5.length()+"  "+s6.length()+"  "+s7.length());
 //		http://login.sina.com.cn/sso/prelogin.php?entry=weibo&callback=sinaSSOController.preloginCallBack&su=NTY5Mzk4NDAzJTQwcXEuY29t&rsakt=mod&client=ssologin.js(v1.4.18)&_=1421126543540
 //		sinaSSOController.preloginCallBack({"retcode":0,"servertime":1421126570,"pcid":"gz-14863373e0c3615ab981f0a29795032e72c7","nonce":"PHZ8J6","pubkey":"EB2A38568661887FA180BDDB5CABD5F21C7BFD59C090CB2D245A87AC253062882729293E5506350508E7F9AA3BB77F4333231490F915F6D63C55FE2F08A49B353F444AD3993CACC02DB784ABBB8E42A9B1BBFFFB38BE18D78E87A0E41B9B8F73A928EE0CCEE1F6739884B9777E4FE9E88A1BBE495927AC4A799B3181D6442443","rsakv":"1330428213","exectime":3})
 		

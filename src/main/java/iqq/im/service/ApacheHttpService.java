@@ -44,6 +44,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.FileNameMap;
+import java.net.HttpCookie;
 import java.net.URI;
 import java.net.URLConnection;
 import java.nio.ByteBuffer;
@@ -82,6 +83,8 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultRedirectStrategy;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.impl.cookie.CookieSpecBase;
 import org.apache.http.impl.nio.client.DefaultHttpAsyncClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.nio.ContentEncoder;
@@ -247,6 +250,10 @@ public class ApacheHttpService extends AbstractService implements HttpService{
 			SSLContext.setDefault(sslContext);
 			
 			asyncHttpClient = new DefaultHttpAsyncClient();
+			asyncHttpClient.getCookieStore().addCookie(new BasicClientCookie("SUB", "_2AkMj4X_qf8NjqwJRmPkTxWjibot0yADEiebDAH_sJxJjHnUY7EYbX9N4kXblopB0OG7Pey_MSsIi"));
+			asyncHttpClient.getCookieStore().addCookie(new BasicClientCookie("SUBP", "0033WrSXqPxfM72-Ws9jqgMF55z29P9D9W5kuhy4zgpV4ioJq2zdHLG1"));
+			asyncHttpClient.getCookieStore().addCookie(new BasicClientCookie("SINAGLOBAL","171.113.253.82_1421734110.235142"));
+			asyncHttpClient.getCookieStore().addCookie(new BasicClientCookie("Apache","171.113.253.82_1421734110.235145"));
 			
 			
 			HttpParams httpParams = asyncHttpClient.getParams();
