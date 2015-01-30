@@ -17,7 +17,7 @@ public class T_04 {
               
         se.eval(" var window = new Object(); var document = new Object();navigator=new Object();navigator.userAgent=''") ;                     /* 执行一段script */  
         
-            se.eval(new FileReader("t4.txt"))  ;
+            se.eval(new FileReader("t6.js"))  ;
               
             
 	}
