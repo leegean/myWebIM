@@ -5584,7 +5584,7 @@
             return {request: t}
         }
         var a = g("base.Config"), d = g("util.browser"), e = g("cometd.Transport"), f = g("cometd.RequestTransport");
-        var h = 0, i = d.IE, j = d.IE9, k = d.IE6 || d.IE7;
+//        var h = 0, i = d.IE, j = d.IE9, k = d.IE6 || d.IE7;
         return function() {
             var a = new f, b = l(), c = e.derive(a), d = 2e3;
             c.accept = function(a, b, c) {
@@ -6138,11 +6138,11 @@
         var a = "http:nas.im.api.weibo.com/im/webim.jsp";
         var b = 30 * 1e3;
         var c = g("cometd.Cometd"), f = g("transport.CallbackPolling"), h = g("transport.WebSocket"), i = g("cometd.ext.AckExtension"), j = g("cometd.ext.ReloadExtension"), k = g("cometd.ext.TimeStampExtension"), l = g("cometd.ext.TimeSyncExtension"), m = g("async.jsonp"), n = g("base.Error"), o = g("base.Config"), p = g("util.cookie"), q = g("util.type"), r = g("util.delay"), s = g("util.array"), t = g("util.object"), u = g("util.ready");
-        var v = {webSocket: false,log_level: o("cometd_level") || "info",heart_beat_timeout: 3.5 * 60 * 1e3,packet_timeout: 8 * 1e3,webSocket_connect_timeout: 1e3,reconnect_time: 5};
+//        var v = {webSocket: false,log_level: o("cometd_level") || "info",heart_beat_timeout: 3.5 * 60 * 1e3,packet_timeout: 8 * 1e3,webSocket_connect_timeout: 1e3,reconnect_time: 5};
         return w
     });
     f("connect.Sender", function() {
-        var a = g("async.deferred"), b = g("util.object").forEach, c = g("util.array").forEach, d = g("util.delay"), e = g("base.Error");
+        var a = g("async.deferred"),  c = g("util.array").forEach, d = g("util.delay"), e = g("base.Error");
         return function() {
             function p(a, b) {
                 return o(a, b)
@@ -6732,7 +6732,7 @@
 //        }
 //    });
     f("plugin.sync", function() {
-        var a = g("connect.Sender"), b = g("connect.Notifier"), c = g("util.object").clone;
+        var a = g("connect.Sender"), b = g("connect.Notifier");
         a.on(function(c) {
             param = c.param;
             switch (param.cmd) {
@@ -7108,15 +7108,15 @@
             return d
         }
         var a = {sendMessage: "msg",getUser: "vcard",getRoster: "roster",getRecent: "recents",getPresence: "querypresence",getHistory: "chatMsgHistory",setPresence: "presence",clearUnread: "revmsg",sync: "synchroniz",setStatus: "chatStates",chatSync: "chatSync",blockUser: "blockscreate",restrict: "restrict",search: "rosterSearch",getSetting: {cmd: "usersetting",subcmd: "get"},setSetting: {cmd: "usersetting",subcmd: "set"},publish: "statusesUpdate",comment: "createComment",like: "likeupdate",interact: "friendsInteract",inviteResponse: "inviteResponse",testNotice: "testNotice"};
-        var b = g("async.deferred"), c = g("async.queue"), e = g("open.Public"), f = g("protocol"), h = g("connect.Sender"), i = g("util.type"), j = g("util.object").forEach, k = function(a) {
+        var b = g("async.deferred"), c = g("async.queue"), e = g("open.Public"), f = g("protocol"), h = g("connect.Sender"), i = g("util.type"),  k = function(a) {
             return [].slice.call(a)
         }, l = {};
         var m = {};
-        j(a, function(a, b) {
-            l[a] = function() {
-                return n(b, k(arguments))
-            }
-        });
+//        j(a, function(a, b) {
+//            l[a] = function() {
+//                return n(b, k(arguments))
+//            }
+//        });
         l.getUser = function(a) {
             return (new b).outer(function(b) {
                 if (m[a]) {
@@ -7479,417 +7479,417 @@
 //                d.setItem(a + b, z.stringify(e))
 //            }}
 //    });
-    f("rule.CardAnalysis", function() {
-        function R(b, f) {
-            var g = new a, i = b[0] || {}, j = [], k = {}, l = {}, m, n;
-            if (!f && i.url_short) {
-                if ((i.type == "36" || i.type == "39") && i.annotations[0].object && i.annotations[0].object_type === "webpage") {
-                } else {
-                    u.set(i.url_short, i)
-                }
-            }
-            if (i.annotations && i.annotations[0]) {
-                if ((i.type == "36" || i.type == "39") && i.annotations[0].object) {
-                    n = i.annotations[0];
-                    var o = Q(n);
-                    m = n.object_domain_id.substring(0, 7);
-                    k = o.content;
-                    k.url = i.url_long;
-                    k.enUrl = encodeURIComponent(k.url);
-                    k.id = n.object_id;
-                    k.short = i.url_short;
-                    k.enShort = encodeURIComponent(k.short);
-                    k.style = n.object_type;
-                    switch (n.object_type) {
-                        case "audio":
-                            i.extra = h(E, {object_id: n.object_id,is_encoded: 1});
-                            break;
-                        case "article":
-                            i.extra = c("entity/show", {object_id: n.object_id,with_object: 1,is_encoded: 1});
-                            break;
-                        case "collection":
-                            if (n.object && n.object.items) {
-                                var p = [];
-                                x(n.object.items, function(a, b) {
-                                    p.push(c("entity/show", {object_id: a.id,with_object: 1,is_encoded: 1}));
-                                    if (b > 0) {
-                                        j.push({id: a.id,name: a.display_name,pic: a.pic,url: a.url,enUrl: encodeURIComponent(a.url)})
-                                    } else {
-                                        k.id = a.id
-                                    }
-                                });
-                                i.extra = p
-                            }
-                            break;
-                        case "priMessage":
-                            var q = n.object;
-                            if (q) {
-                                var s = q.content_data;
-                                var v = q.content_template.replace(/{{(\w+).(\w+)}}/g, function(a, b) {
-                                    return '<span style="color :${display.data.' + b + '.color}"> ${display.data.' + b + ".value} </span>"
-                                }).replace(/\n/g, "<br />");
-                                v = "  <#et tname display> " + v + "</#et>";
-                                k = {type: "priMessage",headimgurl: q.headimgurl,data: q.content_data,content_template: q.content_template,create_at: w(q.create_at),display_name: q.display_name,target_url: q.target_url,note: q.note};
-                                var y = r(v)(k);
-                                k.content = y
-                            }
-                            break;
-                        case "webpage":
-                            var q = n.object;
-                            if (q) {
-                                var z = q.Custom_data;
-                                var A = z && z.Owner;
-                                if (q.id.indexOf("230698") > -1) {
-                                    k.desc = q.summary;
-                                    k.hidelike = "hide"
-                                }
-                                if (A) {
-                                    k = {type: "webpage",target_url: encodeURIComponent(q.url),display_name: q.display_name,ownerUrl: A.profile_image_url,ownerName: A.name,Desc_Sum: parseInt(z.Desc_Sum),People_Count: z.People_Count,verified: A.verified};
-                                    if (A.verified_type >= 1 && A.verified_type <= 7) {
-                                        k.iconClassName = "icon_pf_approve_co"
-                                    } else if (A.verified_type == 0) {
-                                        k.iconClassName = "icon_pf_approve"
-                                    }
-                                }
-                            }
-                            break
-                    }
-                    if (n.object_domain_id == "1032" && n.object_type == "collection") {
-                        k.type = "collection";
-                        k.pic = n.object.full_image && n.object.full_image.url;
-                        k.items = j
-                    }
-                    if (m == "2002449" || m == "2002174") {
-                        k.style = m == "2002449" ? "taobao" : "tmall";
-                        k.category = n.object.custom_data && n.object.custom_data.category_name || ""
-                    }
-                    k.pic = k.pic || function() {
-                        var a;
-                        switch (k.style) {
-                            case "article":
-                                a = H;
-                                break;
-                            case "vote":
-                                a = I;
-                                break;
-                            case "topic":
-                                a = J;
-                                break;
-                            default:
-                                a = G
-                        }
-                        return a
-                    }();
-                    k.liked = e;
-                    k.like_count = 0;
-                    l = {card: n,rule: o.rule,extra: i.extra || null,"short": i.url_short,"long": i.url_long,type: n.object_type,show: n.show_status.charAt(0) == "1",domain_id: n.object_domain_id,biz_id: (n.containerid || "").substring(0, 6),display: k,name: k.name || k.display_name,html: N(t(k).toString())};
-                    g.resolve(l);
-                    L(n.object_id);
-                    if (f) {
-                        var B = o.rule.desc1, C = o.rule.desc2;
-                        if (B && B.indexOf("dynamic") > -1 || C && C.indexOf("dynamic") > -1 || n.actions && n.actions[0]) {
-                            M(i.url_short)
-                        }
-                    }
-                } else if (i.type == "34" || i.type == "16") {
-                    n = i.annotations && i.annotations[0];
-                    if (n) {
-                        k = {type: "news",style: i.type == "34" ? "simple" : "vote",name: n.title,url: i.url_short,pic: n.img_prev || H};
-                        g.resolve({card: n,rule: null,extra: null,"short": i.url_short,"long": i.url_long,type: "news",show: d,domain_id: "",biz_id: "",display: k,name: k.name,html: N(t(k).toString())})
-                    } else {
-                        g.resolve({})
-                    }
-                } else if (i.type == "7") {
-                    n = i.annotations && i.annotations[0];
-                    if (n) {
-                        var D = [];
-                        x(n.news, function(a) {
-                            D.push({name: a.t,url: a.url})
-                        });
-                        k = {type: "news",style: "collection",name: n.ptitle,url: i.url_short,pic: n.sp || H,purl: n.purl,items: D};
-                        g.resolve({card: n,rule: null,extra: null,"short": i.url_short,"long": i.url_long,type: "news",show: d,domain_id: "",biz_id: "",display: k,name: k.name,html: N(t(k).toString())})
-                    } else {
-                        g.resolve({})
-                    }
-                } else {
-                    g.resolve({})
-                }
-            } else {
-                g.resolve({})
-            }
-            return g
-        }
-        function Q(a) {
-            var b = {type: "common"}, c = (a.containerid || "").substring(0, 6), d = a.object_domain_id, e = a.object_type, f = P(c, d, e), g = O(f.desc1 || "", a).replace(/\|/g, ""), h = O(f.desc2 || "", a).replace(/\|/g, ""), i = !!g && !!h;
-            b.pic = a.object.img_url || a.object.image && a.object.image.url;
-            b.name = a.object.display_name;
-            b.button = f.button || "";
-            b.multi = i;
-            if (i) {
-                b.desc1 = g;
-                b.desc2 = h
-            } else {
-                b.desc = g || h
-            }
-            b.action = f.actionType;
-            if (a.actions && a.actions[0]) {
-                b.button = a.actions[0].name
-            }
-            return {content: b,rule: f}
-        }
-        function P(a, b, c) {
-            if (k.biz[a]) {
-                return m.associate(k.biz[a], C)
-            } else if (k.domain[b] && k.domain[b][c]) {
-                return m.associate(k.domain[b][c], B)
-            } else {
-                var d = "";
-                if (b && b.charAt(0) == "1") {
-                    d = b.substring(0, 4)
-                } else if (b && b.charAt(0) == "2") {
-                    d = b.substring(0, 7)
-                }
-                if (k.domain[d] && k.domain[d][c]) {
-                    return m.associate(k.domain[d][c], B)
-                }
-            }
-            return {}
-        }
-        function O(a, b) {
-            return a.replace(z, function(a) {
-                return (new D("try{ return this." + a.replace(/\.(\d+)/g, function(a, b) {
-                    return "[" + b + "]"
-                }) + ' || "";}catch(e){return "";}')).apply(b)
-            })
-        }
-        function N(a) {
-            return a.replace(/<!--[^(-->)]*-->/g, "")
-        }
-        var a = g("async.deferred"), b = g("base.Config"), c = g("open.Public"), f = g("control.Protocol"), h = g("async.jsonp"), i = g("async.queue"), j = g("async.parallel"), k = g("rule.Card"), l = g("util.object"), m = g("util.array"), n = g("util.string"), o = g("util.sizzle"), p = g("util.type"), q = g("util.MD5"), r = g("util.easyTemplate"), s = g("rule.CardTemp"), t = r(s), u = g("rule.CardStorage"), v = g("util.delay"), w = g("util.date"), x = m.forEach;
-        var y = /http:\/\/t\.cn\/([\w\d]*)/g, z = /(\w+(\.[\w|\d]+)*)/g, A = /#(\S+)#/g, B = ["domain_id", "name", "object_type", "desc1", "desc2", "button", "actionType"], C = ["biz_id", "name", "object_type", "desc1", "desc2", "button", "actionType"], D = Function, E = "http:ting.weibo.com/page/appclient/getsonginfojsonp", F = "http:weibo.com/aj/card/show", G = "http:img.t.sinajs.cn/t4/appstyle/V5_webim/images/card_default.gif", H = "http:img.t.sinajs.cn/t5/style/images/face/face_card_longwb.png", I = "http:img.t.sinajs.cn/t5/style/images/face/bg_face_card.png", J = "http:img.t.sinajs.cn/t5/style/images/topic_PCD/topicavatar.jpg", K = "http:img.t.sinajs.cn/t4/appstyle/V5_webim/images/card_atten.jpg";
-        var L = function() {
-            function k(a) {
-                l.forEach(a, function(a, b) {
-                    var c = o(e + " a[data-im=card.like][data-id=" + a + "]");
-                    x(c, function(a) {
-                        var c = a.getElementsByTagName("i")[0], d = a.getElementsByTagName("i")[1], e = n.parseQuery(a.getAttribute("data-im-param") || "");
-                        i(c, b.liked ? e.class1 : e.class2);
-                        d.innerHTML = b.count || 0;
-                        d.style.display = b.count === 0 ? "none" : "";
-                        e.liked = b.liked ? "true" : "false";
-                        a.setAttribute("data-im-param", l.toQuery(e))
-                    })
-                })
-            }
-            function i(a, b) {
-                a.className = b.replace(/\|/g, " ")
-            }
-            function h() {
-                var a = f.join(",");
-                f.length = 0;
-                j([c("likes/exists", {uid: b("uid"),object_ids: a}), c("likes/counts", {object_ids: a})], ["exists", "counts"]).done(function(a) {
-                    var b = a.exists, c = a.counts;
-                    if (b.result && b.result.length && c.objects && c.objects.length) {
-                        var d = {};
-                        x(b.result, function(a) {
-                            d[a.object_id] = {liked: a.liked,count: 0}
-                        });
-                        x(c.objects, function(a) {
-                            if (d[a.object_id]) {
-                                d[a.object_id].count = a.like_counts
-                            }
-                        });
-                        k(d)
-                    }
-                })
-            }
-            var a = 20, d = 500, e = "." + b("im_class") + " ";
-            var f = [], g = null;
-            return function(b) {
-                f.push(b);
-                if (g) {
-                    clearTimeout(g)
-                }
-                if (f.length < a) {
-                    g = v(h, d)
-                } else {
-                    h()
-                }
-            }
-        }();
-        var M = function() {
-            function i() {
-                var a = e.join(",");
-                e.length = 0;
-                h(F, {short_url: a,_t: 3}).done(function(a) {
-                    x(a, g)
-                })
-            }
-            function g(a) {
-                var b = a.annotations && a.annotations[0];
-                if (b && b.object) {
-                    var c = b.object_id, e = Q(b).content;
-                    if (e.multi) {
-                        var f = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc1]"), g = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc2]");
-                        x(f, function(a) {
-                            a.innerHTML = e.desc1
-                        });
-                        x(g, function(a) {
-                            a.innerHTML = e.desc2
-                        })
-                    } else {
-                        var h = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc]");
-                        x(h, function(a) {
-                            a.innerHTML = e.desc
-                        })
-                    }
-                    var i = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_btn]");
-                    x(i, function(a) {
-                        a.innerHTML = e.button
-                    });
-                    u.set(a.url_short, a)
-                }
-            }
-            var a = 20, c = 500, d = "." + b("im_class") + " ";
-            var e = [], f = null;
-            return function(b) {
-                e.push(b);
-                if (f) {
-                    clearTimeout(f)
-                }
-                if (e.length < a) {
-                    f = v(i, c)
-                } else {
-                    i()
-                }
-            }
-        }();
-        var S = {parseShortUrl: function(b) {
-                var c = new a, d = (b || "").match(y);
-                return c.outer(function() {
-                    function a() {
-                        h(F, {short_url: d.join(","),_t: 3}).done(function(a) {
-                            if (p.isArray(a)) {
-                                var b = [];
-                                for (var d = 0; d < a.length; d++) {
-                                    for (var e in a[d]) {
-                                        a[d][e] && b.push(a[d][e])
-                                    }
-                                }
-                                var f = [{}];
-                                x(b, function(a) {
-                                    f.push(function(a) {
-                                        return function(b) {
-                                            if (p.isEmptyObject(b)) {
-                                                return R([a])
-                                            } else {
-                                                return b
-                                            }
-                                        }
-                                    }(a))
-                                });
-                                i(f).done(function(a) {
-                                    if (p.isArray(a)) {
-                                        c.resolve(a[a.length - 1])
-                                    } else {
-                                        c.resolve({})
-                                    }
-                                }).fail(function() {
-                                    c.resolve({})
-                                })
-                            } else {
-                                c.resolve({})
-                            }
-                        }).fail(function() {
-                            c.resolve({})
-                        })
-                    }
-                    if (d && d.length) {
-                        var b = u.get(d);
-                        if (b) {
-                            R([b], true).done(function(b) {
-                                if (p.isEmptyObject(b)) {
-                                    a()
-                                } else {
-                                    c.resolve(b)
-                                }
-                            })
-                        } else {
-                            a()
-                        }
-                    } else {
-                        c.resolve({})
-                    }
-                })
-            },parseExt: function(b, c, e) {
-                var g = new a;
-                if (b) {
-                    if (b.card_type == "invite") {
-                        if (b.invite_type == "attention") {
-                            return g.outer(function(a) {
-                                f.getUser(c).done(function(c) {
-                                    if (c.uid) {
-                                        var f = {}, g = {type: "im_invite",style: "attention",uid: c.uid,nick: c.nick,status: b.invite_state,pic: b.app_logo || K,mid: e};
-                                        f.type = "im_invite";
-                                        f.display = g;
-                                        f.show = d;
-                                        f.html = N(t(g).toString());
-                                        a.resolve(f)
-                                    } else {
-                                        a.resolve({})
-                                    }
-                                }).fail(function() {
-                                    a.resolve({})
-                                })
-                            })
-                        } else if (b.invite_type == "game") {
-                            return g.outer(function(a) {
-                                f.getUser(c).done(function(c) {
-                                    if (c.uid) {
-                                        var e = {}, f = {type: "im_invite",style: "game",uid: c.uid,nick: c.nick,app_name: b.app_name,invite_url: b.invite_url};
-                                        e.type = "im_invite";
-                                        e.display = f;
-                                        e.show = d;
-                                        e.html = N(t(f).toString());
-                                        a.resolve(e)
-                                    } else {
-                                        a.resolve({})
-                                    }
-                                }).fail(function() {
-                                    a.resolve({})
-                                })
-                            })
-                        } else {
-                            return {}
-                        }
-                    } else if (b.card_type == "weibo") {
-                        return {}
-                    } else {
-                        return {}
-                    }
-                } else {
-                    return {}
-                }
-            },parseTopic: function(b) {
-                var d = (b || "").match(A);
-                return (new a).outer(function(a) {
-                    if (d && d.length) {
-                        var b = d[0], e;
-                        b = b.substring(1, b.length - 1);
-                        e = "1022:100808" + q(b);
-                        c("object/show", {object_id: e}).done(function(c) {
-                            var d = "http:huati.weibo.com/k/" + encodeURIComponent(b);
-                            R([{annotations: [c],description: "",last_modified: "",title: "",type: "36",url_long: d,url_short: d}]).done(a.resolve)
-                        }).fail(function() {
-                            a.resolve({})
-                        })
-                    } else {
-                        a.resolve({})
-                    }
-                })
-            }};
-        return S
-    });
+//    f("rule.CardAnalysis", function() {
+//        function R(b, f) {
+//            var g = new a, i = b[0] || {}, j = [], k = {}, l = {}, m, n;
+//            if (!f && i.url_short) {
+//                if ((i.type == "36" || i.type == "39") && i.annotations[0].object && i.annotations[0].object_type === "webpage") {
+//                } else {
+//                    u.set(i.url_short, i)
+//                }
+//            }
+//            if (i.annotations && i.annotations[0]) {
+//                if ((i.type == "36" || i.type == "39") && i.annotations[0].object) {
+//                    n = i.annotations[0];
+//                    var o = Q(n);
+//                    m = n.object_domain_id.substring(0, 7);
+//                    k = o.content;
+//                    k.url = i.url_long;
+//                    k.enUrl = encodeURIComponent(k.url);
+//                    k.id = n.object_id;
+//                    k.short = i.url_short;
+//                    k.enShort = encodeURIComponent(k.short);
+//                    k.style = n.object_type;
+//                    switch (n.object_type) {
+//                        case "audio":
+//                            i.extra = h(E, {object_id: n.object_id,is_encoded: 1});
+//                            break;
+//                        case "article":
+//                            i.extra = c("entity/show", {object_id: n.object_id,with_object: 1,is_encoded: 1});
+//                            break;
+//                        case "collection":
+//                            if (n.object && n.object.items) {
+//                                var p = [];
+//                                x(n.object.items, function(a, b) {
+//                                    p.push(c("entity/show", {object_id: a.id,with_object: 1,is_encoded: 1}));
+//                                    if (b > 0) {
+//                                        j.push({id: a.id,name: a.display_name,pic: a.pic,url: a.url,enUrl: encodeURIComponent(a.url)})
+//                                    } else {
+//                                        k.id = a.id
+//                                    }
+//                                });
+//                                i.extra = p
+//                            }
+//                            break;
+//                        case "priMessage":
+//                            var q = n.object;
+//                            if (q) {
+//                                var s = q.content_data;
+//                                var v = q.content_template.replace(/{{(\w+).(\w+)}}/g, function(a, b) {
+//                                    return '<span style="color :${display.data.' + b + '.color}"> ${display.data.' + b + ".value} </span>"
+//                                }).replace(/\n/g, "<br />");
+//                                v = "  <#et tname display> " + v + "</#et>";
+//                                k = {type: "priMessage",headimgurl: q.headimgurl,data: q.content_data,content_template: q.content_template,create_at: w(q.create_at),display_name: q.display_name,target_url: q.target_url,note: q.note};
+//                                var y = r(v)(k);
+//                                k.content = y
+//                            }
+//                            break;
+//                        case "webpage":
+//                            var q = n.object;
+//                            if (q) {
+//                                var z = q.Custom_data;
+//                                var A = z && z.Owner;
+//                                if (q.id.indexOf("230698") > -1) {
+//                                    k.desc = q.summary;
+//                                    k.hidelike = "hide"
+//                                }
+//                                if (A) {
+//                                    k = {type: "webpage",target_url: encodeURIComponent(q.url),display_name: q.display_name,ownerUrl: A.profile_image_url,ownerName: A.name,Desc_Sum: parseInt(z.Desc_Sum),People_Count: z.People_Count,verified: A.verified};
+//                                    if (A.verified_type >= 1 && A.verified_type <= 7) {
+//                                        k.iconClassName = "icon_pf_approve_co"
+//                                    } else if (A.verified_type == 0) {
+//                                        k.iconClassName = "icon_pf_approve"
+//                                    }
+//                                }
+//                            }
+//                            break
+//                    }
+//                    if (n.object_domain_id == "1032" && n.object_type == "collection") {
+//                        k.type = "collection";
+//                        k.pic = n.object.full_image && n.object.full_image.url;
+//                        k.items = j
+//                    }
+//                    if (m == "2002449" || m == "2002174") {
+//                        k.style = m == "2002449" ? "taobao" : "tmall";
+//                        k.category = n.object.custom_data && n.object.custom_data.category_name || ""
+//                    }
+//                    k.pic = k.pic || function() {
+//                        var a;
+//                        switch (k.style) {
+//                            case "article":
+//                                a = H;
+//                                break;
+//                            case "vote":
+//                                a = I;
+//                                break;
+//                            case "topic":
+//                                a = J;
+//                                break;
+//                            default:
+//                                a = G
+//                        }
+//                        return a
+//                    }();
+//                    k.liked = e;
+//                    k.like_count = 0;
+//                    l = {card: n,rule: o.rule,extra: i.extra || null,"short": i.url_short,"long": i.url_long,type: n.object_type,show: n.show_status.charAt(0) == "1",domain_id: n.object_domain_id,biz_id: (n.containerid || "").substring(0, 6),display: k,name: k.name || k.display_name,html: N(t(k).toString())};
+//                    g.resolve(l);
+//                    L(n.object_id);
+//                    if (f) {
+//                        var B = o.rule.desc1, C = o.rule.desc2;
+//                        if (B && B.indexOf("dynamic") > -1 || C && C.indexOf("dynamic") > -1 || n.actions && n.actions[0]) {
+//                            M(i.url_short)
+//                        }
+//                    }
+//                } else if (i.type == "34" || i.type == "16") {
+//                    n = i.annotations && i.annotations[0];
+//                    if (n) {
+//                        k = {type: "news",style: i.type == "34" ? "simple" : "vote",name: n.title,url: i.url_short,pic: n.img_prev || H};
+//                        g.resolve({card: n,rule: null,extra: null,"short": i.url_short,"long": i.url_long,type: "news",show: d,domain_id: "",biz_id: "",display: k,name: k.name,html: N(t(k).toString())})
+//                    } else {
+//                        g.resolve({})
+//                    }
+//                } else if (i.type == "7") {
+//                    n = i.annotations && i.annotations[0];
+//                    if (n) {
+//                        var D = [];
+//                        x(n.news, function(a) {
+//                            D.push({name: a.t,url: a.url})
+//                        });
+//                        k = {type: "news",style: "collection",name: n.ptitle,url: i.url_short,pic: n.sp || H,purl: n.purl,items: D};
+//                        g.resolve({card: n,rule: null,extra: null,"short": i.url_short,"long": i.url_long,type: "news",show: d,domain_id: "",biz_id: "",display: k,name: k.name,html: N(t(k).toString())})
+//                    } else {
+//                        g.resolve({})
+//                    }
+//                } else {
+//                    g.resolve({})
+//                }
+//            } else {
+//                g.resolve({})
+//            }
+//            return g
+//        }
+//        function Q(a) {
+//            var b = {type: "common"}, c = (a.containerid || "").substring(0, 6), d = a.object_domain_id, e = a.object_type, f = P(c, d, e), g = O(f.desc1 || "", a).replace(/\|/g, ""), h = O(f.desc2 || "", a).replace(/\|/g, ""), i = !!g && !!h;
+//            b.pic = a.object.img_url || a.object.image && a.object.image.url;
+//            b.name = a.object.display_name;
+//            b.button = f.button || "";
+//            b.multi = i;
+//            if (i) {
+//                b.desc1 = g;
+//                b.desc2 = h
+//            } else {
+//                b.desc = g || h
+//            }
+//            b.action = f.actionType;
+//            if (a.actions && a.actions[0]) {
+//                b.button = a.actions[0].name
+//            }
+//            return {content: b,rule: f}
+//        }
+//        function P(a, b, c) {
+//            if (k.biz[a]) {
+//                return m.associate(k.biz[a], C)
+//            } else if (k.domain[b] && k.domain[b][c]) {
+//                return m.associate(k.domain[b][c], B)
+//            } else {
+//                var d = "";
+//                if (b && b.charAt(0) == "1") {
+//                    d = b.substring(0, 4)
+//                } else if (b && b.charAt(0) == "2") {
+//                    d = b.substring(0, 7)
+//                }
+//                if (k.domain[d] && k.domain[d][c]) {
+//                    return m.associate(k.domain[d][c], B)
+//                }
+//            }
+//            return {}
+//        }
+//        function O(a, b) {
+//            return a.replace(z, function(a) {
+//                return (new D("try{ return this." + a.replace(/\.(\d+)/g, function(a, b) {
+//                    return "[" + b + "]"
+//                }) + ' || "";}catch(e){return "";}')).apply(b)
+//            })
+//        }
+//        function N(a) {
+//            return a.replace(/<!--[^(-->)]*-->/g, "")
+//        }
+//        var a = g("async.deferred"), b = g("base.Config"), c = g("open.Public"), f = g("control.Protocol"), h = g("async.jsonp"), i = g("async.queue"), j = g("async.parallel"), k = g("rule.Card"), l = g("util.object"), m = g("util.array"), n = g("util.string"), o = g("util.sizzle"), p = g("util.type"), q = g("util.MD5"), r = g("util.easyTemplate"), s = g("rule.CardTemp"), t = r(s), u = g("rule.CardStorage"), v = g("util.delay"), w = g("util.date"), x = m.forEach;
+//        var y = /http:\/\/t\.cn\/([\w\d]*)/g, z = /(\w+(\.[\w|\d]+)*)/g, A = /#(\S+)#/g, B = ["domain_id", "name", "object_type", "desc1", "desc2", "button", "actionType"], C = ["biz_id", "name", "object_type", "desc1", "desc2", "button", "actionType"], D = Function, E = "http:ting.weibo.com/page/appclient/getsonginfojsonp", F = "http:weibo.com/aj/card/show", G = "http:img.t.sinajs.cn/t4/appstyle/V5_webim/images/card_default.gif", H = "http:img.t.sinajs.cn/t5/style/images/face/face_card_longwb.png", I = "http:img.t.sinajs.cn/t5/style/images/face/bg_face_card.png", J = "http:img.t.sinajs.cn/t5/style/images/topic_PCD/topicavatar.jpg", K = "http:img.t.sinajs.cn/t4/appstyle/V5_webim/images/card_atten.jpg";
+//        var L = function() {
+//            function k(a) {
+//                l.forEach(a, function(a, b) {
+//                    var c = o(e + " a[data-im=card.like][data-id=" + a + "]");
+//                    x(c, function(a) {
+//                        var c = a.getElementsByTagName("i")[0], d = a.getElementsByTagName("i")[1], e = n.parseQuery(a.getAttribute("data-im-param") || "");
+//                        i(c, b.liked ? e.class1 : e.class2);
+//                        d.innerHTML = b.count || 0;
+//                        d.style.display = b.count === 0 ? "none" : "";
+//                        e.liked = b.liked ? "true" : "false";
+//                        a.setAttribute("data-im-param", l.toQuery(e))
+//                    })
+//                })
+//            }
+//            function i(a, b) {
+//                a.className = b.replace(/\|/g, " ")
+//            }
+//            function h() {
+//                var a = f.join(",");
+//                f.length = 0;
+//                j([c("likes/exists", {uid: b("uid"),object_ids: a}), c("likes/counts", {object_ids: a})], ["exists", "counts"]).done(function(a) {
+//                    var b = a.exists, c = a.counts;
+//                    if (b.result && b.result.length && c.objects && c.objects.length) {
+//                        var d = {};
+//                        x(b.result, function(a) {
+//                            d[a.object_id] = {liked: a.liked,count: 0}
+//                        });
+//                        x(c.objects, function(a) {
+//                            if (d[a.object_id]) {
+//                                d[a.object_id].count = a.like_counts
+//                            }
+//                        });
+//                        k(d)
+//                    }
+//                })
+//            }
+//            var a = 20, d = 500, e = "." + b("im_class") + " ";
+//            var f = [], g = null;
+//            return function(b) {
+//                f.push(b);
+//                if (g) {
+//                    clearTimeout(g)
+//                }
+//                if (f.length < a) {
+//                    g = v(h, d)
+//                } else {
+//                    h()
+//                }
+//            }
+//        }();
+//        var M = function() {
+//            function i() {
+//                var a = e.join(",");
+//                e.length = 0;
+//                h(F, {short_url: a,_t: 3}).done(function(a) {
+//                    x(a, g)
+//                })
+//            }
+//            function g(a) {
+//                var b = a.annotations && a.annotations[0];
+//                if (b && b.object) {
+//                    var c = b.object_id, e = Q(b).content;
+//                    if (e.multi) {
+//                        var f = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc1]"), g = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc2]");
+//                        x(f, function(a) {
+//                            a.innerHTML = e.desc1
+//                        });
+//                        x(g, function(a) {
+//                            a.innerHTML = e.desc2
+//                        })
+//                    } else {
+//                        var h = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_desc]");
+//                        x(h, function(a) {
+//                            a.innerHTML = e.desc
+//                        })
+//                    }
+//                    var i = o(d + " [data-im-card-id=" + c + "] [data-im-type=card_btn]");
+//                    x(i, function(a) {
+//                        a.innerHTML = e.button
+//                    });
+//                    u.set(a.url_short, a)
+//                }
+//            }
+//            var a = 20, c = 500, d = "." + b("im_class") + " ";
+//            var e = [], f = null;
+//            return function(b) {
+//                e.push(b);
+//                if (f) {
+//                    clearTimeout(f)
+//                }
+//                if (e.length < a) {
+//                    f = v(i, c)
+//                } else {
+//                    i()
+//                }
+//            }
+//        }();
+//        var S = {parseShortUrl: function(b) {
+//                var c = new a, d = (b || "").match(y);
+//                return c.outer(function() {
+//                    function a() {
+//                        h(F, {short_url: d.join(","),_t: 3}).done(function(a) {
+//                            if (p.isArray(a)) {
+//                                var b = [];
+//                                for (var d = 0; d < a.length; d++) {
+//                                    for (var e in a[d]) {
+//                                        a[d][e] && b.push(a[d][e])
+//                                    }
+//                                }
+//                                var f = [{}];
+//                                x(b, function(a) {
+//                                    f.push(function(a) {
+//                                        return function(b) {
+//                                            if (p.isEmptyObject(b)) {
+//                                                return R([a])
+//                                            } else {
+//                                                return b
+//                                            }
+//                                        }
+//                                    }(a))
+//                                });
+//                                i(f).done(function(a) {
+//                                    if (p.isArray(a)) {
+//                                        c.resolve(a[a.length - 1])
+//                                    } else {
+//                                        c.resolve({})
+//                                    }
+//                                }).fail(function() {
+//                                    c.resolve({})
+//                                })
+//                            } else {
+//                                c.resolve({})
+//                            }
+//                        }).fail(function() {
+//                            c.resolve({})
+//                        })
+//                    }
+//                    if (d && d.length) {
+//                        var b = u.get(d);
+//                        if (b) {
+//                            R([b], true).done(function(b) {
+//                                if (p.isEmptyObject(b)) {
+//                                    a()
+//                                } else {
+//                                    c.resolve(b)
+//                                }
+//                            })
+//                        } else {
+//                            a()
+//                        }
+//                    } else {
+//                        c.resolve({})
+//                    }
+//                })
+//            },parseExt: function(b, c, e) {
+//                var g = new a;
+//                if (b) {
+//                    if (b.card_type == "invite") {
+//                        if (b.invite_type == "attention") {
+//                            return g.outer(function(a) {
+//                                f.getUser(c).done(function(c) {
+//                                    if (c.uid) {
+//                                        var f = {}, g = {type: "im_invite",style: "attention",uid: c.uid,nick: c.nick,status: b.invite_state,pic: b.app_logo || K,mid: e};
+//                                        f.type = "im_invite";
+//                                        f.display = g;
+//                                        f.show = d;
+//                                        f.html = N(t(g).toString());
+//                                        a.resolve(f)
+//                                    } else {
+//                                        a.resolve({})
+//                                    }
+//                                }).fail(function() {
+//                                    a.resolve({})
+//                                })
+//                            })
+//                        } else if (b.invite_type == "game") {
+//                            return g.outer(function(a) {
+//                                f.getUser(c).done(function(c) {
+//                                    if (c.uid) {
+//                                        var e = {}, f = {type: "im_invite",style: "game",uid: c.uid,nick: c.nick,app_name: b.app_name,invite_url: b.invite_url};
+//                                        e.type = "im_invite";
+//                                        e.display = f;
+//                                        e.show = d;
+//                                        e.html = N(t(f).toString());
+//                                        a.resolve(e)
+//                                    } else {
+//                                        a.resolve({})
+//                                    }
+//                                }).fail(function() {
+//                                    a.resolve({})
+//                                })
+//                            })
+//                        } else {
+//                            return {}
+//                        }
+//                    } else if (b.card_type == "weibo") {
+//                        return {}
+//                    } else {
+//                        return {}
+//                    }
+//                } else {
+//                    return {}
+//                }
+//            },parseTopic: function(b) {
+//                var d = (b || "").match(A);
+//                return (new a).outer(function(a) {
+//                    if (d && d.length) {
+//                        var b = d[0], e;
+//                        b = b.substring(1, b.length - 1);
+//                        e = "1022:100808" + q(b);
+//                        c("object/show", {object_id: e}).done(function(c) {
+//                            var d = "http:huati.weibo.com/k/" + encodeURIComponent(b);
+//                            R([{annotations: [c],description: "",last_modified: "",title: "",type: "36",url_long: d,url_short: d}]).done(a.resolve)
+//                        }).fail(function() {
+//                            a.resolve({})
+//                        })
+//                    } else {
+//                        a.resolve({})
+//                    }
+//                })
+//            }};
+//        return S
+//    });
     f("open.Process", function() {
         var a = g("async.deferred"), b = g("base.Config"), c = g("connect.Sender"), e = g("open.Private"), f = g("open.Public"), h = g("async.jsonp"), i = g("async.queue"), j = g("async.parallel"), k = g("plugin.audio"), l = g("util.array"), m = g("util.type"), n = g("rule.CardAnalysis"), o = l.forEach;
         var p = g("util.base62");
