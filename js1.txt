@@ -128,10 +128,8 @@
             },makeRequest: function(b, pubkey, servertime,nonce) {
                 var e = new sinaSSOEncoder.RSAKey;
                 e.setPublic(pubkey, "10001");
-                var str = [1421129478, "3C7N15"].join("\t") + "\n" + b;
-                print(str);
                 b = e.encrypt([servertime, nonce].join("\t") + "\n" + b);
-                print("===="+b);
+                return b;
         },_keys: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=",_keys_urlsafe: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=",_subp_v2_keys: "uAL715W8e3jJCcNU0lT_FSXVgxpbEDdQ4vKaIOH2GBPtfzqsmYZo-wRM9i6hynrk=",_subp_v3_keys_3: "5WFh28sGziZTeS1lBxCK-HgPq9IdMUwknybo.LJrQD3uj_Va7pE0XfcNR4AOYvm6t"};
         this.Cookie = {decode: function(a) {
                 var b = [], c = a.substr(0, 3), d = a.substr(3);

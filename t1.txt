@@ -1,0 +1,6 @@
+/*setTimeout(function(){
+
+print("=======");
+},1000);
+*/
+print(encodeURI("aa"));

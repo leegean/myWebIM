@@ -46,6 +46,7 @@ public class WbLoginAction extends AbstractHttpAction{
 		int retcode = json.getInt("retcode");
 		switch (retcode) {
 		case 0:
+//		{"retcode":"0","ticket":"ST-MjY0NTA1MjYwMw==-1421823968-gz-A4B8DD8D1824CF382EB98D4084DC0F78","uid":"2645052603","nick":"\u4e00\u53e5\u8bdd_\u7ecf\u5178","crossDomainUrlList":["http:\/\/crosdom.weicaifu.com\/sso\/crosdom?action=login&savestate=1453359968","http:\/\/passport.97973.com\/sso\/crossdomain?action=login&savestate=1453359968"]}
 			notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
 			break;
 		case 101:
@@ -61,6 +62,7 @@ public class WbLoginAction extends AbstractHttpAction{
 //			为了您的帐号安全，请输入验证码
 //			{"retcode":"2070","reason":"\u8f93\u5165\u7684\u9a8c\u8bc1\u7801\u4e0d\u6b63\u786e"}
 //			输入的验证码不正确
+//			{"retcode":"2093","reason":"\u62b1\u6b49\uff01\u767b\u5f55\u5931\u8d25\uff0c\u8bf7\u7a0d\u5019\u518d\u8bd5"}
 //			{"retcode":"4401","reason":"\u62b1\u6b49\uff01\u767b\u5f55\u5931\u8d25\uff0c\u8bf7\u7a0d\u5019\u518d\u8bd5"}
 //			抱歉！登录失败，请稍候再试
 //			{"retcode":"20","reason":"\u8bf7\u8f93\u5165\u6b63\u786e\u7684\u767b\u5f55\u540d"}
@@ -123,6 +125,7 @@ public class WbLoginAction extends AbstractHttpAction{
 		String sp = QQEncryptor.getWbSp(getContext().getAccount().getWbPassword(), pubkey, servertime, nonce);
 		session.setSp(sp);
 		System.out.println(servertime+"   "+nonce+"   "+rsakv+"   "+ pubkey);
+		System.out.println(sp);
 		req.addPostValue("sp",""+sp);
 		req.addPostValue("sr","1440*900");
 		req.addPostValue("encoding","UTF-8");

@@ -51,7 +51,7 @@ public class T_03 {
 		System.out.println(callbackvalue);
 		
 		System.out.println(URLEncoder.encode("569398403@qq.com", "utf-8"));
-		String str = "{\"retcode\":\"101\",\"reason\":\"\u4e00\u53e5\u8bdd_\u7ecf\u5178\"}";
+		String str = "{\"retcode\":\"101\",\"reason\":\"\u62b1\u6b49\uff01\u767b\u5f55\u5931\u8d25\uff0c\u8bf7\u7a0d\u5019\u518d\u8bd5\"}";
 		System.out.println("" +str+
 				"e68bee9f683bb008ac7792d035f5236fe1f2ec689133caebd97e4f5289931284c8ef083ad06dcd878da6e60811c68e51d6e8a60b440b79c4fe385deb4293bf6b88ecb3b996cbad8ef79d4c36da6bd2b93ced2143ed01fe3f106faf1efba38825ac60c5876bdb388ab5e971cbdc4f61b3066894bec4238d3e4670a887de885156".length());
 		
