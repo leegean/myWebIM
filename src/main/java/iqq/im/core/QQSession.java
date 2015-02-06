@@ -57,6 +57,11 @@ public class QQSession {
 	
 	private long starttime;
 	private String qmLoginSig;
+	private long id;
+	private String wbClientId;
+	private long wbAck = -1;
+	private String wbTicket;
+	private String wbUid;
 	public enum State{ 
 		OFFLINE,
 		ONLINE,
@@ -357,5 +362,45 @@ public class QQSession {
 
 	public void setExectime(int exectime) {
 		this.exectime = exectime;
+	}
+
+	public long getId() {
+		return id;
+	}
+
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	public String getWbClientId() {
+		return wbClientId;
+	}
+
+	public void setWbClientId(String wbClientId) {
+		this.wbClientId = wbClientId;
+	}
+
+	public long getWbAck() {
+		return wbAck;
+	}
+
+	public void setWbAck(long wbAck) {
+		this.wbAck = wbAck;
+	}
+
+	public String getWbTicket() {
+		return wbTicket;
+	}
+
+	public void setWbTicket(String wbTicket) {
+		this.wbTicket = wbTicket;
+	}
+
+	public String getWbUid() {
+		return wbUid;
+	}
+
+	public void setWbUid(String wbUid) {
+		this.wbUid = wbUid;
 	}
 }

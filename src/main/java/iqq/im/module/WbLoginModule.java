@@ -38,8 +38,12 @@ import iqq.im.action.qun.QmCheckVerifyAction;
 import iqq.im.action.qun.QmGetCaptchaImageAction;
 import iqq.im.action.qun.QmGetLoginSigAction;
 import iqq.im.action.qun.QmWebLoginAction;
+import iqq.im.action.weibo.WbHandshakeAction;
 import iqq.im.action.weibo.WbLoginAction;
+import iqq.im.action.weibo.WbLoginCallbackAction;
 import iqq.im.action.weibo.WbPreloginAction;
+import iqq.im.action.weibo.WbSubscribeAction;
+import iqq.im.action.weibo.WbconnectAction;
 import iqq.im.bean.QQStatus;
 import iqq.im.core.QQModule;
 import iqq.im.event.QQActionEvent;
@@ -56,10 +60,20 @@ public class WbLoginModule extends AbstractModule {
 	public QQActionFuture login(QQActionListener listener, long prelt){
 		return pushHttpAction(new WbLoginAction(getContext(), listener, prelt));
 	}
-	
+	public QQActionFuture loginCallback(QQActionListener listener){
+		return pushHttpAction(new WbLoginCallbackAction(getContext(), listener));
+	}
 	
 	public QQActionFuture prelogin(QQActionListener listener){
 		return pushHttpAction(new WbPreloginAction(getContext(), listener));
 	}
-	
+	public QQActionFuture handshake(QQActionListener listener){
+		return pushHttpAction(new WbHandshakeAction(getContext(), listener));
+	}
+	public QQActionFuture subscribe(QQActionListener listener){
+		return pushHttpAction(new WbSubscribeAction(getContext(), listener));
+	}
+	public QQActionFuture connect(QQActionListener listener){
+		return pushHttpAction(new WbconnectAction(getContext(), listener));
+	}
 }

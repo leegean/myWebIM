@@ -93,7 +93,7 @@ public class QQNotifyEvent extends QQEvent{
 		/**验证请求，需要用户输入验证码以继续*/
 		CAPACHA_VERIFY,
 		/**新邮件通知*/
-		EMAIL_NOTIFY,
+		EMAIL_NOTIFY, WeboChat,
 	}
 
 	/* (non-Javadoc)

@@ -90,6 +90,7 @@ public class WebQQClientTest {
 					System.out.println("就算是登录成功微博了");
 					System.out.println(client.getSession().getPubkey());
 					
+					client.beginPollWbMsg();
 				}else{
 					System.out.println(event.getTarget());
 				}
@@ -156,7 +157,11 @@ public class WebQQClientTest {
 		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
 		client.submitVerify(code, event);
 	}
-
+	@QQNotifyHandler(QQNotifyEvent.Type.WeboChat)
+	protected void processWeiboChat(QQNotifyEvent event) throws IOException{
+		String respStr = (String) event.getTarget();
+		System.out.println("====processWeiboChat===="+ respStr);
+	}
 	/**
 	 * 登录
 	 */

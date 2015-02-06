@@ -48,85 +48,94 @@ import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 /**
  * QQ加密解码
- *
+ * 
  * @author solosky
  */
 public class QQEncryptor {
-	
+
+	private static ScriptEngine engine;
+
 	/**
 	 * 登录邮箱时用到的，auth_token
-	 *
-	 * @param str a {@link java.lang.String} object.
+	 * 
+	 * @param str
+	 *            a {@link java.lang.String} object.
 	 * @return a long.
 	 */
 	public static long time33(String str) {
 		long hash = 0;
-        for (int i = 0, length = str.length(); i < length; i++) {
-            hash = hash * 33 + str.charAt(i);
-        }
-        return hash % 4294967296L;
+		for (int i = 0, length = str.length(); i < length; i++) {
+			hash = hash * 33 + str.charAt(i);
+		}
+		return hash % 4294967296L;
 	}
 
-    /**
-     * 获取好友列表时计算的Hash参数 v2014.06.14更新
-     *
-     * @param uin
-     *            当前登录用户UIN
-     * @param ptwebqq
-     *            Cookie中的ptwebqq的值
-     * @return hash
-     */
-    public static String hash(String uin, String ptwebqq) {
-        String s = "";
-        try {
-//			String js = "P=function(i,a){var j=[];j[0]=i>>24&255;j[1]=i>>16&255;j[2]=i>>8&255;j[3]=i&255;for(var s=[],e=0;e<a.length;++e)s.push(a.charCodeAt(e));e=[];for(e.push(new b(0,s.length-1));e.length>0;){var c=e.pop();if(!(c.s>=c.e||c.s<0||c.e>=s.length))if(c.s+1==c.e){if(s[c.s]>s[c.e]){var J=s[c.s];s[c.s]=s[c.e];s[c.e]=J}}else{for(var J=c.s,l=c.e,f=s[c.s];c.s<c.e;){for(;c.s<c.e&&s[c.e]>=f;)c.e--,j[0]=j[0]+3&255;c.s<c.e&&(s[c.s]=s[c.e],c.s++,j[1]=j[1]*13+43&255);for(;c.s<c.e&&s[c.s]<=f;)c.s++,j[2]=j[2]-3&255;c.s<c.e&&(s[c.e]=s[c.s],c.e--,j[3]=(j[0]^j[1]^j[2]^j[3]+1)&255)}s[c.s]=f;e.push(new b(J,c.s-1));e.push(new b(c.s+1,l))}}s=[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"A\",\"B\",\"C\",\"D\",\"E\",\"F\"];e=\"\";for(c=0;c<j.length;c++)e+=s[j[c]>>4&15],e+=s[j[c]&15];return e},b=function(b,i){this.s=b||0;this.e=i||0}";
-            // 20140614修改
-            StringBuffer sqlSB = new StringBuffer();
-            sqlSB.setLength(0);
-            sqlSB.append("P = function(b, j) { \n");
-            sqlSB.append("\tfor (var a = j + \"password error\", i = \"\", E = [];;) \n");
-            sqlSB.append("\t\tif (i.length <= a.length) { \n");
-            sqlSB.append("\t\t\tif (i += b, i.length == a.length) \n");
-            sqlSB.append("\t\t\t\tbreak \n");
-            sqlSB.append("\t\t} else { \n");
-            sqlSB.append("\t\t\ti = i.slice(0, a.length); \n");
-            sqlSB.append("\t\t\tbreak \n");
-            sqlSB.append("\t\t} \n");
-            sqlSB.append("\tfor (var c = 0; c < i.length; c++) \n");
-            sqlSB.append("\t\tE[c] = i.charCodeAt(c) ^ a.charCodeAt(c); \n");
-            sqlSB.append("\ta = [\"0\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \n");
-            sqlSB.append("\t\t  \"E\", \"F\"]; \n");
-            sqlSB.append("  i = \"\"; \n");
-            sqlSB.append("  for (c = 0; c < E.length; c++) \n");
-            sqlSB.append("    i += a[E[c] >> 4 & 15], i += a[E[c] & 15]; \n");
-            sqlSB.append("  return i \n");
-            sqlSB.append("} \n");
-            String js = sqlSB.toString();
-            // end
-            ScriptEngineManager mgr = new ScriptEngineManager();
-            ScriptEngine engine = mgr
-                    .getEngineByMimeType("application/javascript");
-            engine.eval(js);
-            Invocable inv = (Invocable) engine;
-            s = (String) inv.invokeFunction("P", uin, ptwebqq);
-            
-            System.out.println("hash:    "+uin+"   "+ptwebqq+"   "+s);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return s;
+	/**
+	 * 获取好友列表时计算的Hash参数 v2014.06.14更新
+	 * 
+	 * @param uin
+	 *            当前登录用户UIN
+	 * @param ptwebqq
+	 *            Cookie中的ptwebqq的值
+	 * @return hash
+	 */
+	public static String hash(String uin, String ptwebqq) {
+		String s = "";
+		try {
+			// String js =
+			// "P=function(i,a){var j=[];j[0]=i>>24&255;j[1]=i>>16&255;j[2]=i>>8&255;j[3]=i&255;for(var s=[],e=0;e<a.length;++e)s.push(a.charCodeAt(e));e=[];for(e.push(new b(0,s.length-1));e.length>0;){var c=e.pop();if(!(c.s>=c.e||c.s<0||c.e>=s.length))if(c.s+1==c.e){if(s[c.s]>s[c.e]){var J=s[c.s];s[c.s]=s[c.e];s[c.e]=J}}else{for(var J=c.s,l=c.e,f=s[c.s];c.s<c.e;){for(;c.s<c.e&&s[c.e]>=f;)c.e--,j[0]=j[0]+3&255;c.s<c.e&&(s[c.s]=s[c.e],c.s++,j[1]=j[1]*13+43&255);for(;c.s<c.e&&s[c.s]<=f;)c.s++,j[2]=j[2]-3&255;c.s<c.e&&(s[c.e]=s[c.s],c.e--,j[3]=(j[0]^j[1]^j[2]^j[3]+1)&255)}s[c.s]=f;e.push(new b(J,c.s-1));e.push(new b(c.s+1,l))}}s=[\"0\",\"1\",\"2\",\"3\",\"4\",\"5\",\"6\",\"7\",\"8\",\"9\",\"A\",\"B\",\"C\",\"D\",\"E\",\"F\"];e=\"\";for(c=0;c<j.length;c++)e+=s[j[c]>>4&15],e+=s[j[c]&15];return e},b=function(b,i){this.s=b||0;this.e=i||0}";
+			// 20140614修改
+			StringBuffer sqlSB = new StringBuffer();
+			sqlSB.setLength(0);
+			sqlSB.append("P = function(b, j) { \n");
+			sqlSB.append("\tfor (var a = j + \"password error\", i = \"\", E = [];;) \n");
+			sqlSB.append("\t\tif (i.length <= a.length) { \n");
+			sqlSB.append("\t\t\tif (i += b, i.length == a.length) \n");
+			sqlSB.append("\t\t\t\tbreak \n");
+			sqlSB.append("\t\t} else { \n");
+			sqlSB.append("\t\t\ti = i.slice(0, a.length); \n");
+			sqlSB.append("\t\t\tbreak \n");
+			sqlSB.append("\t\t} \n");
+			sqlSB.append("\tfor (var c = 0; c < i.length; c++) \n");
+			sqlSB.append("\t\tE[c] = i.charCodeAt(c) ^ a.charCodeAt(c); \n");
+			sqlSB.append("\ta = [\"0\", \"1\", \"2\", \"3\", \"4\", \"5\", \"6\", \"7\", \"8\", \"9\", \"A\", \"B\", \"C\", \"D\", \n");
+			sqlSB.append("\t\t  \"E\", \"F\"]; \n");
+			sqlSB.append("  i = \"\"; \n");
+			sqlSB.append("  for (c = 0; c < E.length; c++) \n");
+			sqlSB.append("    i += a[E[c] >> 4 & 15], i += a[E[c] & 15]; \n");
+			sqlSB.append("  return i \n");
+			sqlSB.append("} \n");
+			String js = sqlSB.toString();
+			// end
+			ScriptEngineManager mgr = new ScriptEngineManager();
+			ScriptEngine engine = mgr.getEngineByMimeType("application/javascript");
+			engine.eval(js);
+			Invocable inv = (Invocable) engine;
+			s = (String) inv.invokeFunction("P", uin, ptwebqq);
 
-    }
+			System.out.println("hash:    " + uin + "   " + ptwebqq + "   " + s);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return s;
+
+	}
 
 	/**
-	 *
+	 * 
 	 * 计算登录时密码HASH值
-	 *
-	 * @param uin a long.
-	 * @param plain a {@link java.lang.String} object.
-	 * @param verify a {@link java.lang.String} object.
+	 * 
+	 * @param uin
+	 *            a long.
+	 * @param plain
+	 *            a {@link java.lang.String} object.
+	 * @param verify
+	 *            a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
 	public static String encrypt(long uin, String plain, String verify) {
@@ -135,31 +144,31 @@ public class QQEncryptor {
 		data = md5((code + verify.toUpperCase()).getBytes());
 		return byte2HexString(data);
 	}
-	
+
 	public static String encryptQm(String password, String verify) {
-		ScriptEngineManager sem = new ScriptEngineManager();    /*script引擎管理*/  
-        ScriptEngine se = sem.getEngineByName("javascript");           /*script引擎*/  
-        
-        String callbackvalue = null;
-        try {  
-              
-            se.eval(" var $ = new Object(); var navigator = new Object();navigator.appName == 'Microsoft Internet Explorer';") ;                     /* 执行一段script */  
-              
-            Scanner s = new Scanner(T_01.class.getClassLoader().getResourceAsStream("js.txt"));
-            StringBuilder sb = new StringBuilder();
-            while(s.hasNextLine()){
-            	sb.append(s.nextLine());
-            }
-            s.close();
-            Object Encryption = se.eval(sb.toString()) ;      
-//            ";º ·"
-            String salt = String.valueOf(new char[]{(char)0,(char)0,(char)0,(char)0,(char)59,(char)186,(char)32,(char)183});
-            Invocable invocableEngine = (Invocable) se ;   
-            callbackvalue=(String)invocableEngine.invokeMethod(Encryption, "getEncryption",password, salt,verify);
-            
-        } catch (Exception e) {   
-            e.printStackTrace();  
-        }
+		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
+		ScriptEngine se = sem.getEngineByName("javascript"); /* script引擎 */
+
+		String callbackvalue = null;
+		try {
+
+			se.eval(" var $ = new Object(); var navigator = new Object();navigator.appName == 'Microsoft Internet Explorer';"); /* 执行一段script */
+
+			Scanner s = new Scanner(T_01.class.getClassLoader().getResourceAsStream("js.txt"));
+			StringBuilder sb = new StringBuilder();
+			while (s.hasNextLine()) {
+				sb.append(s.nextLine());
+			}
+			s.close();
+			Object Encryption = se.eval(sb.toString());
+			// ";º ·"
+			String salt = String.valueOf(new char[] { (char) 0, (char) 0, (char) 0, (char) 0, (char) 59, (char) 186, (char) 32, (char) 183 });
+			Invocable invocableEngine = (Invocable) se;
+			callbackvalue = (String) invocableEngine.invokeMethod(Encryption, "getEncryption", password, salt, verify);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return callbackvalue;
 	}
 
@@ -192,8 +201,7 @@ public class QQEncryptor {
 	 */
 	private static String byte2HexString(byte[] b) {
 		StringBuffer sb = new StringBuffer();
-		char[] hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8',
-				'9', 'A', 'B', 'C', 'D', 'E', 'F' };
+		char[] hex = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
 		if (b == null)
 			return "null";
 
@@ -214,8 +222,9 @@ public class QQEncryptor {
 
 	/**
 	 * 计算GTK(gtk啥东东？)
-	 *
-	 * @param skey a {@link java.lang.String} object.
+	 * 
+	 * @param skey
+	 *            a {@link java.lang.String} object.
 	 * @return a {@link java.lang.String} object.
 	 */
 	public static String gtk(String skey) {
@@ -228,8 +237,9 @@ public class QQEncryptor {
 
 	/**
 	 * 把整形数转换为字节数组
-	 *
-	 * @param i a long.
+	 * 
+	 * @param i
+	 *            a long.
 	 * @return an array of byte.
 	 */
 	public static byte[] long2bytes(long i) {
@@ -245,95 +255,191 @@ public class QQEncryptor {
 
 	/**
 	 * 把一个16进制字符串转换为字节数组，字符串没有空格，所以每两个字符 一个字节
-	 *
-	 * @param s a {@link java.lang.String} object.
+	 * 
+	 * @param s
+	 *            a {@link java.lang.String} object.
 	 * @return an array of byte.
 	 */
 	public static byte[] hexString2Byte(String s) {
 		int len = s.length();
 		byte[] ret = new byte[len >>> 1];
 		for (int i = 0; i <= len - 2; i += 2) {
-			ret[i >>> 1] = (byte) (Integer.parseInt(s.substring(i, i + 2)
-					.trim(), 16) & 0xFF);
+			ret[i >>> 1] = (byte) (Integer.parseInt(s.substring(i, i + 2).trim(), 16) & 0xFF);
 		}
 		return ret;
 	}
-	
-	public static String getWbSu(String username){
-			String su = "";
-			ScriptEngine engine = initScriptEngine();
-			if(engine!=null){
-				try {
-					su = (String)engine.eval("sinaSSOEncoder.base64.encode('"+URLEncoder.encode(username, "utf-8")+"');");
-				} catch (UnsupportedEncodingException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				} catch (ScriptException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		return su;
-	}
-	public static String getWbSp(String password,String pubkey, long servertime,String nonce){
+
+	public static String getWbSu(String username) {
 		String su = "";
 		ScriptEngine engine = initScriptEngine();
-		if(engine!=null){
+		if (engine != null) {
 			try {
-				su = (String)engine.eval("sinaSSOEncoder.base64.makeRequest('"+password+"','"+pubkey+"',"+servertime+",'"+nonce+"');");
-			}  catch (ScriptException e) {
+				su = (String) engine.eval("sinaSSOEncoder.base64.encode('" + URLEncoder.encode(username, "utf-8") + "');");
+			} catch (UnsupportedEncodingException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
-	return su;
-}
-	private static ScriptEngine initScriptEngine() {
-		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
-		ScriptEngine engine = sem.getEngineByName("javascript"); /* script引擎 */
+		return su;
+	}
+
+	public static String getWbSp(String password, String pubkey, long servertime, String nonce) {
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (String) engine.eval("sinaSSOEncoder.base64.makeRequest('" + password + "','" + pubkey + "'," + servertime + ",'" + nonce + "');");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+
+	public static String getWbTimestamp() {
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (String) engine.eval("(new Date).toUTCString();");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+	public static String getWbLocaleDate() {
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (String) engine.eval("(new Date).toLocaleString();");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+
+	public static String getWbTimesyncTc() {
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = String.format("%.0f", engine.eval("(new Date).getTime();"));
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+	public static int getWbTimesyncL() {
+		int su = 0;
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (Integer)engine.eval("g");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+	public static int getWbTimesyncO() {
+		int su = 0;
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (Integer)engine.eval("h");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+	public static void updateWbTimesync(String ts, String tc, String p) {
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				engine.eval(" i.incoming("+ts+","+tc+","+p+")");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+	public static JSONObject updateExt(Object ack) throws JSONException {
+		JSONObject ext = new JSONObject();
+		JSONObject timesync =new JSONObject();
+		timesync.put("tc", QQEncryptor.getWbTimesyncTc());
+		timesync.put("l", QQEncryptor.getWbTimesyncL());
+		timesync.put("o", QQEncryptor.getWbTimesyncO());
+		if(ack!=null){
+			if(ack instanceof Boolean){
+				ext.put("ack", (Boolean)ack);
+			}else if(ack instanceof Long){
+				ext.put("ack", (Long)ack);
+			}
+		}
 		
-		Compilable compilable = (Compilable) engine;
-	    CompiledScript compiled;
+		 ext.put("timesync", timesync);
+		return ext;
+	}
+	private static ScriptEngine initScriptEngine() {
+		if(engine!=null)return engine;
+		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
+		engine = sem.getEngineByName("javascript"); /* script引擎 */
+
 		try {
-			 engine.eval("var window = new Object();var navigator = new Object();navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';"); /* 执行一段script */
-			compiled = compilable.compile(new FileReader("js1.txt"));
-			compiled.eval();
+			engine.eval("var window = new Object();var navigator = new Object();navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';");
+			engine.eval(new FileReader("qq.js"));
+			engine.eval(new FileReader("ext.js"));
 			return engine;
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (ScriptException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} /* 执行一段script */catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+
 		return null;
-	    
+
 	}
-	
-	/** 
-	 * 把Unicode编码转换为汉字 
-	 *  
-	 * @param source 
-	 * @return 
-	 */  
-	public static String convertUnicodeToChar(String source) {  
-	    if (null == source || " ".equals(source)) {  
-	        return source;  
-	    }  
-	  
-	    StringBuffer sb = new StringBuffer();  
-	    int i = 0;  
-	    while (i < source.length()) {  
-	        if (source.charAt(i) == '\\') {  
-	            int j = Integer.parseInt(source.substring(i + 2, i + 6), 16);  
-	            sb.append((char) j);  
-	            i += 6;  
-	        } else {  
-	            sb.append(source.charAt(i));  
-	            i++;  
-	        }  
-	    }  
-	    return sb.toString();  
-	}  
-	  
+
+	/**
+	 * 把Unicode编码转换为汉字
+	 * 
+	 * @param source
+	 * @return
+	 */
+	public static String convertUnicodeToChar(String source) {
+		if (null == source || " ".equals(source)) {
+			return source;
+		}
+
+		StringBuffer sb = new StringBuffer();
+		int i = 0;
+		while (i < source.length()) {
+			if (source.charAt(i) == '\\') {
+				int j = Integer.parseInt(source.substring(i + 2, i + 6), 16);
+				sb.append((char) j);
+				i += 6;
+			} else {
+				sb.append(source.charAt(i));
+				i++;
+			}
+		}
+		return sb.toString();
+	}
+
 }

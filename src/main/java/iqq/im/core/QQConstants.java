@@ -169,6 +169,10 @@ public interface QQConstants {
 	public static final String URL_QM_DELETE_GROUP_MEMBER = "http://qun.qq.com/cgi-bin/qun_mgr/delete_group_member";
 	public static final String URL_WB_PRELOGIN = "http://login.sina.com.cn/sso/prelogin.php?entry=weibo&callback=sinaSSOController.preloginCallBack&su={0}&rsakt=mod&client=ssologin.js(v1.4.18)&_={1}";
 	public static final String URL_WB_LOGIN = "http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&_={0}";
+	public static final String URL_WB_HANDSHAKE = "http://12.76.web1.im.weibo.com/im/handshake?{0}";
+	public static final String REGXP_WEBIMCB = "try\\{parent\\.webimCB\\._callback\\d+\\(([^\\)]+)\\)\\}catch\\(e\\)\\{\\}";
+	public static final String URL_WB_JSONP = "http://10.76.web1.im.weibo.com/im/?";
+	public static final String URL_WB_LOGIN_CALLBACK =" https://passport.weibo.com/wbsso/login?callback=sinaSSOController.callbackLoginStatus&ticket={0}&ssosavestate=1423635244&client=ssologin.js(v1.4.18)&_={1}";
 	
 	
 	

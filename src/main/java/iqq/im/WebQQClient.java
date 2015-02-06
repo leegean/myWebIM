@@ -350,7 +350,15 @@ public class WebQQClient implements QQClient, QQContext {
         // EmailModule emailModule = (EmailModule) getModule(QQModule.Type.EMAIL);
 		// emailModule.doPoll();
 	}
+	public void beginPollWbMsg() {
+		
+		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
+		procModule.doPollMsg();
 
+        // 轮询邮件
+        // EmailModule emailModule = (EmailModule) getModule(QQModule.Type.EMAIL);
+		// emailModule.doPoll();
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -794,6 +802,6 @@ public class WebQQClient implements QQClient, QQContext {
 	public QQActionFuture loginWb(final QQActionListener listener) {
 
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
-		return procModule.login(listener);
+		return procModule.loginWb(listener);
 	}
 }

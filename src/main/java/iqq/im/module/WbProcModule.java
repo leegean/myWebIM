@@ -47,40 +47,95 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * 处理整体登陆逻辑
- *
+ * 
  * @author solosky
  */
 public class WbProcModule extends AbstractModule {
 	private static final Logger LOG = LoggerFactory.getLogger(WbProcModule.class);
+
 	/**
-	 * <p>login.</p>
-	 *
-	 * @param listener a {@link iqq.im.QQActionListener} object.
+	 * <p>
+	 * login.
+	 * </p>
+	 * 
+	 * @param listener
+	 *            a {@link iqq.im.QQActionListener} object.
 	 * @return a {@link iqq.im.event.QQActionFuture} object.
 	 */
-	public QQActionFuture login(QQActionListener listener) {
+	public QQActionFuture loginWb(QQActionListener listener) {
 		final ProcActionFuture future = new ProcActionFuture(listener, true);
 		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
 		loginModule.prelogin(new QQActionListener() {
-			
+
 			@Override
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
-				if(event.getType()==QQActionEvent.Type.EVT_OK){
-					long prelt = new Date().getTime() - getContext().getSession().getStarttime()-( getContext().getSession().getExectime()| 0);
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					long prelt = new Date().getTime() - getContext().getSession().getStarttime() - (getContext().getSession().getExectime() | 0);
 					loginModule.login(future, prelt);
-				}else if(event.getType()==QQActionEvent.Type.EVT_ERROR){
-					future.notifyActionEvent(
-							QQActionEvent.Type.EVT_ERROR,
-							(QQException) event.getTarget());
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, (QQException) event.getTarget());
 				}
-				
+
 			}
 		});
 		return future;
 	}
-	
+	public QQActionFuture login(final ProcActionFuture future) {
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		final long prelt = new Date().getTime() - getContext().getSession().getStarttime() - (getContext().getSession().getExectime() | 0);
+		loginModule.login(new QQActionListener() {
 
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					
+					loginModule.loginCallback(future);
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, (QQException) event.getTarget());
+				}
+
+			}
+		},prelt);
+		return future;
+	}
+	public void doPollMsg() {
+		final WbLoginModule login = getContext().getModule(QQModule.Type.WB_LOGIN);
+
+		login.handshake(new QQActionListener() {
+			public void onActionEvent(QQActionEvent event) {
+				// 回调通知事件函数
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+
+					login.subscribe(new QQActionListener() {
+						public void onActionEvent(QQActionEvent event) {
+							// 回调通知事件函数
+							if (event.getType() == QQActionEvent.Type.EVT_OK) {
+								pollMsg();
+							}
+
+						}
+					});
+				}
+
+			}
+		});
+
+	}
+	public void pollMsg(){
+		final WbLoginModule login = getContext().getModule(QQModule.Type.WB_LOGIN);
+		login.connect(new QQActionListener() {
+			public void onActionEvent(QQActionEvent event) {
+				// 回调通知事件函数
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+						getContext().fireNotify(new QQNotifyEvent(QQNotifyEvent.Type.WeboChat, event.getTarget()));
+					pollMsg();
+				}
+
+			}
+		});
+	}
 }

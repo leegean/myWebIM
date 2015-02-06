@@ -1,4 +1,4 @@
-(function() {
+
     function g(b) {
         return a[b] || a[b]
     }
@@ -5939,6 +5939,9 @@
 //    });
     f("connect.Connect", function() {
         function w(g) {
+        	function show(){
+        		print("==============");
+        	}
             function bf() {
                 if (G) {
                     clearTimeout(G)
@@ -6125,18 +6128,19 @@
                 K();
                 L()
             }
-            var o = t.extend(v, g || {}), w = null, x = null, y = {}, z = null, A = null, B = e, C = "unconnect", D = [], E = [], F = [], G = null, H = 0, I = "";
+            var o , w = null, x = null, y = {}, z = null, A = null, B = e, C = "unconnect", D = [], E = [], F = [], G = null, H = 0, I = "";
             _self = {};
             _self = {start: function() {
                     if (!B) {
                         u(M)
                     }
-                },send: bd,onMessage: $,onNotice: _,onStatusChange: Z,setStatus: V,getConfig: T,getUid: S,getServerTime: U,getStatus: be,reConnectNow: Y};
-            J();
+                },send: bd,onMessage: $,onNotice: _,onStatusChange: Z,setStatus: V,getConfig: T,getUid: S,getServerTime: U,getStatus: be,reConnectNow: Y,show:show};
+//            J();
             return _self
         }
         var a = "http:nas.im.api.weibo.com/im/webim.jsp";
         var b = 30 * 1e3;
+        print(b);
         var c = g("cometd.Cometd"), f = g("transport.CallbackPolling"), h = g("transport.WebSocket"), i = g("cometd.ext.AckExtension"), j = g("cometd.ext.ReloadExtension"), k = g("cometd.ext.TimeStampExtension"), l = g("cometd.ext.TimeSyncExtension"), m = g("async.jsonp"), n = g("base.Error"), o = g("base.Config"), p = g("util.cookie"), q = g("util.type"), r = g("util.delay"), s = g("util.array"), t = g("util.object"), u = g("util.ready");
 //        var v = {webSocket: false,log_level: o("cometd_level") || "info",heart_beat_timeout: 3.5 * 60 * 1e3,packet_timeout: 8 * 1e3,webSocket_connect_timeout: 1e3,reconnect_time: 5};
         return w
@@ -8662,4 +8666,6 @@
 //            }
 //        })
 //    })
-})();
+    
+    var my = g("connect.Connect");
+

@@ -42,11 +42,15 @@ public class WbLoginAction extends AbstractHttpAction{
 	protected void onHttpStatusOK(QQHttpResponse response) throws QQException,
 			JSONException {
 //		{"retcode":"101","reason":"\u767b\u5f55\u540d\u6216\u5bc6\u7801\u9519\u8bef"}
+		System.out.println(response.getResponseString());
 		JSONObject json = new JSONObject(response.getResponseString());
 		int retcode = json.getInt("retcode");
 		switch (retcode) {
 		case 0:
 //		{"retcode":"0","ticket":"ST-MjY0NTA1MjYwMw==-1421823968-gz-A4B8DD8D1824CF382EB98D4084DC0F78","uid":"2645052603","nick":"\u4e00\u53e5\u8bdd_\u7ecf\u5178","crossDomainUrlList":["http:\/\/crosdom.weicaifu.com\/sso\/crosdom?action=login&savestate=1453359968","http:\/\/passport.97973.com\/sso\/crossdomain?action=login&savestate=1453359968"]}
+			String ticket = json.getString("ticket");
+			session.setWbTicket(ticket);
+			session.setWbUid(json.getString("uid"));
 			notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
 			break;
 		case 101:
