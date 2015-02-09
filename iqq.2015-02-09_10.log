@@ -1,0 +1,32 @@
+[10:50:08.182][WARN][ThreadActorDispatcher:74] QQActor dispatchAction Error!
+java.lang.IllegalArgumentException: Illegal character in scheme name at index 0:  https://passport.weibo.com/wbsso/login?callback=sinaSSOController.callbackLoginStatus&ticket=ST-MjY0NTA1MjYwMw==-1423450262-gz-C2695A3EFA1FA11758BE4E5870585F16&ssosavestate=1423635244&client=ssologin.js(v1.4.18)&_=1423450208162
+	at java.net.URI.create(URI.java:852) ~[na:1.8.0_25]
+	at iqq.im.service.ApacheHttpService.executeHttpRequest(ApacheHttpService.java:153) ~[classes/:na]
+	at iqq.im.actor.HttpActor.execute(HttpActor.java:62) ~[classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.dispatchAction(ThreadActorDispatcher.java:71) [classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.run(ThreadActorDispatcher.java:84) [classes/:na]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_25]
+Caused by: java.net.URISyntaxException: Illegal character in scheme name at index 0:  https://passport.weibo.com/wbsso/login?callback=sinaSSOController.callbackLoginStatus&ticket=ST-MjY0NTA1MjYwMw==-1423450262-gz-C2695A3EFA1FA11758BE4E5870585F16&ssosavestate=1423635244&client=ssologin.js(v1.4.18)&_=1423450208162
+	at java.net.URI$Parser.fail(URI.java:2848) ~[na:1.8.0_25]
+	at java.net.URI$Parser.checkChars(URI.java:3021) ~[na:1.8.0_25]
+	at java.net.URI$Parser.checkChar(URI.java:3031) ~[na:1.8.0_25]
+	at java.net.URI$Parser.parse(URI.java:3047) ~[na:1.8.0_25]
+	at java.net.URI.<init>(URI.java:588) ~[na:1.8.0_25]
+	at java.net.URI.create(URI.java:850) ~[na:1.8.0_25]
+	... 5 common frames omitted
+[10:53:32.665][WARN][ThreadActorDispatcher:74] QQActor dispatchAction Error!
+java.lang.IllegalArgumentException: Illegal character in scheme name at index 0:  https://passport.weibo.com/wbsso/login?callback=sinaSSOController.callbackLoginStatus&ticket=ST-MjY0NTA1MjYwMw%3D%3D-1423450467-gz-5E883F01E7C44D4CD04BAF9A130E5E05&ssosavestate=1423635244&client=ssologin.js(v1.4.18)&_=1423450412652
+	at java.net.URI.create(URI.java:852) ~[na:1.8.0_25]
+	at iqq.im.service.ApacheHttpService.executeHttpRequest(ApacheHttpService.java:153) ~[classes/:na]
+	at iqq.im.actor.HttpActor.execute(HttpActor.java:62) ~[classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.dispatchAction(ThreadActorDispatcher.java:71) [classes/:na]
+	at iqq.im.actor.ThreadActorDispatcher.run(ThreadActorDispatcher.java:84) [classes/:na]
+	at java.lang.Thread.run(Thread.java:745) [na:1.8.0_25]
+Caused by: java.net.URISyntaxException: Illegal character in scheme name at index 0:  https://passport.weibo.com/wbsso/login?callback=sinaSSOController.callbackLoginStatus&ticket=ST-MjY0NTA1MjYwMw%3D%3D-1423450467-gz-5E883F01E7C44D4CD04BAF9A130E5E05&ssosavestate=1423635244&client=ssologin.js(v1.4.18)&_=1423450412652
+	at java.net.URI$Parser.fail(URI.java:2848) ~[na:1.8.0_25]
+	at java.net.URI$Parser.checkChars(URI.java:3021) ~[na:1.8.0_25]
+	at java.net.URI$Parser.checkChar(URI.java:3031) ~[na:1.8.0_25]
+	at java.net.URI$Parser.parse(URI.java:3047) ~[na:1.8.0_25]
+	at java.net.URI.<init>(URI.java:588) ~[na:1.8.0_25]
+	at java.net.URI.create(URI.java:850) ~[na:1.8.0_25]
+	... 5 common frames omitted

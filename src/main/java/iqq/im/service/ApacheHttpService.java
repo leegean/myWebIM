@@ -133,7 +133,7 @@ public class ApacheHttpService extends AbstractService implements HttpService{
 	public QQHttpRequest createHttpRequest(String method, String url) {
 		QQHttpRequest req = new QQHttpRequest(url, method);
 		req.addHeader("User-Agent", userAgent != null ? userAgent : QQConstants.USER_AGENT);
-		req.addHeader("Referer", QQConstants.REFFER);
+//		req.addHeader("Referer", QQConstants.REFFER);
 		return req;
 	}
 

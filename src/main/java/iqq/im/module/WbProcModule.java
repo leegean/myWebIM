@@ -73,8 +73,7 @@ public class WbProcModule extends AbstractModule {
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					long prelt = new Date().getTime() - getContext().getSession().getStarttime() - (getContext().getSession().getExectime() | 0);
-					loginModule.login(future, prelt);
+					login(future);
 				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
 					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, (QQException) event.getTarget());
 				}
@@ -92,14 +91,31 @@ public class WbProcModule extends AbstractModule {
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					
-					loginModule.loginCallback(future);
+					loginCallback(future);
 				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
 					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, (QQException) event.getTarget());
 				}
 
 			}
 		},prelt);
+		return future;
+	}
+	public QQActionFuture loginCallback(final ProcActionFuture future) {
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		loginModule.loginCallback(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					
+					loginModule.webim(future);
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, (QQException) event.getTarget());
+				}
+
+			}
+		});
 		return future;
 	}
 	public void doPollMsg() {
@@ -110,6 +126,7 @@ public class WbProcModule extends AbstractModule {
 				// 回调通知事件函数
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
 
+					System.out.println(event.getTarget());
 					login.subscribe(new QQActionListener() {
 						public void onActionEvent(QQActionEvent event) {
 							// 回调通知事件函数
@@ -119,6 +136,8 @@ public class WbProcModule extends AbstractModule {
 
 						}
 					});
+				}else{
+					System.out.println(event.getTarget());
 				}
 
 			}

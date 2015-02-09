@@ -62,6 +62,8 @@ public class QQSession {
 	private long wbAck = -1;
 	private String wbTicket;
 	private String wbUid;
+	private String wbUidChannel;
+	private String wbImUrl;
 	public enum State{ 
 		OFFLINE,
 		ONLINE,
@@ -402,5 +404,21 @@ public class QQSession {
 
 	public void setWbUid(String wbUid) {
 		this.wbUid = wbUid;
+	}
+
+	public String getWbUidChannel() {
+		return wbUidChannel;
+	}
+
+	public void setWbUidChannel(String wbUidChannel) {
+		this.wbUidChannel = wbUidChannel;
+	}
+
+	public String getWbImUrl() {
+		return wbImUrl;
+	}
+
+	public void setWbImUrl(String wbImUrl) {
+		this.wbImUrl = wbImUrl;
 	}
 }

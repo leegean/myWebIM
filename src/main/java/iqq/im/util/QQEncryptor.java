@@ -318,7 +318,7 @@ public class QQEncryptor {
 		ScriptEngine engine = initScriptEngine();
 		if (engine != null) {
 			try {
-				su = (String) engine.eval("(new Date).toLocaleString();");
+				su = (String) engine.eval("new Date+''");
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -340,12 +340,12 @@ public class QQEncryptor {
 		}
 		return su;
 	}
-	public static int getWbTimesyncL() {
-		int su = 0;
+	public static String getWbTimesyncL() {
+		String su = "";
 		ScriptEngine engine = initScriptEngine();
 		if (engine != null) {
 			try {
-				su = (Integer)engine.eval("g");
+				su = (String) engine.eval("g+''");
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -353,12 +353,12 @@ public class QQEncryptor {
 		}
 		return su;
 	}
-	public static int getWbTimesyncO() {
-		int su = 0;
+	public static String getWbTimesyncO() {
+		String su = "";
 		ScriptEngine engine = initScriptEngine();
 		if (engine != null) {
 			try {
-				su = (Integer)engine.eval("h");
+				su = (String) engine.eval("h+''");
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -377,12 +377,52 @@ public class QQEncryptor {
 			}
 		}
 	}
+	
+	public static String getImCallback() {
+		String result = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				result = (String)engine.eval("var l = 0;'IM_' + +(new Date) + l++");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public static String getRnd() {
+		String result = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				result = (String) engine.eval("+(new Date)+''");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
+	public static String urlEncode(String str) {
+		String result = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				result = (String) engine.eval("encodeURIComponent('"+str+"')");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return result;
+	}
 	public static JSONObject updateExt(Object ack) throws JSONException {
 		JSONObject ext = new JSONObject();
 		JSONObject timesync =new JSONObject();
 		timesync.put("tc", QQEncryptor.getWbTimesyncTc());
-		timesync.put("l", QQEncryptor.getWbTimesyncL());
-		timesync.put("o", QQEncryptor.getWbTimesyncO());
+		timesync.put("l", Double.parseDouble(QQEncryptor.getWbTimesyncL()));
+		timesync.put("o", Double.parseDouble(QQEncryptor.getWbTimesyncO()));
 		if(ack!=null){
 			if(ack instanceof Boolean){
 				ext.put("ack", (Boolean)ack);

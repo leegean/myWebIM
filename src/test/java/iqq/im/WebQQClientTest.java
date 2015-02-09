@@ -89,7 +89,7 @@ public class WebQQClientTest {
 					//到这里就算是登录成功了
 					System.out.println("就算是登录成功微博了");
 					System.out.println(client.getSession().getPubkey());
-					
+					System.out.println(event.getTarget());
 					client.beginPollWbMsg();
 				}else{
 					System.out.println(event.getTarget());
