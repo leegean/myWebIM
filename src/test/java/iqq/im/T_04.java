@@ -83,7 +83,7 @@ public class T_04 {
     		
     		
     		
-    		String respStr = "try{parent.webimCB._callback0([{\"id\":\"1\",\"minimumVersion\":\"1.0\",\"supportedConnectionTypes\":[\"callback-polling\",\"long-polling\"],\"successful\":true,\"channel\":\"/meta/handshake\",\"ext\":{\"timesync\":{\"ts\":1423471094854,\"tc\":1423471182447,\"p\":0,\"a\":87593},\"ack\":true},\"clientId\":\"307cb159wj8i61l2tl10zdg130dvqk4\",\"version\":\"1.0\"}])}catch(e){}";
+    		String respStr = "try{parent.webimCB._callback0([{\"id\":\"1\",\"minimumVersion\":\"1.0\",\"supportedConnectionTypes\":[\"callback-polling\",\"long-polling\"],\"successful\":true,\"channel\":\"/meta/handshake\",\"ext\":{\"timesync\":{\"ts\":1423530847528,\"tc\":1423530787332,\"p\":0,\"a\":-60196},\"ack\":true},\"clientId\":\"3gtqu1qrzyjwzj2i6xtzinl2w2tsiv\",\"version\":\"1.0\"}])}catch(e){}";
     		Pattern pattern1 = Pattern.compile(QQConstants.REGXP_WEBIMCB);
     		Matcher m1 = pattern1.matcher(respStr);
     		if(m1.matches()){

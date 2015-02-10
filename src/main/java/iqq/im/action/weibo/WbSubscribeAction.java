@@ -55,7 +55,6 @@ public class WbSubscribeAction extends AbstractHttpAction{
 		if(m.matches()){
 			JSONArray json = new JSONArray(m.group(1));
 			JSONObject jsonO = json.getJSONObject(0);
-			session.setWbClientId(jsonO.getString("clientId"));
 			JSONObject ext = jsonO.getJSONObject("ext");
 			JSONObject timesync = ext.getJSONObject("timesync");
 			String ts = timesync.getString("ts");
