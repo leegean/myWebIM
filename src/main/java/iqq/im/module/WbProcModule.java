@@ -131,7 +131,16 @@ public class WbProcModule extends AbstractModule {
 						public void onActionEvent(QQActionEvent event) {
 							// 回调通知事件函数
 							if (event.getType() == QQActionEvent.Type.EVT_OK) {
-								pollMsg();
+								login.connectAdvice(new QQActionListener() {
+									
+									@Override
+									public void onActionEvent(QQActionEvent event) {
+										// TODO Auto-generated method stub
+										if (event.getType() == QQActionEvent.Type.EVT_OK) {
+											pollMsg();
+										}
+									}
+								});
 							}
 
 						}
@@ -156,5 +165,12 @@ public class WbProcModule extends AbstractModule {
 
 			}
 		});
+	}
+	
+	public QQActionFuture doSendMsg(QQActionListener listener, String msg) {
+		final WbLoginModule login = getContext().getModule(QQModule.Type.WB_LOGIN);
+		QQActionFuture future = login.sendMsg(listener, msg);
+		return future;
+		
 	}
 }

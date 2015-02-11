@@ -55,13 +55,13 @@ public class WbSubscribeAction extends AbstractHttpAction{
 		if(m.matches()){
 			JSONArray json = new JSONArray(m.group(1));
 			JSONObject jsonO = json.getJSONObject(0);
-			JSONObject ext = jsonO.getJSONObject("ext");
-			JSONObject timesync = ext.getJSONObject("timesync");
-			String ts = timesync.getString("ts");
-			String tc = timesync.getString("tc");
-			String p = timesync.getString("p");
-			QQEncryptor.updateWbTimesync(ts, tc, p);
-				 notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
+//			JSONObject ext = jsonO.getJSONObject("ext");
+//			JSONObject timesync = ext.getJSONObject("timesync");
+//			String ts = timesync.getString("ts");
+//			String tc = timesync.getString("tc");
+//			String p = timesync.getString("p");
+//			QQEncryptor.updateWbTimesync(ts, tc, p);
+				 notifyActionEvent(QQActionEvent.Type.EVT_OK, respStr);
 		}else{
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, respStr);
 		}

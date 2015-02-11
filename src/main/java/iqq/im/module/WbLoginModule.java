@@ -42,9 +42,11 @@ import iqq.im.action.weibo.WbHandshakeAction;
 import iqq.im.action.weibo.WbLoginAction;
 import iqq.im.action.weibo.WbLoginCallbackAction;
 import iqq.im.action.weibo.WbPreloginAction;
+import iqq.im.action.weibo.WbSendMessageAction;
 import iqq.im.action.weibo.WbSubscribeAction;
 import iqq.im.action.weibo.WbWebimAction;
 import iqq.im.action.weibo.WbconnectAction;
+import iqq.im.action.weibo.WbconnectAdviceAction;
 import iqq.im.bean.QQStatus;
 import iqq.im.core.QQModule;
 import iqq.im.event.QQActionEvent;
@@ -74,10 +76,16 @@ public class WbLoginModule extends AbstractModule {
 	public QQActionFuture subscribe(QQActionListener listener){
 		return pushHttpAction(new WbSubscribeAction(getContext(), listener));
 	}
+	public QQActionFuture connectAdvice(QQActionListener listener){
+		return pushHttpAction(new WbconnectAdviceAction(getContext(), listener));
+	}
 	public QQActionFuture connect(QQActionListener listener){
 		return pushHttpAction(new WbconnectAction(getContext(), listener));
 	}
 	public QQActionFuture webim(QQActionListener listener){
 		return pushHttpAction(new WbWebimAction(getContext(), listener));
+	}
+	public QQActionFuture sendMsg(QQActionListener listener, String msg){
+		return pushHttpAction(new WbSendMessageAction(getContext(), listener, msg));
 	}
 }

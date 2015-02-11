@@ -82,7 +82,7 @@ public class WbHandshakeAction extends AbstractHttpAction{
 		 JSONObject ext = QQEncryptor.updateExt(true);
 		 jsObject.put("ext", ext);
 		jsObject.put("timestamp", QQEncryptor.getWbTimestamp());
-		
+		System.out.println("ext:     "+ext.toString());
 		String url = "";
 		try {
 			String message = URLEncoder.encode(jsArray.toString(), "UTF-8");

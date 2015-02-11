@@ -98,6 +98,7 @@ public class T_04 {
     			System.out.println( QQEncryptor.getWbTimesyncL()+ "           "+QQEncryptor.getWbTimesyncO());
 	}
     		
+    		System.out.println(se.eval("(new Date).getTime()+'';"));
 	}
 
 }

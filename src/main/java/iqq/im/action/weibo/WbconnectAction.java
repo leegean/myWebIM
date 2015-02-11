@@ -54,14 +54,25 @@ public class WbconnectAction extends AbstractHttpAction{
 		Matcher m = pattern.matcher(respStr);
 		if(m.matches()){
 			JSONArray json = new JSONArray(m.group(1));
-			JSONObject jsonO = json.getJSONObject(0);
-			session.setWbClientId(jsonO.getString("clientId"));
-			JSONObject ext = jsonO.getJSONObject("ext");
-			JSONObject timesync = ext.getJSONObject("timesync");
-			String ts = timesync.getString("ts");
-			String tc = timesync.getString("tc");
-			String p = timesync.getString("p");
-			QQEncryptor.updateWbTimesync(ts, tc, p);
+			int len = json.length();
+			for (int i = 0; i < len; i++) {
+				JSONObject jsonO = json.getJSONObject(i);
+//				session.setWbClientId(jsonO.getString("clientId"));
+				try {
+					JSONObject ext = jsonO.getJSONObject("ext");
+					session.setWbAck(ext.getInt("ack"));
+				} catch (Exception e) {
+					// TODO: handle exception
+				}
+				
+				
+			}
+			
+//			JSONObject timesync = ext.getJSONObject("timesync");
+//			String ts = timesync.getString("ts");
+//			String tc = timesync.getString("tc");
+//			String p = timesync.getString("p");
+//			QQEncryptor.updateWbTimesync(ts, tc, p);
 				 notifyActionEvent(QQActionEvent.Type.EVT_OK, respStr);
 		}else{
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, respStr);
@@ -78,7 +89,6 @@ public class WbconnectAction extends AbstractHttpAction{
 		jsObject.put("id", session.getId()+"");
 		jsObject.put("clientId", session.getWbClientId());
 		 JSONObject ext = QQEncryptor.updateExt(session.getWbAck());
-		 session.setWbAck(session.getWbAck()+1);
 		 jsObject.put("ext", ext);
 		jsObject.put("timestamp", QQEncryptor.getWbTimestamp());
 		

@@ -153,7 +153,7 @@ public interface QQConstants {
 	/** Constant <code>MAX_RETRY_TIMES=5</code> */
 	public static final int MAX_RETRY_TIMES = 5;
 	/** Constant <code>HTTP_TIME_OUT=80000</code> */
-	public static final int HTTP_TIME_OUT = 80000;
+	public static final int HTTP_TIME_OUT = 240000;
 	
 	public static final String URL_QM_LOGIN_SIG = "http://ui.ptlogin2.qq.com/cgi-bin/login?appid=715030901&daid=73&pt_no_auth=1&s_url=http%3A%2F%2Fqun.qq.com%2F";
 	public static final String REGXP_QM_LOGIN_SIG = "login_sig:\"([^\"]*)\"";

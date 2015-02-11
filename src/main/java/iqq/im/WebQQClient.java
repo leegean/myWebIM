@@ -551,6 +551,11 @@ public class WebQQClient implements QQClient, QQContext {
 		ChatModule mod = getModule(QQModule.Type.CHAT);
 		return mod.sendMsg(msg, qqActionListener);
 	}
+	public QQActionFuture sendWbMsg(String msg, QQActionListener qqActionListener) {
+		WbProcModule mod = getModule(QQModule.Type.WB_PROC);
+		return mod.doSendMsg(qqActionListener, msg);
+				
+	}
 
 	/**
 	 * {@inheritDoc}

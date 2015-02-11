@@ -81,6 +81,7 @@ public abstract class AbstractHttpAction implements HttpAction{
 				LOG.debug(response.getResponseString());
 			}
 
+			System.out.println(response.getResponseString());
 			if(response.getResponseCode() == QQHttpResponse.S_OK){
 				onHttpStatusOK(response);
 			}else{

@@ -332,7 +332,7 @@ public class QQEncryptor {
 		ScriptEngine engine = initScriptEngine();
 		if (engine != null) {
 			try {
-				su = String.format("%.0f", engine.eval("(new Date).getTime();"));
+				su = (String)engine.eval("(new Date).getTime()+'';");
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

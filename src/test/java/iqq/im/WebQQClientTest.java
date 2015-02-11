@@ -48,7 +48,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Date;
 import java.util.List;
+import java.util.Scanner;
 
 import javax.imageio.ImageIO;
 
@@ -91,6 +93,32 @@ public class WebQQClientTest {
 					System.out.println(client.getSession().getPubkey());
 					System.out.println(event.getTarget());
 					client.beginPollWbMsg();
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							Scanner s = new Scanner(System.in);
+							while(true){
+								if(s.hasNextLine()){
+									String msg = s.nextLine();
+									client.sendWbMsg(msg, new QQActionListener() {
+										
+										@Override
+										public void onActionEvent(QQActionEvent event) {
+											// TODO Auto-generated method stub
+											if(event.getType()==Type.EVT_OK){
+												System.out.println(event.getTarget());
+											}
+											
+										}
+									});
+								}
+							}
+							
+							
+						}
+					}).start();
 				}else{
 					System.out.println(event.getTarget());
 				}
@@ -160,7 +188,7 @@ public class WebQQClientTest {
 	@QQNotifyHandler(QQNotifyEvent.Type.WeboChat)
 	protected void processWeiboChat(QQNotifyEvent event) throws IOException{
 		String respStr = (String) event.getTarget();
-		System.out.println("====processWeiboChat===="+ respStr);
+		System.out.println(new Date()+"     "+ respStr);
 	}
 	/**
 	 * 登录
