@@ -55,7 +55,6 @@ public class QQSession {
 	private String su;
 	private String sp;
 	
-	private long starttime;
 	private String qmLoginSig;
 	public enum State{ 
 		OFFLINE,
@@ -341,14 +340,6 @@ public class QQSession {
 
 	public void setSp(String sp) {
 		this.sp = sp;
-	}
-
-	public long getStarttime() {
-		return starttime;
-	}
-
-	public void setStarttime(long starttime) {
-		this.starttime = starttime;
 	}
 
 	public int getExectime() {

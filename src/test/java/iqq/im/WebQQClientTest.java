@@ -44,10 +44,12 @@ import iqq.im.event.QQNotifyEventArgs;
 import iqq.im.event.QQNotifyHandler;
 import iqq.im.event.QQNotifyHandlerProxy;
 
+import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -76,19 +78,63 @@ public class WebQQClientTest {
      *
      */
     public static void main(String[] args) {
-        WebQQClientTest test = new WebQQClientTest("1002053815", "lj19861001");
-        test.prelogin();
+        WebQQClientTest test = new WebQQClientTest("569398403@qq.com", "leegean19861001");
+        test.loginWb();
     }
-    public void prelogin(){
-    	client.loginWb(new QQActionListener() {
+    public void loginWb(){
+    	client.preloginWb(new QQActionListener() {
 			
 			@Override
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
 				if (event.getType() == Type.EVT_OK) {
 					//到这里就算是登录成功了
+					ArrayList<String> list = (ArrayList<String>) event.getTarget();
+					for (String string : list) {
+						System.out.println(string);
+					}
 					System.out.println("就算是登录成功微博了");
-					System.out.println(client.getSession().getPubkey());
+					
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							// TODO Auto-generated method stub
+							while(true){
+								try {
+									String sendMsg = new BufferedReader(new InputStreamReader(System.in)).readLine();
+									if(sendMsg.contains("#")){
+										client.pollWbMsg("5175429989", new QQActionListener() {
+											
+											@Override
+											public void onActionEvent(QQActionEvent event) {
+												// TODO Auto-generated method stub
+												if (event.getType() == Type.EVT_OK) {
+													System.out.println("pllmsg：   "+event.getTarget());
+												}
+											}
+										});
+									}else{
+										client.sendWbMsg(sendMsg, "5175429989", new QQActionListener() {
+											
+											@Override
+											public void onActionEvent(QQActionEvent event) {
+												// TODO Auto-generated method stub
+												if (event.getType() == Type.EVT_OK) {
+													System.out.println("发送成功");
+												}
+											}
+										});
+									}
+									
+								} catch (IOException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+							}
+							
+						}
+					}).start();
 					
 				}else{
 					System.out.println(event.getTarget());
@@ -156,7 +202,14 @@ public class WebQQClientTest {
 		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
 		client.submitVerify(code, event);
 	}
-
+	@QQNotifyHandler(QQNotifyEvent.Type.WB_CAPACHA_VERIFY)
+	protected void processWbVerify(QQNotifyEvent event) throws IOException{
+		WbVerifyImage verify = (WbVerifyImage) event.getTarget();
+		ImageIO.write(verify.getImage(), "png", new File("verify.png"));
+		System.out.print("请输入在项目根目录下verify.png图片里面的验证码:");
+		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
+		client.loginWb(verify.getFuture(), verify);
+	}
 	/**
 	 * 登录
 	 */

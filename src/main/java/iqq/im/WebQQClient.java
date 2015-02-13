@@ -38,6 +38,7 @@ import iqq.im.bean.QQStranger;
 import iqq.im.bean.QQUser;
 import iqq.im.bean.content.CFaceItem;
 import iqq.im.bean.content.OffPicItem;
+import iqq.im.bean.content.WbVerifyImage;
 import iqq.im.core.QQContext;
 import iqq.im.core.QQModule;
 import iqq.im.core.QQService;
@@ -543,7 +544,15 @@ public class WebQQClient implements QQClient, QQContext {
 		ChatModule mod = getModule(QQModule.Type.CHAT);
 		return mod.sendMsg(msg, qqActionListener);
 	}
-
+	public QQActionFuture sendWbMsg(String msg, String acceptor, QQActionListener qqActionListener) {
+		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
+		return procModule.sendMsg(qqActionListener, msg, acceptor);
+	}
+	
+	public QQActionFuture pollWbMsg(String acceptor, QQActionListener qqActionListener) {
+		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
+		return procModule.pollMsg(qqActionListener, acceptor);
+	}
 	/**
 	 * {@inheritDoc}
 	 *
@@ -791,9 +800,14 @@ public class WebQQClient implements QQClient, QQContext {
 		QmProcModule procModule = (QmProcModule) getModule(QQModule.Type.QM_PROC);
 		return procModule.login(listener);
 	}
-	public QQActionFuture loginWb(final QQActionListener listener) {
+	public QQActionFuture preloginWb(final QQActionListener listener) {
 
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
-		return procModule.login(listener);
+		return procModule.prelogin(listener);
+	}
+	public QQActionFuture loginWb(ProcActionFuture future, WbVerifyImage verifyImage) {
+
+		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
+		return procModule.login(future, verifyImage);
 	}
 }

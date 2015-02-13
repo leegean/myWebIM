@@ -1,4 +1,4 @@
- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -47,7 +47,8 @@ import java.util.concurrent.TimeoutException;
 import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-public abstract class AbstractHttpAction implements HttpAction{
+
+public abstract class AbstractHttpAction implements HttpAction {
 	private static final Logger LOG = LoggerFactory.getLogger(AbstractHttpAction.class);
 	private QQContext context;
 	private QQActionListener listener;
@@ -55,12 +56,15 @@ public abstract class AbstractHttpAction implements HttpAction{
 	private QQActionFuture actionFuture;
 	private int retryTimes;
 
-
 	/**
-	 * <p>Constructor for AbstractHttpAction.</p>
-	 *
-	 * @param context a {@link iqq.im.core.QQContext} object.
-	 * @param listener a {@link iqq.im.QQActionListener} object.
+	 * <p>
+	 * Constructor for AbstractHttpAction.
+	 * </p>
+	 * 
+	 * @param context
+	 *            a {@link iqq.im.core.QQContext} object.
+	 * @param listener
+	 *            a {@link iqq.im.QQActionListener} object.
 	 */
 	public AbstractHttpAction(QQContext context, QQActionListener listener) {
 		this.context = context;
@@ -73,33 +77,37 @@ public abstract class AbstractHttpAction implements HttpAction{
 	public void onHttpFinish(QQHttpResponse response) {
 		try {
 			LOG.debug(response.getContentType());
+
 			String type = response.getContentType();
-			if((type.startsWith("application/x-javascript")
-					|| type.startsWith("application/json")
-					|| type.indexOf("text") >= 0
-					) && response.getContentLength() > 0){
+			// case 'text/xml' :
+			// return request.responseXML;
+			// case 'text/json' :
+			// case 'text/javascript' :
+			// case 'application/javascript' :
+			// case 'application/x-javascript' :
+			if ((type.contains("application/javascript") ||type.contains("text/javascript") ||type.contains("application/x-javascript") || type.contains("application/json") || type.indexOf("text") >= 0) && response.getContentLength() > 0) {
 				LOG.debug(response.getResponseString());
+				System.out.println(response.getResponseString());
 			}
 
-			if(response.getResponseCode() == QQHttpResponse.S_OK){
+			if (response.getResponseCode() == QQHttpResponse.S_OK) {
 				onHttpStatusOK(response);
-			}else{
+			} else {
 				onHttpStatusError(response);
 			}
 		} catch (QQException e) {
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, e);
 		} catch (JSONException e) {
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, new QQException(QQErrorCode.JSON_ERROR, e));
-		} catch (Throwable e){
+		} catch (Throwable e) {
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, new QQException(QQErrorCode.UNKNOWN_ERROR, e));
 		}
 	}
 
-
 	/** {@inheritDoc} */
 	@Override
 	public void onHttpError(Throwable t) {
-		if(!doRetryIt(getErrorCode(t), t)){
+		if (!doRetryIt(getErrorCode(t), t)) {
 			notifyActionEvent(QQActionEvent.Type.EVT_ERROR, new QQException(getErrorCode(t), t));
 		}
 	}
@@ -115,7 +123,7 @@ public abstract class AbstractHttpAction implements HttpAction{
 
 	/** {@inheritDoc} */
 	@Override
-	public  void onHttpRead(long current, long total) {
+	public void onHttpRead(long current, long total) {
 		QQActionEventArgs.ProgressArgs progress = new QQActionEventArgs.ProgressArgs();
 		progress.total = total;
 		progress.current = current;
@@ -135,11 +143,13 @@ public abstract class AbstractHttpAction implements HttpAction{
 	}
 
 	/**
-	 * <p>Getter for the field <code>context</code>.</p>
-	 *
+	 * <p>
+	 * Getter for the field <code>context</code>.
+	 * </p>
+	 * 
 	 * @return a {@link iqq.im.core.QQContext} object.
 	 */
-	protected QQContext getContext(){
+	protected QQContext getContext() {
 		return this.context;
 	}
 
@@ -148,7 +158,6 @@ public abstract class AbstractHttpAction implements HttpAction{
 	public void setActionFuture(QQActionFuture future) {
 		actionFuture = future;
 	}
-
 
 	/** {@inheritDoc} */
 	@Override
@@ -159,7 +168,7 @@ public abstract class AbstractHttpAction implements HttpAction{
 	/** {@inheritDoc} */
 	@Override
 	public void notifyActionEvent(QQActionEvent.Type type, Object target) {
-		if(listener != null){
+		if (listener != null) {
 			listener.onActionEvent(new QQActionEvent(type, target, actionFuture));
 		}
 
@@ -172,51 +181,68 @@ public abstract class AbstractHttpAction implements HttpAction{
 			return onBuildRequest();
 		} catch (JSONException e) {
 			throw new QQException(QQErrorCode.JSON_ERROR, e);
-		} catch (Throwable e){
+		} catch (Throwable e) {
 			throw new QQException(QQErrorCode.UNKNOWN_ERROR, e);
 		}
 	}
 
 	/**
-	 * <p>createHttpRequest.</p>
-	 *
-	 * @param method a {@link java.lang.String} object.
-	 * @param url a {@link java.lang.String} object.
+	 * <p>
+	 * createHttpRequest.
+	 * </p>
+	 * 
+	 * @param method
+	 *            a {@link java.lang.String} object.
+	 * @param url
+	 *            a {@link java.lang.String} object.
 	 * @return a {@link iqq.im.http.QQHttpRequest} object.
 	 */
-	protected QQHttpRequest createHttpRequest(String method, String url){
+	protected QQHttpRequest createHttpRequest(String method, String url) {
 		HttpService httpService = (HttpService) getContext().getSerivce(QQService.Type.HTTP);
 		return httpService.createHttpRequest(method, url);
 	}
 
 	/**
-	 * <p>onHttpStatusError.</p>
-	 *
-	 * @param response a {@link iqq.im.http.QQHttpResponse} object.
-	 * @throws iqq.im.QQException if any.
+	 * <p>
+	 * onHttpStatusError.
+	 * </p>
+	 * 
+	 * @param response
+	 *            a {@link iqq.im.http.QQHttpResponse} object.
+	 * @throws iqq.im.QQException
+	 *             if any.
 	 */
 	protected void onHttpStatusError(QQHttpResponse response) throws QQException {
-		if(!doRetryIt(QQErrorCode.ERROR_HTTP_STATUS, null)){
+		if (!doRetryIt(QQErrorCode.ERROR_HTTP_STATUS, null)) {
 			throw new QQException(QQErrorCode.ERROR_HTTP_STATUS);
 		}
 	}
 
 	/**
-	 * <p>onHttpStatusOK.</p>
-	 *
-	 * @param response a {@link iqq.im.http.QQHttpResponse} object.
-	 * @throws iqq.im.QQException if any.
-	 * @throws org.json.JSONException if any.
+	 * <p>
+	 * onHttpStatusOK.
+	 * </p>
+	 * 
+	 * @param response
+	 *            a {@link iqq.im.http.QQHttpResponse} object.
+	 * @throws iqq.im.QQException
+	 *             if any.
+	 * @throws org.json.JSONException
+	 *             if any.
 	 */
-	protected void onHttpStatusOK(QQHttpResponse response) throws QQException, JSONException{
+	protected void onHttpStatusOK(QQHttpResponse response) throws QQException, JSONException {
 		notifyActionEvent(QQActionEvent.Type.EVT_OK, null);
 	}
 
 	/**
-	 * <p>onBuildRequest.</p>
-	 *
-	 * @throws iqq.im.QQException if any.
-	 * @throws org.json.JSONException if any.
+	 * <p>
+	 * onBuildRequest.
+	 * </p>
+	 * 
+	 * @throws iqq.im.QQException
+	 *             if any.
+	 * @throws org.json.JSONException
+	 *             if any.
 	 * @return a {@link iqq.im.http.QQHttpRequest} object.
 	 */
 	protected QQHttpRequest onBuildRequest() throws QQException, JSONException {
@@ -241,13 +267,13 @@ public abstract class AbstractHttpAction implements HttpAction{
 		return false;
 	}
 
-	private boolean doRetryIt(QQErrorCode code, Throwable t){
-		if(actionFuture.isCanceled()){
+	private boolean doRetryIt(QQErrorCode code, Throwable t) {
+		if (actionFuture.isCanceled()) {
 			return true;
 		}
 
 		++retryTimes;
-		if( retryTimes < QQConstants.MAX_RETRY_TIMES){
+		if (retryTimes < QQConstants.MAX_RETRY_TIMES) {
 			notifyActionEvent(QQActionEvent.Type.EVT_RETRY, new QQException(code, t));
 			try {
 				// 等待几秒再重试
@@ -262,13 +288,12 @@ public abstract class AbstractHttpAction implements HttpAction{
 		return false;
 	}
 
-	private QQErrorCode getErrorCode(Throwable e){
-		if(e instanceof SocketTimeoutException
-				|| e instanceof TimeoutException){
+	private QQErrorCode getErrorCode(Throwable e) {
+		if (e instanceof SocketTimeoutException || e instanceof TimeoutException) {
 			return QQErrorCode.IO_TIMEOUT;
-		}else if(e instanceof IOException){
+		} else if (e instanceof IOException) {
 			return QQErrorCode.IO_ERROR;
-		}else {
+		} else {
 			return QQErrorCode.UNKNOWN_ERROR;
 		}
 	}

@@ -34,6 +34,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -296,7 +297,7 @@ public class QQEncryptor {
 	    CompiledScript compiled;
 		try {
 			 engine.eval("var window = new Object();var navigator = new Object();navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';"); /* 执行一段script */
-			compiled = compilable.compile(new FileReader("js1.txt"));
+			compiled = compilable.compile(new FileReader("js_wb/wb_01.js"));
 			compiled.eval();
 			return engine;
 		} catch (FileNotFoundException e) {
@@ -336,4 +337,27 @@ public class QQEncryptor {
 	    return sb.toString();  
 	}  
 	  
+	public static String utf8_to_b64(String str){
+		try {
+			return Base64.getEncoder().encodeToString(URLEncoder.encode(str, "utf-8").getBytes("utf-8"));
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return "";
+	}
+	public static String _siteId(String str){
+		
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if(engine!=null){
+			try {
+				su = (String)engine.eval("_siteId('"+str+"')");
+			}  catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	return su;
+	}
 }

@@ -171,5 +171,11 @@ public interface QQConstants {
 	public static final String URL_WB_LOGIN = "http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&_={0}";
 	
 	
+	public static final String  WB_ENTRY = "mweibo";
+	public static final String  WB_PRELOGIN = "http://login.sina.com.cn/sso/prelogin.php?checkpin=1&entry=" + WB_ENTRY;
+	public static final String  WB_LOGIN = "http://passport.weibo.cn/sso/login";
+	public static final String  WB_VERIFY_IMAGE = "http://passport.weibo.cn/captcha/image";
+	public static final String WB_SEND_MSG = "http://m.weibo.cn/msgDeal/sendMsg?";
+	public static final String WB_POLL_MSG = "http://m.weibo.cn/msg/messages?uid={0}&page={1}";
 	
 }

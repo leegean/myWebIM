@@ -30,6 +30,7 @@ import iqq.im.QQException;
 import iqq.im.QQException.QQErrorCode;
 import iqq.im.bean.QQAccount;
 import iqq.im.bean.QQStatus;
+import iqq.im.bean.content.WbVerifyImage;
 import iqq.im.core.QQModule;
 import iqq.im.core.QQSession;
 import iqq.im.event.QQActionEvent;
@@ -40,6 +41,7 @@ import iqq.im.event.QQNotifyEventArgs;
 import iqq.im.event.future.ProcActionFuture;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -47,40 +49,136 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- *
+ * 
  * 处理整体登陆逻辑
- *
+ * 
  * @author solosky
  */
 public class WbProcModule extends AbstractModule {
 	private static final Logger LOG = LoggerFactory.getLogger(WbProcModule.class);
+
 	/**
-	 * <p>login.</p>
-	 *
-	 * @param listener a {@link iqq.im.QQActionListener} object.
+	 * <p>
+	 * login.
+	 * </p>
+	 * 
+	 * @param listener
+	 *            a {@link iqq.im.QQActionListener} object.
 	 * @return a {@link iqq.im.event.QQActionFuture} object.
 	 */
-	public QQActionFuture login(QQActionListener listener) {
+	public QQActionFuture prelogin(QQActionListener listener) {
 		final ProcActionFuture future = new ProcActionFuture(listener, true);
 		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
-		loginModule.prelogin(new QQActionListener() {
-			
+		loginModule.checkVerify(new QQActionListener() {
+
 			@Override
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
-				if(event.getType()==QQActionEvent.Type.EVT_OK){
-					long prelt = new Date().getTime() - getContext().getSession().getStarttime()-( getContext().getSession().getExectime()| 0);
-					loginModule.login(future, prelt);
-				}else if(event.getType()==QQActionEvent.Type.EVT_ERROR){
-					future.notifyActionEvent(
-							QQActionEvent.Type.EVT_ERROR,
-							(QQException) event.getTarget());
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					boolean needVerify = (Boolean) event.getTarget();
+					if (needVerify) {
+						getVerifyImageUrl(future);
+					} else {
+						login(future, null);
+					}
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					System.out.println("======prelogin出错=======");
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,  event.getTarget());
 				}
-				
+
 			}
 		});
 		return future;
 	}
-	
 
+	public QQActionFuture login(final ProcActionFuture future,WbVerifyImage verifyImage) {
+		// TODO Auto-generated method stub
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		return loginModule.login(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					ArrayList<String> crossdomainlist = (ArrayList<String>)event.getTarget();
+					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, crossdomainlist);
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, event.getTarget());
+				}
+			}
+		},verifyImage);
+	}
+
+	protected void getVerifyImageUrl(final ProcActionFuture future) {
+		// TODO Auto-generated method stub
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		loginModule.getVerifyImageUrl(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					WbVerifyImage verifyImage = (WbVerifyImage) event.getTarget();
+					getVerifyImage(future, verifyImage);
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, event.getTarget());
+				}
+			}
+		});
+	}
+
+	protected void getVerifyImage(final ProcActionFuture future, WbVerifyImage verifyImage) {
+		// TODO Auto-generated method stub
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		loginModule.getVerifyImage(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					BufferedImage image = (BufferedImage) event.getTarget();
+					getContext().fireNotify(new QQNotifyEvent(QQNotifyEvent.Type.WB_CAPACHA_VERIFY, image));
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, event.getTarget());
+				}
+			}
+		},verifyImage);
+	}
+
+	public QQActionFuture sendMsg(QQActionListener listener, String msg, String acceptor) {
+		final ProcActionFuture future = new ProcActionFuture(listener, true);
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		loginModule.sendMsg(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, event.getTarget());
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					System.out.println("======prelogin出错=======");
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,  event.getTarget());
+				}
+			}
+		},msg, acceptor);
+		return future;
+	}
+	public QQActionFuture pollMsg(QQActionListener listener, String acceptor) {
+		final ProcActionFuture future = new ProcActionFuture(listener, true);
+		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
+		loginModule.pollMsg(new QQActionListener() {
+
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+				// TODO Auto-generated method stub
+				if (event.getType() == QQActionEvent.Type.EVT_OK) {
+					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, event.getTarget());
+				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
+					System.out.println("======prelogin出错=======");
+					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,  event.getTarget());
+				}
+			}
+		}, acceptor);
+		return future;
+	}
 }
