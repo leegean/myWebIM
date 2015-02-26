@@ -57,7 +57,7 @@ public class WbSendMsgAction extends AbstractHttpAction {
 //		 {"ok":1,"msg":"\u79c1\u4fe1\u53d1\u9001\u6210\u529f"}
 		String respStr = response.getResponseString();
 		JSONObject json = new JSONObject(respStr);
-		int retcode = json.optInt("retcode", -1);
+		int retcode = json.optInt("ok", -1);
 		if (retcode == 1) {
 
 			notifyActionEvent(QQActionEvent.Type.EVT_OK, respStr);

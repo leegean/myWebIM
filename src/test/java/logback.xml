@@ -21,7 +21,7 @@
     <root level="debug" >
         <appender-ref ref="console" />
     </root>
-    <logger name="iqq.im" level="warn">
+    <logger name="iqq.im" level="debug">
         <appender-ref ref="iqqAppender" />
     </logger>
 </configuration>

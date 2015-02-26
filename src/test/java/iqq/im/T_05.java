@@ -122,5 +122,6 @@ public class T_05 {
 			
 		}
 		System.out.println(maxIndex);
+		
 	}
 }
