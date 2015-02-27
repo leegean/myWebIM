@@ -66,10 +66,12 @@ public class WebQQClientTest {
 	
 	WebQQClient client;
 	
-	public WebQQClientTest(String user, String pwd){
+	public WebQQClientTest(String user, String pwd, String wbUser, String wbPwd){
 		QQAccount account = new QQAccount();
-		account.setWbUsername("569398403@qq.com");
-		account.setWbPassword("leegean19861001");
+		account.setUsername(user);
+		account.setPassword(pwd);
+		account.setWbUsername(wbUser);
+		account.setWbPassword(wbPwd);
 		client = new WebQQClient(account, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
 	}
 
@@ -78,8 +80,8 @@ public class WebQQClientTest {
      *
      */
     public static void main(String[] args) {
-        WebQQClientTest test = new WebQQClientTest("569398403@qq.com", "leegean19861001");
-        test.loginWb();
+        WebQQClientTest test = new WebQQClientTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
+        test.login();
     }
     public void loginWb(){
     	client.preloginWb(new QQActionListener() {
@@ -297,6 +299,7 @@ public class WebQQClientTest {
 						public void onActionEvent(QQActionEvent event) {
 							if(event.getType() == Type.EVT_OK) {
 								
+								System.out.println("查群测试成功");
 							}
 						}
 					});
@@ -308,16 +311,16 @@ public class WebQQClientTest {
 			}
 		};
 		
-		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
-		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
-		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
-		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
-		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
-		client.setHttpUserAgent(ua);
+//		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
+//		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
+//		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
+//		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
+//		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
+//		client.setHttpUserAgent(ua);
 		client.login(QQStatus.ONLINE, listener);
 	}
 	
-	public void LoginQm(){
+	public void loginQm(){
 
 		final QQActionListener listener = new QQActionListener() {
 			public void onActionEvent(QQActionEvent event) {
@@ -330,12 +333,13 @@ public class WebQQClientTest {
 			}
 		};
 		
-		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
-		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
-		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
-		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
-		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
-		client.setHttpUserAgent(ua);
+//		Mozilla/5.0 (Linux; U; Android 4.3; en-us; SM-N900T Build/JSS15J) AppleWebKit/534.30 (KHTML, like Gecko) Version/4.0 Mobile Safari/534.30
+//		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
+//		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
+//		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
+//		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
+//		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
+//		client.setHttpUserAgent(ua);
 		client.loginQm(listener);
 	}
 

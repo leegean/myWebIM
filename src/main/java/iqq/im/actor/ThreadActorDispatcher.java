@@ -60,7 +60,6 @@ public class ThreadActorDispatcher implements QQActorDispatcher, Runnable {
 	@Override
 	public void pushActor(QQActor actor){
 		this.actorQueue.add(actor);
-//		System.out.println("push:    "+actor);
 	}
 	
 	/**

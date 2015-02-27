@@ -143,8 +143,11 @@ public class GetGroupInfoAction extends AbstractHttpAction{
 	protected QQHttpRequest onBuildRequest() throws QQException, JSONException {
 		QQHttpRequest req = createHttpRequest("GET", QQConstants.URL_GET_GROUP_INFO_EXT);
 		req.addGetValue("gcode", group.getCode() + "");
+		req.addGetValue("cb", "undefined");
 		req.addGetValue("vfwebqq", getContext().getSession().getVfwebqq());
 		req.addGetValue("t", System.currentTimeMillis()/1000 + "");
+		
+		req.addHeader("Referer", "http://s.web2.qq.com/proxy.html?v=20110412001&callback=1&id=3");
 		return req;
 	}
 	

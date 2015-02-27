@@ -49,7 +49,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public abstract class AbstractHttpAction implements HttpAction {
-	private static final Logger LOG = LoggerFactory.getLogger(AbstractHttpAction.class);
+	private Logger LOG ;
 	private QQContext context;
 	private QQActionListener listener;
 	private Future<QQHttpResponse> responseFuture;
@@ -70,6 +70,7 @@ public abstract class AbstractHttpAction implements HttpAction {
 		this.context = context;
 		this.listener = listener;
 		this.retryTimes = 0;
+		LOG = LoggerFactory.getLogger(this.getClass());
 	}
 
 	/** {@inheritDoc} */
@@ -87,7 +88,6 @@ public abstract class AbstractHttpAction implements HttpAction {
 			// case 'application/x-javascript' :
 			if ((type.contains("application/javascript") ||type.contains("text/javascript") ||type.contains("application/x-javascript") || type.contains("application/json") || type.indexOf("text") >= 0) && response.getContentLength() > 0) {
 				LOG.debug(response.getResponseString());
-				System.out.println(response.getResponseString());
 			}
 
 			if (response.getResponseCode() == QQHttpResponse.S_OK) {

@@ -58,8 +58,8 @@ public class SendMsgAction extends AbstractHttpAction {
 		} else if (msg.getType() == QQMsg.Type.GROUP_MSG) {
 			req = createHttpRequest("POST", QQConstants.URL_SEND_GROUP_MSG);
 			json.put("group_uin", msg.getGroup().getGin());
-			json.put("key", session.getCfaceKey());
-			json.put("sig", session.getCfaceSig());
+//			json.put("key", session.getCfaceKey());
+//			json.put("sig", session.getCfaceSig());
 		} else if (msg.getType() == QQMsg.Type.DISCUZ_MSG) {
 			req = createHttpRequest("POST", QQConstants.URL_SEND_DISCUZ_MSG);
 			json.put("did", msg.getDiscuz().getDid());

@@ -1,28 +1,3 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
-/**
- * Project  : WebQQCoreAsync
- * Package  : iqq.im
- * File     : WebQQClientTest.java
- * Author   : solosky < solosky772@qq.com >
- * Created  : 2012-9-6
- * License  : Apache License 2.0 
- */
 package iqq.im;
 
 import iqq.im.actor.ThreadActorDispatcher;
@@ -44,21 +19,17 @@ import iqq.im.event.QQNotifyEvent;
 import iqq.im.event.QQNotifyEventArgs;
 import iqq.im.event.QQNotifyHandler;
 import iqq.im.event.QQNotifyHandlerProxy;
-import iqq.im.module.WbProcModule;
 
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -73,148 +44,54 @@ import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import ch.qos.logback.core.net.server.Client;
 import static iqq.im.event.QQActionEvent.Type.EVT_OK;
 
-/**
- * Client测试类
- * 
- * @author solosky
- * 
- */
 public class WebQQClientUiTest extends JFrame implements WindowListener {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LoggerFactory.getLogger(WebQQClientUiTest.class);
 	WebQQClient client;
 	private JTextArea jta;
-	private Timer sendTimer;
 
-	public WebQQClientUiTest(String user, String pwd) {
+	public WebQQClientUiTest(String user, String pwd, String wbUser, String wbPwd) {
 		setLayout(new FlowLayout());
-		sendTimer = new Timer();
 		QQAccount account = new QQAccount();
-		account.setWbUsername("569398403@qq.com");
-		account.setWbPassword("leegean19861001");
+		account.setUsername(user);
+		account.setPassword(pwd);
+		account.setWbUsername(wbUser);
+		account.setWbPassword(wbPwd);
 		client = new WebQQClient(account, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
 		add(new JButton(new AbstractAction("login") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				
+				login();
+			}
+		}));
+		add(new JButton(new AbstractAction("loginWb") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
 				loginWb();
 			}
 		}));
 		jta = new JTextArea(4, 20);
 		add(jta);
-		JButton sendBtn = new JButton(new AbstractAction("send") {
-
-			int index = 0;
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				StringBuilder sb = null;
-				try {
-					Scanner scanner = new Scanner(new  File("js_wb/msg.txt"));
-					sb = new StringBuilder();
-					while (scanner.hasNextLine()) {
-						String line = scanner.nextLine();
-						sb.append(line);
-					}
-					scanner.close();
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				final String[] sendMsg = sb.toString().split("[，。？；]");
-				
-				if (sendMsg.length > 0) {
-							send(sendMsg);
-				}
-			}
-			private void send(final String[] sendMsg) {
-				final String msg = sendMsg[index];
-				LOG.debug("send:   "+msg);
-				client.sendWbMsg(msg, "5175429989", new QQActionListener() {
-
-					@Override
-					public void onActionEvent(QQActionEvent event) {
-						// TODO Auto-generated method stub
-						if (event.getType() == EVT_OK) {
-							LOG.debug("发送成功");
-							final Timer pollTimer = new Timer();
-
-							pollTimer.schedule(new TimerTask() {
-								
-								@Override
-								public void run() {
-									// TODO Auto-generated method stub
-									QQActionFuture future = client.pollWbMsg("5175429989", null);
-									try {
-										QQActionEvent event = future.waitFinalEvent();
-
-										// TODO Auto-generated method stub
-										if (event.getType() == EVT_OK) {
-											JSONObject json = (JSONObject)event.getTarget();
-//											System.out.println("pllmsg：   "+json);
-											LOG.debug(json.toString());
-											JSONArray data = json.optJSONArray("data");
-											if(data!=null){
-												JSONObject firstItem = data.optJSONObject(0);
-												String firstText = firstItem.optString("text");
-												boolean flag = false;
-												for (int i = 0; i < data.length(); i++) {
-													
-													JSONObject item = data.optJSONObject(i);
-													String senderId = item.optString("sender_id");
-													if(senderId.equals("2645052603")){
-														break;
-													}
-													String text = item.optString("text");
-													if(i>0&&text.equals(msg)){
-														flag = true;
-														break;
-													}
-												}
-												if(flag){
-													LOG.debug("       pllmsg：   "+firstText);
-													pollTimer.cancel();
-													send(sendMsg);
-												}
-												
-													
-											}
-											
-										}
-									
-									} catch (QQException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-								}
-							}, 1000, 1000);
-
-						}
-					}
-				});
-				index++;
-				if(index==sendMsg.length)index=0;
-			}
-		});
 		
-		
-		
-		add(sendBtn);
 
 		add(new JButton(new AbstractAction("sendOne") {
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				// TODO Auto-generated method stub
+				
 				final String msg = jta.getText().trim();
 				if(msg.length()>0)
 				client.sendWbMsg(msg, "5175429989", new QQActionListener() {
 
 					@Override
 					public void onActionEvent(QQActionEvent event) {
-						// TODO Auto-generated method stub
+						
 						if (event.getType() == EVT_OK) {
 							LOG.debug("发送成功");
 							pollMsg(msg);
@@ -228,12 +105,12 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 							
 							@Override
 							public void run() {
-								// TODO Auto-generated method stub
+								
 								QQActionFuture future = client.pollWbMsg("5175429989", null);
 								try {
 									QQActionEvent event1 = future.waitFinalEvent();
 
-									// TODO Auto-generated method stub
+									
 									if (event1.getType() == EVT_OK) {
 										JSONObject json = (JSONObject)event1.getTarget();
 //											System.out.println("pllmsg：   "+json);
@@ -275,7 +152,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 									}
 								
 								} catch (QQException e) {
-									// TODO Auto-generated catch block
 									e.printStackTrace();
 								} 
 							}
@@ -283,22 +159,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 								
 					}
 				});
-			}
-		}));
-		add(new JButton(new AbstractAction("getmsg") {
-			
-			@Override
-			public void actionPerformed(ActionEvent e) {
-						client.pollWbMsg("5175429989", new QQActionListener() {
-							
-							@Override
-							public void onActionEvent(QQActionEvent event) {
-								// TODO Auto-generated method stub
-								if (event.getType() == EVT_OK) {
-									System.out.println("pllmsg：   "+event.getTarget());
-								}
-							}
-						});
 			}
 		}));
 		addWindowListener(this);
@@ -312,8 +172,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	 * 
 	 */
 	public static void main(String[] args) {
-		WebQQClientUiTest test = new WebQQClientUiTest("569398403@qq.com", "leegean19861001");
-		// test.loginWb();
+		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {
@@ -321,7 +180,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 			@Override
 			public void onActionEvent(QQActionEvent event) {
-				// TODO Auto-generated method stub
+				
 				if (event.getType() == EVT_OK) {
 					// 到这里就算是登录成功了
 					ArrayList<String> list = (ArrayList<String>) event.getTarget();
@@ -357,20 +216,38 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			} else if (item.getType() == ContentItem.Type.OFFPIC) {
 				System.out.print(" Picture:" + ((OffPicItem) item).getFilePath());
 			} else if (item.getType() == ContentItem.Type.TEXT) {
-				System.out.print(" Text:" + ((TextItem) item).getContent());
+				String chatContent = ((TextItem) item).getContent();
+				System.out.print(" Text:" +chatContent );
+				if(chatContent.trim().length()>0){
+					// 组装QQ消息发送回去
+					QQMsg sendMsg = new QQMsg();
+					sendMsg.setTo(msg.getFrom()); // QQ好友UIN
+					iqq.im.bean.QQMsg.Type msgType = msg.getType();
+					switch (msgType) {
+					case BUDDY_MSG:
+						sendMsg.setType(QQMsg.Type.BUDDY_MSG); // 发送类型为好友
+						break;
+					case GROUP_MSG:
+						sendMsg.setType(QQMsg.Type.GROUP_MSG); // 发送类型为好友
+						sendMsg.setGroup(msg.getGroup());
+						break;
+					default:
+						break;
+					}
+					// QQ内容
+					sendMsg.addContentItem(new TextItem("hello")); // 添加文本内容
+					sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
+					sendMsg.addContentItem(new FontItem()); // 使用默认字体
+					client.sendMsg(sendMsg, null); // 调用接口发送消息
+				}
+			}else if (item.getType() == ContentItem.Type.CFACE) {
+				//截图
+//				{"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":20290,"from_uin":2901943685,"to_uin":1002053815,"msg_id2":855429,"msg_type":43,"reply_ip":176886380,"group_code":1226655265,"send_uin":3706930015,"seq":26,"time":1425016953,"info_seq":260334785,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],["cface",{"name":"{88F3B4B5-0447-77CC-63FB-0E9993B365B0}.jpg","file_id":3080570299,"key":"                ","server":"183.60.51.182:80"}]," "]}}]}
+//				System.out.print(" Text:" + ((CFaceItem) item).());
 			}
 		}
-		System.out.println();
 
-		// 组装QQ消息发送回去
-		QQMsg sendMsg = new QQMsg();
-		sendMsg.setTo(msg.getFrom()); // QQ好友UIN
-		sendMsg.setType(QQMsg.Type.BUDDY_MSG); // 发送类型为好友
-		// QQ内容
-		sendMsg.addContentItem(new TextItem("hello")); // 添加文本内容
-		sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
-		sendMsg.addContentItem(new FontItem()); // 使用默认字体
-		client.sendMsg(sendMsg, null); // 调用接口发送消息
+		
 	}
 
 	/**
@@ -403,6 +280,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 		ImageIO.write(verify.getImage(), "png", new File("verify.png"));
 		System.out.print("请输入在项目根目录下verify.png图片里面的验证码:");
 		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
+		verify.setCode(code);
 		client.loginWb(verify.getFuture(), verify);
 	}
 
@@ -429,7 +307,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 						@Override
 						public void onActionEvent(QQActionEvent event) {
-							// TODO Auto-generated method stub
+							
 							System.out.println("******** " + event.getType() + " ********");
 							if (event.getType() == QQActionEvent.Type.EVT_OK) {
 								System.out.println("******** 好友列表  ********");
@@ -463,31 +341,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 							}
 						}
 					});
-					// 获取讨论组列表
-					client.getDiscuzList(new QQActionListener() {
 
-						@Override
-						public void onActionEvent(QQActionEvent event) {
-							if (event.getType() == EVT_OK) {
-								for (QQDiscuz d : client.getDiscuzList()) {
-									client.getDiscuzInfo(d, null);
-									System.out.println("Discuz: " + d.getName());
-								}
-							}
-						}
-					});
-
-					// 查群测试
-					QQGroupSearchList list = new QQGroupSearchList();
-					list.setKeyStr("QQ");
-					client.searchGroupGetList(list, new QQActionListener() {
-						@Override
-						public void onActionEvent(QQActionEvent event) {
-							if (event.getType() == EVT_OK) {
-
-							}
-						}
-					});
 
 					// 启动轮询时，需要获取所有好友、群成员、讨论组成员
 					// 所有的逻辑完了后，启动消息轮询
@@ -496,12 +350,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			}
 		};
 
-		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
-		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
-		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
-		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
-		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
-		client.setHttpUserAgent(ua);
 		client.login(QQStatus.ONLINE, listener);
 	}
 
@@ -518,12 +366,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			}
 		};
 
-		String ua = "Mozilla/5.0 (@os.name; @os.version; @os.arch) AppleWebKit/537.36 (KHTML, like Gecko) @appName Safari/537.36";
-		ua = ua.replaceAll("@appName", QQConstants.USER_AGENT);
-		ua = ua.replaceAll("@os.name", System.getProperty("os.name"));
-		ua = ua.replaceAll("@os.version", System.getProperty("os.version"));
-		ua = ua.replaceAll("@os.arch", System.getProperty("os.arch"));
-		client.setHttpUserAgent(ua);
 		client.loginQm(listener);
 	}
 
@@ -544,46 +386,33 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 	@Override
 	public void windowOpened(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowClosing(WindowEvent e) {
-		// TODO Auto-generated method stub
 		System.out.println("windowClosing");
 		client.destroy();
 	}
 
 	@Override
 	public void windowClosed(WindowEvent e) {
-		// TODO Auto-generated method stub
 		System.out.println("windowClosed");
-
 	}
 
 	@Override
 	public void windowIconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowDeiconified(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowActivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void windowDeactivated(WindowEvent e) {
-		// TODO Auto-generated method stub
-
 	}
 
 }
