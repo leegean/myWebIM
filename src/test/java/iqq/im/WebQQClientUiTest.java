@@ -68,6 +68,14 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 				login();
 			}
 		}));
+		add(new JButton(new AbstractAction("loginQm") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+				loginQm();
+			}
+		}));
 		add(new JButton(new AbstractAction("loginWb") {
 
 			@Override
@@ -155,7 +163,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 									e.printStackTrace();
 								} 
 							}
-						}, 1000, 1000);
+						}, 1000, 500);
 								
 					}
 				});
@@ -353,7 +361,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 		client.login(QQStatus.ONLINE, listener);
 	}
 
-	public void LoginQm() {
+	public void loginQm() {
 
 		final QQActionListener listener = new QQActionListener() {
 			public void onActionEvent(QQActionEvent event) {
