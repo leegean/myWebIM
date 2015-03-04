@@ -47,6 +47,6 @@ public interface QQModule extends QQLifeCycle{
 		EMAIL	,		//邮件模块
 		
 		QM_LOGIN,
-		QM_PROC, WB_LOGIN, WB_PROC
+		QM_PROC, WB_LOGIN, WB_PROC, QM_MGR
 	}
 }

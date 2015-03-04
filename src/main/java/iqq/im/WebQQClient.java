@@ -36,6 +36,7 @@ import iqq.im.bean.QQMsg;
 import iqq.im.bean.QQStatus;
 import iqq.im.bean.QQStranger;
 import iqq.im.bean.QQUser;
+import iqq.im.bean.QmMemSearchCondition;
 import iqq.im.bean.content.CFaceItem;
 import iqq.im.bean.content.OffPicItem;
 import iqq.im.bean.content.WbVerifyImage;
@@ -61,6 +62,7 @@ import iqq.im.module.GroupModule;
 import iqq.im.module.LoginModule;
 import iqq.im.module.ProcModule;
 import iqq.im.module.QmLoginModule;
+import iqq.im.module.QmMgrModule;
 import iqq.im.module.QmProcModule;
 import iqq.im.module.UserModule;
 import iqq.im.module.WbLoginModule;
@@ -71,6 +73,7 @@ import iqq.im.service.HttpService.ProxyType;
 
 import java.io.File;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -120,6 +123,7 @@ public class WebQQClient implements QQClient, QQContext {
 		
 		this.modules.put(QQModule.Type.QM_LOGIN, new QmLoginModule());
 		this.modules.put(QQModule.Type.QM_PROC, new QmProcModule());
+		this.modules.put(QQModule.Type.QM_MGR, new QmMgrModule());
 		
 		this.modules.put(QQModule.Type.WB_LOGIN, new WbLoginModule());
 		this.modules.put(QQModule.Type.WB_PROC, new WbProcModule());
@@ -548,7 +552,18 @@ public class WebQQClient implements QQClient, QQContext {
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
 		return procModule.sendMsg(qqActionListener, msg, acceptor);
 	}
-	
+	public QQActionFuture searchQmGroupMember(QmMemSearchCondition condition,QQActionListener qqActionListener) {
+		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
+		return mgrModule.searchGroupMember(condition, qqActionListener);
+	}
+	public QQActionFuture setQmGroupCard(String group, String uin, String card,QQActionListener qqActionListener) {
+		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
+		return mgrModule.setGroupCard(group, uin, card, qqActionListener);
+	}
+	public QQActionFuture deleteQmGroupMember(String group, ArrayList<String> memsDeleted, boolean acceptApply,QQActionListener qqActionListener) {
+		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
+		return mgrModule.deleteGroupMember(group, memsDeleted, acceptApply, qqActionListener);
+	}
 	public QQActionFuture pollWbMsg(String acceptor, QQActionListener qqActionListener) {
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
 		return procModule.pollMsg(qqActionListener, acceptor);

@@ -15,7 +15,6 @@ public class QmGroupMembers {
 	private int admMax;
 	private int admNum;
 	private int count;
-	private int ec;
 	private HashMap<String, String> levelName = new HashMap<String, String>();
 	private int maxCount;
 	private ArrayList<QmGroupMember> mems = new ArrayList<QmGroupMembers.QmGroupMember>();
@@ -273,12 +272,6 @@ public class QmGroupMembers {
 	}
 	public void setCount(int count) {
 		this.count = count;
-	}
-	public int getEc() {
-		return ec;
-	}
-	public void setEc(int ec) {
-		this.ec = ec;
 	}
 	public HashMap<String, String> getLevelName() {
 		return levelName;

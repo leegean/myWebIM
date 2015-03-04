@@ -21,6 +21,7 @@ import iqq.im.http.QQHttpResponse;
 import iqq.im.service.HttpService;
 import iqq.im.util.QQEncryptor;
 import org.slf4j.Logger;
+import org.apache.http.cookie.Cookie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -60,13 +61,15 @@ public class QmSetGroupCardAction extends AbstractHttpAction {
 //		name:name
 //		bkn:605178519
 		
+		HttpService httpService = (HttpService) getContext().getSerivce(QQService.Type.HTTP);
+		Cookie skey = httpService.getCookie("skey", QQConstants.URL_QM_SEATCH_GROUP_MEMBERS);
 
 		QQHttpRequest req = createHttpRequest("POST",
 				QQConstants.URL_QM_SET_GROUP_CARD);
 		req.addPostValue("gc", group);
 		req.addPostValue("u", uin);
 		req.addPostValue("name", card);
-		req.addPostValue("bkn", "");
+		req.addPostValue("bkn", QQEncryptor.getBkn(skey.getValue()) + "");
 		
 
 		req.addHeader("Referer", "http://qun.qq.com/member.html");
@@ -79,10 +82,11 @@ public class QmSetGroupCardAction extends AbstractHttpAction {
 	protected void onHttpStatusOK(QQHttpResponse response) throws QQException,
 			JSONException {
 //		{"ec":0}
+//		 {"ec":15,"em":""}
 		QQStore store = getContext().getStore();
 		JSONObject json = new JSONObject(response.getResponseString());
 
-		int returnCode = json.getInt("ec");
+		int returnCode = json.optInt("ec", -1);
 		if(returnCode==0){
 			notifyActionEvent(QQActionEvent.Type.EVT_OK, null); 	
 		}else{

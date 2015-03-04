@@ -9,6 +9,8 @@ import iqq.im.http.QQHttpResponse;
 
 import java.util.concurrent.Future;
 
+import org.apache.http.cookie.Cookie;
+
 /**
  * <p>HttpService interface.</p>
  */
@@ -59,7 +61,7 @@ public interface HttpService extends QQService{
 	 * @param url				基于的URL
 	 * @return a {@link iqq.im.http.QQHttpCookie} object.
 	 */
-	public QQHttpCookie getCookie(String name, String url);
+	public Cookie getCookie(String name, String url);
 
 	/**
 	 *

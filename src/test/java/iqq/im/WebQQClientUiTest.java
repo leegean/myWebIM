@@ -10,6 +10,8 @@ import iqq.im.bean.QQGroup;
 import iqq.im.bean.QQGroupSearchList;
 import iqq.im.bean.QQMsg;
 import iqq.im.bean.QQStatus;
+import iqq.im.bean.QmGroupMembers;
+import iqq.im.bean.QmMemSearchCondition;
 import iqq.im.bean.content.*;
 import iqq.im.core.QQConstants;
 import iqq.im.event.QQActionEvent;
@@ -37,7 +39,9 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -51,6 +55,11 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	private static final Logger LOG = LoggerFactory.getLogger(WebQQClientUiTest.class);
 	WebQQClient client;
 	private JTextArea jta;
+	private JTextField jtf;
+	private JTextField jtfGc;
+	private JTextField jtfUin;
+	private JTextField jtfCard;
+	private JRadioButton jrb;
 
 	public WebQQClientUiTest(String user, String pwd, String wbUser, String wbPwd) {
 		setLayout(new FlowLayout());
@@ -64,7 +73,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				login();
 			}
 		}));
@@ -72,101 +81,188 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				loginQm();
 			}
+		}));
+		jtfGc = new JTextField(15);
+		add(jtfGc);
+		jtf = new JTextField(15);
+		add(jtf);
+		add(new JButton(new AbstractAction("searchMem") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String group = jtfGc.getText().trim();
+				final String lastSpeak = jtf.getText().trim();
+				if (group.length()>0) {
+					QmMemSearchCondition condition = new QmMemSearchCondition();
+					condition.setGc(group);
+					if(lastSpeak.length() > 0)
+					condition.setLastSpeakTime("1|"+Integer.parseInt(lastSpeak)*24*3600);
+					client.searchQmGroupMember(condition, new QQActionListener(){
+
+						@Override
+						public void onActionEvent(QQActionEvent event) {
+							// TODO Auto-generated method stub
+							if (event.getType() == EVT_OK) {
+								LOG.debug("搜索群成员成功");
+
+								QmGroupMembers members = (QmGroupMembers)event.getTarget();
+								LOG.debug("members:     "+members.getCount()+"             admNumb:   "+ members.getAdmNum());
+							}
+						}
+						
+					});
+				}
+
+			}
+
+		}));
+		jtfUin = new JTextField(15);
+		add(jtfUin);
+		jtfCard = new JTextField(15);
+		add(jtfCard);
+		add(new JButton(new AbstractAction("updateCard") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String group = jtfGc.getText().trim();
+				final String uin = jtfUin.getText().trim();
+				final String card = jtfCard.getText().trim();
+				if (group.length()>0&&uin.length()>0) {
+					client.setQmGroupCard(group, uin, card, new QQActionListener(){
+
+						@Override
+						public void onActionEvent(QQActionEvent event) {
+							// TODO Auto-generated method stub
+							if (event.getType() == EVT_OK) {
+								LOG.debug("修改群名片成功");
+							}
+						}
+						
+					});
+				}
+
+			}
+
+		}));
+		jrb = new JRadioButton("不再接受加群申请");
+		add(jrb);
+		add(new JButton(new AbstractAction("deleteMem") {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				final String group = jtfGc.getText().trim();
+				final String uin = jtfUin.getText().trim();
+				ArrayList<String> deleteList = new ArrayList<String>();
+				deleteList.add(uin);
+				if (group.length()>0&&uin.length()>0) {
+					client.deleteQmGroupMember(group, deleteList, jrb.isSelected(), new QQActionListener(){
+
+						@Override
+						public void onActionEvent(QQActionEvent event) {
+							// TODO Auto-generated method stub
+							if (event.getType() == EVT_OK) {
+								LOG.debug("删除群成员成功");
+							}
+						}
+						
+					});
+				}
+
+			}
+
 		}));
 		add(new JButton(new AbstractAction("loginWb") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+
 				loginWb();
 			}
 		}));
 		jta = new JTextArea(4, 20);
 		add(jta);
-		
 
 		add(new JButton(new AbstractAction("sendOne") {
-			
+
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				final String msg = jta.getText().trim();
-				if(msg.length()>0)
-				client.sendWbMsg(msg, "5175429989", new QQActionListener() {
 
-					@Override
-					public void onActionEvent(QQActionEvent event) {
-						
-						if (event.getType() == EVT_OK) {
-							LOG.debug("发送成功");
-							pollMsg(msg);
+				final String msg = jta.getText().trim();
+				if (msg.length() > 0)
+					client.sendWbMsg(msg, "5175429989", new QQActionListener() {
+
+						@Override
+						public void onActionEvent(QQActionEvent event) {
+
+							if (event.getType() == EVT_OK) {
+								LOG.debug("发送成功");
+								pollMsg(msg);
+
+							}
+						}
+
+						private void pollMsg(final String msg) {
+							final Timer pollTimer = new Timer();
+							pollTimer.schedule(new TimerTask() {
+
+								@Override
+								public void run() {
+
+									QQActionFuture future = client.pollWbMsg("5175429989", null);
+									try {
+										QQActionEvent event1 = future.waitFinalEvent();
+
+										if (event1.getType() == EVT_OK) {
+											JSONObject json = (JSONObject) event1.getTarget();
+											// System.out.println("pllmsg：   "+json);
+											LOG.debug(json.toString());
+											JSONArray data = json.optJSONArray("data");
+											JSONArray attachment = json.optJSONArray("attachment");
+											if (attachment != null) {
+												for (int i = 0; i < attachment.length(); i++) {
+													JSONObject item = attachment.optJSONObject(i);
+													String thumbnail600 = item.optString("thumbnail_600");
+												}
+											}
+											if (data != null) {
+												JSONObject firstItem = data.optJSONObject(0);
+												String senderId = firstItem.optString("sender_id");
+												if (senderId.equals("2645052603")) {
+													return;
+												}
+												String firstText = firstItem.optString("text");
+												boolean flag = false;
+												for (int i = 0; i < data.length(); i++) {
+
+													JSONObject item = data.optJSONObject(i);
+
+													String text = item.optString("text");
+													if (i > 0 && text.equals(msg)) {
+														flag = true;
+														break;
+													}
+
+												}
+												if (flag) {
+													pollTimer.cancel();
+													pollTimer.purge();
+													LOG.debug("       pllmsg：   " + firstText);
+												}
+											}
+
+										}
+
+									} catch (QQException e) {
+										e.printStackTrace();
+									}
+								}
+							}, 1000, 500);
 
 						}
-					}
-
-					private void pollMsg(final String msg) {
-						final Timer pollTimer = new Timer();
-						pollTimer.schedule(new TimerTask() {
-							
-							@Override
-							public void run() {
-								
-								QQActionFuture future = client.pollWbMsg("5175429989", null);
-								try {
-									QQActionEvent event1 = future.waitFinalEvent();
-
-									
-									if (event1.getType() == EVT_OK) {
-										JSONObject json = (JSONObject)event1.getTarget();
-//											System.out.println("pllmsg：   "+json);
-										LOG.debug(json.toString());
-										JSONArray data = json.optJSONArray("data");
-										JSONArray attachment = json.optJSONArray("attachment");
-										if(attachment!=null){
-											for (int i = 0; i < attachment.length(); i++) {
-												JSONObject item = attachment.optJSONObject(i);
-												String thumbnail600 = item.optString("thumbnail_600");
-											}
-										}
-										if(data!=null){
-											JSONObject firstItem = data.optJSONObject(0);
-											String senderId = firstItem.optString("sender_id");
-											if(senderId.equals("2645052603")){
-												return;
-											}
-											String firstText = firstItem.optString("text");
-											boolean flag = false;
-											for (int i = 0; i < data.length(); i++) {
-												
-												JSONObject item = data.optJSONObject(i);
-												
-												String text = item.optString("text");
-												if(i>0&&text.equals(msg)){
-													flag = true;
-													break;
-												}
-												
-											}
-											if(flag){
-												pollTimer.cancel();
-												pollTimer.purge();
-												LOG.debug("       pllmsg：   "+firstText);
-											}
-										}
-										
-									}
-								
-								} catch (QQException e) {
-									e.printStackTrace();
-								} 
-							}
-						}, 1000, 500);
-								
-					}
-				});
+					});
 			}
 		}));
 		addWindowListener(this);
@@ -188,7 +284,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 			@Override
 			public void onActionEvent(QQActionEvent event) {
-				
+
 				if (event.getType() == EVT_OK) {
 					// 到这里就算是登录成功了
 					ArrayList<String> list = (ArrayList<String>) event.getTarget();
@@ -225,8 +321,8 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 				System.out.print(" Picture:" + ((OffPicItem) item).getFilePath());
 			} else if (item.getType() == ContentItem.Type.TEXT) {
 				String chatContent = ((TextItem) item).getContent();
-				System.out.print(" Text:" +chatContent );
-				if(chatContent.trim().length()>0){
+				System.out.print(" Text:" + chatContent);
+				if (chatContent.trim().length() > 0) {
 					// 组装QQ消息发送回去
 					QQMsg sendMsg = new QQMsg();
 					sendMsg.setTo(msg.getFrom()); // QQ好友UIN
@@ -248,14 +344,13 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					sendMsg.addContentItem(new FontItem()); // 使用默认字体
 					client.sendMsg(sendMsg, null); // 调用接口发送消息
 				}
-			}else if (item.getType() == ContentItem.Type.CFACE) {
-				//截图
-//				{"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":20290,"from_uin":2901943685,"to_uin":1002053815,"msg_id2":855429,"msg_type":43,"reply_ip":176886380,"group_code":1226655265,"send_uin":3706930015,"seq":26,"time":1425016953,"info_seq":260334785,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],["cface",{"name":"{88F3B4B5-0447-77CC-63FB-0E9993B365B0}.jpg","file_id":3080570299,"key":"                ","server":"183.60.51.182:80"}]," "]}}]}
-//				System.out.print(" Text:" + ((CFaceItem) item).());
+			} else if (item.getType() == ContentItem.Type.CFACE) {
+				// 截图
+				// {"retcode":0,"result":[{"poll_type":"group_message","value":{"msg_id":20290,"from_uin":2901943685,"to_uin":1002053815,"msg_id2":855429,"msg_type":43,"reply_ip":176886380,"group_code":1226655265,"send_uin":3706930015,"seq":26,"time":1425016953,"info_seq":260334785,"content":[["font",{"size":10,"color":"000000","style":[0,0,0],"name":"\u5FAE\u8F6F\u96C5\u9ED1"}],["cface",{"name":"{88F3B4B5-0447-77CC-63FB-0E9993B365B0}.jpg","file_id":3080570299,"key":"                ","server":"183.60.51.182:80"}]," "]}}]}
+				// System.out.print(" Text:" + ((CFaceItem) item).());
 			}
 		}
 
-		
 	}
 
 	/**
@@ -315,7 +410,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 						@Override
 						public void onActionEvent(QQActionEvent event) {
-							
+
 							System.out.println("******** " + event.getType() + " ********");
 							if (event.getType() == QQActionEvent.Type.EVT_OK) {
 								System.out.println("******** 好友列表  ********");
@@ -349,7 +444,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 							}
 						}
 					});
-
 
 					// 启动轮询时，需要获取所有好友、群成员、讨论组成员
 					// 所有的逻辑完了后，启动消息轮询

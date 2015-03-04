@@ -21,6 +21,7 @@ import iqq.im.http.QQHttpResponse;
 import iqq.im.service.HttpService;
 import iqq.im.util.QQEncryptor;
 import org.slf4j.Logger;
+import org.apache.http.cookie.Cookie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,7 +37,7 @@ public class QmDeleteGroupMemberAction extends AbstractHttpAction {
 	private static final Logger LOG = LoggerFactory.getLogger(QmDeleteGroupMemberAction.class);
 	private String group;
 	private ArrayList<String> memsDeleted;
-	private String flag;
+	private boolean flag;
 
 	/**
 	 * <p>Constructor for GetGroupListAction.</p>
@@ -44,7 +45,7 @@ public class QmDeleteGroupMemberAction extends AbstractHttpAction {
 	 * @param context a {@link iqq.im.core.QQContext} object.
 	 * @param listener a {@link iqq.im.QQActionListener} object.
 	 */
-	public QmDeleteGroupMemberAction(String group, ArrayList<String> memsDeleted,String flag,  QQContext context, QQActionListener listener) {
+	public QmDeleteGroupMemberAction(String group, ArrayList<String> memsDeleted,boolean flag,  QQContext context, QQActionListener listener) {
 		super(context, listener);
 		this.group = group;
 		this.memsDeleted = memsDeleted;
@@ -60,6 +61,9 @@ public class QmDeleteGroupMemberAction extends AbstractHttpAction {
 //		bkn:605178519
 		
 
+		HttpService httpService = (HttpService) getContext().getSerivce(QQService.Type.HTTP);
+		Cookie skey = httpService.getCookie("skey", QQConstants.URL_QM_SEATCH_GROUP_MEMBERS);
+
 		QQHttpRequest req = createHttpRequest("POST",
 				QQConstants.URL_QM_DELETE_GROUP_MEMBER);
 		req.addPostValue("gc", group);
@@ -71,8 +75,8 @@ public class QmDeleteGroupMemberAction extends AbstractHttpAction {
 			}
 		}
 		req.addPostValue("ul", ul.substring(1));
-		req.addPostValue("flag", flag);
-		req.addPostValue("bkn", "");
+		req.addPostValue("flag", flag?"1":"0");
+		req.addPostValue("bkn", QQEncryptor.getBkn(skey.getValue()) + "");
 		
 
 		req.addHeader("Referer", "http://qun.qq.com/member.html");

@@ -56,6 +56,7 @@ import javax.script.ScriptException;
  */
 public class QQEncryptor {
 
+	private static ScriptEngine engine;
 	/**
 	 * 登录邮箱时用到的，auth_token
 	 * 
@@ -142,30 +143,20 @@ public class QQEncryptor {
 	}
 
 	public static String encryptQm(String password, String verify) {
-		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
-		ScriptEngine se = sem.getEngineByName("javascript"); /* script引擎 */
-
-		String callbackvalue = null;
-		try {
-
-			se.eval(" var $ = new Object(); var navigator = new Object();navigator.appName == 'Microsoft Internet Explorer';"); /* 执行一段script */
-
-			Scanner s = new Scanner(T_01.class.getClassLoader().getResourceAsStream("js.txt"));
-			StringBuilder sb = new StringBuilder();
-			while (s.hasNextLine()) {
-				sb.append(s.nextLine());
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				// ";º ·"
+				String salt = String.valueOf(new char[] { (char) 0, (char) 0, (char) 0, (char) 0, (char) 59, (char) 186, (char) 32, (char) 183 });
+				su = (String) engine.eval( "Encryption.getEncryption('"+password+"','"+salt+"','"+verify+"')");
+			}catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			s.close();
-			Object Encryption = se.eval(sb.toString());
-			// ";º ·"
-			String salt = String.valueOf(new char[] { (char) 0, (char) 0, (char) 0, (char) 0, (char) 59, (char) 186, (char) 32, (char) 183 });
-			Invocable invocableEngine = (Invocable) se;
-			callbackvalue = (String) invocableEngine.invokeMethod(Encryption, "getEncryption", password, salt, verify);
-
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
-		return callbackvalue;
+		return su;
+		
 	}
 
 	private static byte[] concat(byte[] bytes1, byte[] bytes2) {
@@ -297,15 +288,14 @@ public class QQEncryptor {
 	}
 
 	private static ScriptEngine initScriptEngine() {
+		if(engine!=null)return engine;
 		ScriptEngineManager sem = new ScriptEngineManager(); /* script引擎管理 */
-		ScriptEngine engine = sem.getEngineByName("javascript"); /* script引擎 */
+		engine = sem.getEngineByName("javascript"); /* script引擎 */
 
-		Compilable compilable = (Compilable) engine;
-		CompiledScript compiled;
 		try {
-			engine.eval("var window = new Object();var navigator = new Object();navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';"); /* 执行一段script */
-			CompiledScript script = compilable.compile(new FileReader("js_wb/wb_01.js"));
-			script.eval();
+			engine.eval("var $ = new Object();var window = new Object();var navigator = new Object();navigator.appName == 'Microsoft Internet Explorer';navigator.userAgent = 'Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36';"); /* 执行一段script */
+			engine.eval(new FileReader("js_wb/wb_01.js"));
+			engine.eval(new FileReader("js_wb/qq.js"));
 			return engine;
 		} catch (ScriptException e) {
 			// TODO Auto-generated catch block
@@ -376,6 +366,20 @@ public class QQEncryptor {
 		if (engine != null) {
 			try {
 				su = (String) engine.eval("talkMsg('" + str + "')");
+			} catch (ScriptException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return su;
+	}
+	public static String getBkn(String skey) {
+
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				su = (String) engine.eval("Encryption.getBkn('" + skey + "')");
 			} catch (ScriptException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

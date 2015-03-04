@@ -169,7 +169,7 @@ public class QmWebLoginAction extends AbstractHttpAction {
 	     Matcher mc = pt.matcher(response.getResponseString());
 //	     ptuiCB('3','0','','0','您输入的帐号或密码不正确，请重新输入。', '569398403');
 //	     ptuiCB('4','0','','0','您输入的验证码不正确，请重新输入。', '569398403');
-
+//	     ptuiCB('4','2','','0','页面过期，请重试。(347079024)', '569398403');
 	     LOG.info("WebLogin: " + response.getResponseString());
 	     if(mc.find()){
 	    	int ret = Integer.parseInt(mc.group(1));

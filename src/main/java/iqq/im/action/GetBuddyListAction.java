@@ -21,6 +21,7 @@ import iqq.im.service.HttpService;
 import iqq.im.util.QQEncryptor;
 
 import org.slf4j.Logger;
+import org.apache.http.cookie.Cookie;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -51,7 +52,7 @@ public class GetBuddyListAction extends AbstractHttpAction {
 		QQSession session = getContext().getSession();
 		QQAccount account = getContext().getAccount();
 		HttpService httpService = (HttpService) getContext().getSerivce(QQService.Type.HTTP);
-		QQHttpCookie ptwebqq = httpService.getCookie("ptwebqq", QQConstants.URL_GET_USER_CATEGORIES);
+		Cookie ptwebqq = httpService.getCookie("ptwebqq", QQConstants.URL_GET_USER_CATEGORIES);
 		
 		JSONObject json = new JSONObject();
 		json.put("h", "hello");
