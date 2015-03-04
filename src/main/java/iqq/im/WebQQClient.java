@@ -25,8 +25,10 @@
  */
 package iqq.im;
 
+import static iqq.im.event.QQActionEvent.Type.EVT_OK;
 import iqq.im.actor.QQActor;
 import iqq.im.actor.QQActorDispatcher;
+import iqq.im.actor.ThreadActorDispatcher;
 import iqq.im.bean.QQAccount;
 import iqq.im.bean.QQBuddy;
 import iqq.im.bean.QQDiscuz;
@@ -77,7 +79,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -135,6 +141,7 @@ public class WebQQClient implements QQClient, QQContext {
 		this.store = new QQStore();
 		this.notifyListener = notifyListener;
 		this.actorDispatcher = actorDispatcher;
+		actorDispatcher.setServices(services);
 		
 		this.init();
 	}
@@ -250,10 +257,7 @@ public class WebQQClient implements QQClient, QQContext {
 				module.destroy();
 			}
 
-			for (QQService.Type type : services.keySet()) {
-				QQService service = services.get(type);
-				service.destroy();
-			}
+			
 
 			actorDispatcher.destroy();
 			store.destroy();
@@ -564,10 +568,11 @@ public class WebQQClient implements QQClient, QQContext {
 		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
 		return mgrModule.deleteGroupMember(group, memsDeleted, acceptApply, qqActionListener);
 	}
-	public QQActionFuture pollWbMsg(String acceptor, QQActionListener qqActionListener) {
+	public QQActionFuture pollWbMsg(String reqMsg, String acceptor, QQActionListener qqActionListener) {
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
-		return procModule.pollMsg(qqActionListener, acceptor);
+		return procModule.pollWbMsg(reqMsg, acceptor, qqActionListener);
 	}
+	
 	/**
 	 * {@inheritDoc}
 	 *

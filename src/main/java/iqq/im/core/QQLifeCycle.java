@@ -25,7 +25,10 @@
  */
 package iqq.im.core;
 
+import java.util.Map;
+
 import iqq.im.QQException;
+import iqq.im.core.QQService.Type;
 
 /**
  *
@@ -46,6 +49,7 @@ public interface QQLifeCycle {
 	
 	/**
 	 * 销毁，在使用完毕之后调用
+	 * @param services 
 	 *
 	 * @throws iqq.im.QQException 销毁失败抛出
 	 */

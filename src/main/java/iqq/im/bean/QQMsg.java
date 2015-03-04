@@ -57,7 +57,8 @@ public class QQMsg implements Serializable{
 		BUDDY_MSG, 		//好友消息
 		GROUP_MSG,		// 群消息
 		DISCUZ_MSG,		//讨论组消息
-		SESSION_MSG	//临时会话消息
+		SESSION_MSG,	//临时会话消息
+		EXIT_MSG
 	}
 
 	private long id; // 消息ID

@@ -25,27 +25,17 @@
  */
 package iqq.im.util;
 
-import iqq.im.T_01;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
-import java.util.Scanner;
-import java.util.Set;
-import java.util.Map.Entry;
 
-import javax.script.Bindings;
-import javax.script.Compilable;
-import javax.script.CompiledScript;
 import javax.script.Invocable;
-import javax.script.ScriptContext;
 import javax.script.ScriptEngine;
-import javax.script.ScriptEngineFactory;
 import javax.script.ScriptEngineManager;
 import javax.script.ScriptException;
 
@@ -151,7 +141,7 @@ public class QQEncryptor {
 				String salt = String.valueOf(new char[] { (char) 0, (char) 0, (char) 0, (char) 0, (char) 59, (char) 186, (char) 32, (char) 183 });
 				su = (String) engine.eval( "Encryption.getEncryption('"+password+"','"+salt+"','"+verify+"')");
 			}catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -263,10 +253,10 @@ public class QQEncryptor {
 			try {
 				su = (String) engine.eval("sinaSSOEncoder.base64.encode('" + URLEncoder.encode(username, "utf-8") + "');");
 			} catch (UnsupportedEncodingException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -280,7 +270,7 @@ public class QQEncryptor {
 			try {
 				su = (String) engine.eval("sinaSSOEncoder.base64.makeRequest('" + password + "','" + pubkey + "'," + servertime + ",'" + nonce + "');");
 			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -298,10 +288,10 @@ public class QQEncryptor {
 			engine.eval(new FileReader("js_wb/qq.js"));
 			return engine;
 		} catch (ScriptException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		return null;
@@ -338,7 +328,7 @@ public class QQEncryptor {
 		try {
 			return Base64.getEncoder().encodeToString(URLEncoder.encode(str, "utf-8").getBytes("utf-8"));
 		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
+			
 			e.printStackTrace();
 		}
 		return "";
@@ -352,7 +342,7 @@ public class QQEncryptor {
 			try {
 				su = (String) engine.eval("_siteId('" + str + "')");
 			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -367,7 +357,7 @@ public class QQEncryptor {
 			try {
 				su = (String) engine.eval("talkMsg('" + str + "')");
 			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}
@@ -381,7 +371,7 @@ public class QQEncryptor {
 			try {
 				su = (String) engine.eval("Encryption.getBkn('" + skey + "')");
 			} catch (ScriptException e) {
-				// TODO Auto-generated catch block
+				
 				e.printStackTrace();
 			}
 		}

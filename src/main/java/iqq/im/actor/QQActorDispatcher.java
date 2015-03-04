@@ -25,7 +25,10 @@
  */
 package iqq.im.actor;
 
+import java.util.Map;
+
 import iqq.im.core.QQLifeCycle;
+import iqq.im.core.QQService;
 
 /**
  *
@@ -42,4 +45,8 @@ public interface QQActorDispatcher extends QQLifeCycle {
 	 * @param actor 事件Actor
 	 */
 	public void pushActor(QQActor actor);
+
+	public void setServices(Map<iqq.im.core.QQService.Type, QQService> services);
+
+	
 }

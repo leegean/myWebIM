@@ -27,6 +27,7 @@ package iqq.im.actor;
 
 
 import iqq.im.QQException;
+import iqq.im.bean.QQMsg;
 import iqq.im.core.QQContext;
 import iqq.im.core.QQService;
 
@@ -43,46 +44,33 @@ import org.slf4j.LoggerFactory;
  *
  * @author solosky
  */
-public class ThreadActorDispatcher implements QQActorDispatcher, Runnable {
-	private static final Logger LOG = LoggerFactory.getLogger(ThreadActorDispatcher.class);
-	private BlockingQueue<QQActor> actorQueue;
-	private Thread dispatchThread;
-	private Map<QQService.Type, QQService> services;
-	public Map<QQService.Type, QQService> getServices() {
-		return services;
-	}
-
-	public void setServices(Map<QQService.Type, QQService> services) {
-		this.services = services;
-	}
+public class ThreadMsgDispatcher implements  Runnable {
+	private static final Logger LOG = LoggerFactory.getLogger(ThreadMsgDispatcher.class);
+	private BlockingQueue<QQMsg> msgQueue;
+	private Thread msgThread;
 
 	/**
 	 * 默认构造函数，不会自动启动action循环
 	 */
-	public ThreadActorDispatcher(){
-		this.actorQueue = new LinkedBlockingQueue<QQActor>();
+	public ThreadMsgDispatcher(){
+		this.msgQueue = new LinkedBlockingQueue<QQMsg>();
 	}
 	
-	/* (non-Javadoc)
-	 * @see iqq.im.actor.QQActorDispatcher#pushActor(iqq.im.actor.QQActor)
-	 */
-	/** {@inheritDoc} */
-	@Override
-	public void pushActor(QQActor actor){
-		this.actorQueue.add(actor);
+	public void pushActor(QQMsg msg){
+		this.msgQueue.add(msg);
 	}
 	
 	/**
 	 * 执行一个QQActor，返回是否继续下一个actor
 	 */
-	private boolean dispatchAction(QQActor actor){
+	private boolean dispatchMsg(QQMsg msg){
 		try {
-			actor.execute();
-//			System.out.println("take:    "+actor);
+
+		
 		} catch (Throwable e) {
 			LOG.warn("QQActor dispatchAction Error!", e);
 		}
-		return !(actor instanceof ExitActor);
+		return !(msg.getType()==QQMsg.Type.EXIT_MSG);
 	}
 	
 	/** {@inheritDoc} */
@@ -90,57 +78,34 @@ public class ThreadActorDispatcher implements QQActorDispatcher, Runnable {
 	public void run(){
 		try {
 			LOG.debug("QQActorDispatcher enter action loop...");
-			while(dispatchAction(this.actorQueue.take())){}
+			while(dispatchMsg(this.msgQueue.take())){}
 			LOG.debug("QQActorDispatcher leave action loop...");
 		} catch (InterruptedException e) {
 			LOG.debug("QQActorDispatcher interrupted.");
 		}
 	}
 
-	/** {@inheritDoc} */
-	@Override
-	public void init(QQContext context) throws QQException {
-		actorQueue.clear();
-		dispatchThread = new Thread(this);
-		dispatchThread.setName("QQActorDispatcher");
-		dispatchThread.start();
+	public void init() throws QQException {
+		
+		msgQueue.clear();
+		msgThread = new Thread(this);
+		msgThread.setName("QQMsgDispatcher");
+		msgThread.start();
 	}
 
-	/** {@inheritDoc} */
-	@Override
 	public void destroy() throws QQException {
-		pushActor(new ExitActor());
+		QQMsg msg = new QQMsg();
+		msg.setType(QQMsg.Type.EXIT_MSG);
+		pushActor(msg);
 		try {
-			if(Thread.currentThread() != dispatchThread){
-				dispatchThread.join();
+			if(Thread.currentThread() != msgThread){
+				msgThread.join();
 			}
 		} catch (InterruptedException e) {
 			throw new QQException(QQException.QQErrorCode.UNKNOWN_ERROR, e);
 		}
 	}
 	
-	/**
-	 * 
-	 * 一个伪Actor只是为了让ActorLoop停下来
-	 *
-	 * @author solosky
-	 *
-	 */
-	public class ExitActor implements QQActor {
-		@Override
-		public void execute() {
-			//do nothing
-			for (QQService.Type type : services.keySet()) {
-				QQService service = services.get(type);
-				try {
-					service.destroy();
-				} catch (QQException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			}
-		}
-	}
 	
 	
 }

@@ -83,67 +83,67 @@ public class WebQQClientTest {
         WebQQClientTest test = new WebQQClientTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
         test.login();
     }
-    public void loginWb(){
-    	client.preloginWb(new QQActionListener() {
-			
-			@Override
-			public void onActionEvent(QQActionEvent event) {
-				// TODO Auto-generated method stub
-				if (event.getType() == Type.EVT_OK) {
-					//到这里就算是登录成功了
-					ArrayList<String> list = (ArrayList<String>) event.getTarget();
-					for (String string : list) {
-						System.out.println(string);
-					}
-					System.out.println("就算是登录成功微博了");
-					
-					new Thread(new Runnable() {
-						
-						@Override
-						public void run() {
-							// TODO Auto-generated method stub
-							while(true){
-								try {
-									String sendMsg = new BufferedReader(new InputStreamReader(System.in)).readLine();
-									if(sendMsg.contains("#")){
-										client.pollWbMsg("5175429989", new QQActionListener() {
-											
-											@Override
-											public void onActionEvent(QQActionEvent event) {
-												// TODO Auto-generated method stub
-												if (event.getType() == Type.EVT_OK) {
-													System.out.println("pllmsg：   "+event.getTarget());
-												}
-											}
-										});
-									}else{
-										client.sendWbMsg(sendMsg, "5175429989", new QQActionListener() {
-											
-											@Override
-											public void onActionEvent(QQActionEvent event) {
-												// TODO Auto-generated method stub
-												if (event.getType() == Type.EVT_OK) {
-													System.out.println("发送成功");
-												}
-											}
-										});
-									}
-									
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-							}
-							
-						}
-					}).start();
-					
-				}else{
-					System.out.println(event.getTarget());
-				}
-			}
-		});
-    }
+//    public void loginWb(){
+//    	client.preloginWb(new QQActionListener() {
+//			
+//			@Override
+//			public void onActionEvent(QQActionEvent event) {
+//				// TODO Auto-generated method stub
+//				if (event.getType() == Type.EVT_OK) {
+//					//到这里就算是登录成功了
+//					ArrayList<String> list = (ArrayList<String>) event.getTarget();
+//					for (String string : list) {
+//						System.out.println(string);
+//					}
+//					System.out.println("就算是登录成功微博了");
+//					
+//					new Thread(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							// TODO Auto-generated method stub
+//							while(true){
+//								try {
+//									String sendMsg = new BufferedReader(new InputStreamReader(System.in)).readLine();
+//									if(sendMsg.contains("#")){
+//										client.pollWbMsg("5175429989", new QQActionListener() {
+//											
+//											@Override
+//											public void onActionEvent(QQActionEvent event) {
+//												// TODO Auto-generated method stub
+//												if (event.getType() == Type.EVT_OK) {
+//													System.out.println("pllmsg：   "+event.getTarget());
+//												}
+//											}
+//										});
+//									}else{
+//										client.sendWbMsg(sendMsg, "5175429989", new QQActionListener() {
+//											
+//											@Override
+//											public void onActionEvent(QQActionEvent event) {
+//												// TODO Auto-generated method stub
+//												if (event.getType() == Type.EVT_OK) {
+//													System.out.println("发送成功");
+//												}
+//											}
+//										});
+//									}
+//									
+//								} catch (IOException e) {
+//									// TODO Auto-generated catch block
+//									e.printStackTrace();
+//								}
+//							}
+//							
+//						}
+//					}).start();
+//					
+//				}else{
+//					System.out.println(event.getTarget());
+//				}
+//			}
+//		});
+//    }
 	
 	/**
 	 * 聊天消息通知，使用这个注解可以收到QQ消息

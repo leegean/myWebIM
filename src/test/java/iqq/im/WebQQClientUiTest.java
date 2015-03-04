@@ -22,6 +22,7 @@ import iqq.im.event.QQNotifyEventArgs;
 import iqq.im.event.QQNotifyHandler;
 import iqq.im.event.QQNotifyHandlerProxy;
 
+import java.awt.Container;
 import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
@@ -37,8 +38,12 @@ import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -60,22 +65,43 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	private JTextField jtfUin;
 	private JTextField jtfCard;
 	private JRadioButton jrb;
+	private JTextField jtfSpeakTime;
+	private JTextField jtfGc1;
+	private JTextField jtfGc2;
+	private JTextField jtfUin2;
 
+	private boolean isLoginWb;
+	private JTextField jtfVerify;
+	private JLabel verifyLabel;
+	private QQNotifyEvent verifyEvt;
 	@SuppressWarnings("serial")
 	public WebQQClientUiTest(String user, String pwd, String wbUser, String wbPwd) {
-		setLayout(new FlowLayout());
+		Container pane = getContentPane();
+		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 		QQAccount account = new QQAccount();
 		account.setUsername(user);
 		account.setPassword(pwd);
 		account.setWbUsername(wbUser);
 		account.setWbPassword(wbPwd);
 		client = new WebQQClient(account, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
-		add(new JButton(new AbstractAction("login") {
+		
+		JPanel loginPanel = new JPanel(new FlowLayout());
+		add(loginPanel);
+		verifyLabel = new JLabel();
+		loginPanel.add(verifyLabel);
+		jtfVerify = new JTextField(10);
+		loginPanel.add(jtfVerify);
+		loginPanel.add(new JButton(new AbstractAction("login") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 
-				login();
+				if(verifyLabel.getIcon()!=null){
+					verifyLabel.setIcon(null);
+					client.submitVerify(jtfVerify.getText(), verifyEvt);
+				}else{
+					login();
+				}
 			}
 		}));
 		add(new JButton(new AbstractAction("loginQm") {
@@ -86,16 +112,21 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 				loginQm();
 			}
 		}));
+		
+		JPanel searchPanel = new JPanel(new FlowLayout());
+		add(searchPanel);
+		searchPanel.add(new JLabel("group："));
 		jtfGc = new JTextField(15);
-		add(jtfGc);
-		jtf = new JTextField(15);
-		add(jtf);
-		add(new JButton(new AbstractAction("searchMem") {
+		searchPanel.add(jtfGc);
+		jtfSpeakTime = new JTextField(15);
+		searchPanel.add(new JLabel("lasttime："));
+		searchPanel.add(jtfSpeakTime);
+		searchPanel.add(new JButton(new AbstractAction("searchMem") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final String group = jtfGc.getText().trim();
-				final String lastSpeak = jtf.getText().trim();
+				final String lastSpeak = jtfSpeakTime.getText().trim();
 				if (group.length()>0) {
 					QmMemSearchCondition condition = new QmMemSearchCondition();
 					condition.setGc(group);
@@ -120,15 +151,22 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			}
 
 		}));
+		JPanel updateCardPanel = new JPanel(new FlowLayout());
+		add(updateCardPanel);
+		updateCardPanel.add(new JLabel("group："));
+		jtfGc1 = new JTextField(15);
+		updateCardPanel.add(jtfGc1);
+		updateCardPanel.add(new JLabel("uin："));
 		jtfUin = new JTextField(15);
-		add(jtfUin);
+		updateCardPanel.add(jtfUin);
+		updateCardPanel.add(new JLabel("card："));
 		jtfCard = new JTextField(15);
-		add(jtfCard);
-		add(new JButton(new AbstractAction("updateCard") {
+		updateCardPanel.add(jtfCard);
+		updateCardPanel.add(new JButton(new AbstractAction("updateCard") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final String group = jtfGc.getText().trim();
+				final String group = jtfGc1.getText().trim();
 				final String uin = jtfUin.getText().trim();
 				final String card = jtfCard.getText().trim();
 				if (group.length()>0&&uin.length()>0) {
@@ -148,14 +186,22 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			}
 
 		}));
+		JPanel deletePanel = new JPanel(new FlowLayout());
+		add(deletePanel);
+		deletePanel.add(new JLabel("group："));
+		jtfGc2 = new JTextField(15);
+		deletePanel.add(jtfGc2);
+		deletePanel.add(new JLabel("uin："));
+		jtfUin2 = new JTextField(15);
+		deletePanel.add(jtfUin2);
 		jrb = new JRadioButton("不再接受加群申请");
-		add(jrb);
-		add(new JButton(new AbstractAction("deleteMem") {
+		deletePanel.add(jrb);
+		deletePanel.add(new JButton(new AbstractAction("deleteMem") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				final String group = jtfGc.getText().trim();
-				final String uin = jtfUin.getText().trim();
+				final String group = jtfGc2.getText().trim();
+				final String uin = jtfUin2.getText().trim();
 				ArrayList<String> deleteList = new ArrayList<String>();
 				deleteList.add(uin);
 				if (group.length()>0&&uin.length()>0) {
@@ -190,94 +236,42 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				final String msg = jta.getText().trim();
 				if (msg.length() > 0)
-					client.sendWbMsg(msg, "5175429989", new QQActionListener() {
-
-						@Override
-						public void onActionEvent(QQActionEvent event) {
-
-							if (event.getType() == EVT_OK) {
-								LOG.debug("发送成功");
-								pollMsg(msg);
-
-							}
-						}
-
-						private void pollMsg(final String msg) {
-							final Timer pollTimer = new Timer();
-							pollTimer.schedule(new TimerTask() {
-
-								@Override
-								public void run() {
-
-									QQActionFuture future = client.pollWbMsg("5175429989", null);
-									try {
-										QQActionEvent event1 = future.waitFinalEvent();
-
-										if (event1.getType() == EVT_OK) {
-											JSONObject json = (JSONObject) event1.getTarget();
-											// System.out.println("pllmsg：   "+json);
-											LOG.debug(json.toString());
-											JSONArray data = json.optJSONArray("data");
-											JSONArray attachment = json.optJSONArray("attachment");
-											if (attachment != null) {
-												for (int i = 0; i < attachment.length(); i++) {
-													JSONObject item = attachment.optJSONObject(i);
-													String thumbnail600 = item.optString("thumbnail_600");
-												}
-											}
-											if (data != null) {
-												JSONObject firstItem = data.optJSONObject(0);
-												String senderId = firstItem.optString("sender_id");
-												if (senderId.equals("2645052603")) {
-													return;
-												}
-												String firstText = firstItem.optString("text");
-												boolean flag = false;
-												for (int i = 0; i < data.length(); i++) {
-
-													JSONObject item = data.optJSONObject(i);
-
-													String text = item.optString("text");
-													if (i > 0 && text.equals(msg)) {
-														flag = true;
-														break;
-													}
-
-												}
-												if (flag) {
-													pollTimer.cancel();
-													pollTimer.purge();
-													LOG.debug("       pllmsg：   " + firstText);
-												}
-											}
-
-										}
-
-									} catch (QQException e) {
-										e.printStackTrace();
-									}
-								}
-							}, 1000, 500);
-
-						}
-					});
+				getChatMsg(msg, "5175429989", null);
 			}
+
+			
 		}));
 		addWindowListener(this);
 		setSize(600, 400);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
+	private void getChatMsg(final String reqMsg,final String acceptor,  final QQActionListener listener) {
+		
+		client.sendWbMsg(reqMsg, acceptor, new QQActionListener() {
 
+			@Override
+			public void onActionEvent(QQActionEvent event) {
+
+				if (event.getType() == EVT_OK) {
+					LOG.debug("发送成功");
+					client.pollWbMsg(reqMsg,acceptor, listener);
+
+				}
+			}
+
+			
+		});
+}
 	/**
 	 * 程序入口
 	 * 
 	 */
 	public static void main(String[] args) {
-		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
+//		1002053815
+		WebQQClientUiTest test = new WebQQClientUiTest("569398403", "lee19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {
@@ -287,6 +281,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			public void onActionEvent(QQActionEvent event) {
 
 				if (event.getType() == EVT_OK) {
+					isLoginWb = true;
 					// 到这里就算是登录成功了
 					ArrayList<String> list = (ArrayList<String>) event.getTarget();
 					for (String string : list) {
@@ -323,27 +318,43 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			} else if (item.getType() == ContentItem.Type.TEXT) {
 				String chatContent = ((TextItem) item).getContent();
 				System.out.print(" Text:" + chatContent);
-				if (chatContent.trim().length() > 0) {
+				int chatLen = chatContent.trim().length();
+				if (chatLen > 0 && chatLen < 100) {
 					// 组装QQ消息发送回去
-					QQMsg sendMsg = new QQMsg();
+					final QQMsg sendMsg = new QQMsg();
 					sendMsg.setTo(msg.getFrom()); // QQ好友UIN
 					iqq.im.bean.QQMsg.Type msgType = msg.getType();
 					switch (msgType) {
 					case BUDDY_MSG:
-						sendMsg.setType(QQMsg.Type.BUDDY_MSG); // 发送类型为好友
+						sendMsg.setType(QQMsg.Type.BUDDY_MSG); 
 						break;
 					case GROUP_MSG:
-						sendMsg.setType(QQMsg.Type.GROUP_MSG); // 发送类型为好友
+						sendMsg.setType(QQMsg.Type.GROUP_MSG); 
 						sendMsg.setGroup(msg.getGroup());
 						break;
 					default:
 						break;
 					}
 					// QQ内容
-					sendMsg.addContentItem(new TextItem("hello")); // 添加文本内容
-					sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
-					sendMsg.addContentItem(new FontItem()); // 使用默认字体
-					client.sendMsg(sendMsg, null); // 调用接口发送消息
+					if(msgType == QQMsg.Type.GROUP_MSG){
+						if(isLoginWb){
+							getChatMsg(chatContent, "5175429989", new QQActionListener() {
+								
+								@Override
+								public void onActionEvent(QQActionEvent event) {
+									// TODO Auto-generated method stub
+									String respMsg = (String)event.getTarget();
+											respMsg = respMsg.replace("小冰", "木头");
+											respMsg = respMsg.replace("微软", "木头");
+									sendMsg.addContentItem(new TextItem()); // 添加文本内容
+//									sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
+									sendMsg.addContentItem(new FontItem()); // 使用默认字体
+									client.sendMsg(sendMsg, null); // 调用接口发送消息
+								}
+							});
+						}
+					}
+					
 				}
 			} else if (item.getType() == ContentItem.Type.CFACE) {
 				// 截图
@@ -371,11 +382,13 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	@QQNotifyHandler(QQNotifyEvent.Type.CAPACHA_VERIFY)
 	protected void processVerify(QQNotifyEvent event) throws IOException {
 		QQNotifyEventArgs.ImageVerify verify = (QQNotifyEventArgs.ImageVerify) event.getTarget();
-		ImageIO.write(verify.image, "png", new File("verify.png"));
-		System.out.println(verify.reason);
-		System.out.print("请输入在项目根目录下verify.png图片里面的验证码:");
-		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
-		client.submitVerify(code, event);
+//		ImageIO.write(verify.image, "png", new File("verify.png"));
+//		System.out.println(verify.reason);
+//		System.out.print("请输入在项目根目录下verify.png图片里面的验证码:");
+//		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
+		verifyEvt = event;
+		verifyLabel.setIcon(new ImageIcon(verify.image));
+		
 	}
 
 	@QQNotifyHandler(QQNotifyEvent.Type.WB_CAPACHA_VERIFY)

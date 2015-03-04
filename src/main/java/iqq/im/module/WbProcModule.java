@@ -44,7 +44,11 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -163,7 +167,8 @@ public class WbProcModule extends AbstractModule {
 		},msg, acceptor);
 		return future;
 	}
-	public QQActionFuture pollMsg(QQActionListener listener, String acceptor) {
+	
+	private QQActionFuture pollMsg(QQActionListener listener, String acceptor) {
 		final ProcActionFuture future = new ProcActionFuture(listener, true);
 		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
 		loginModule.pollMsg(new QQActionListener() {
@@ -180,5 +185,71 @@ public class WbProcModule extends AbstractModule {
 			}
 		}, acceptor);
 		return future;
+	}
+	
+	public QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final QQActionListener qqActionListener) {
+		final ProcActionFuture outFuture = new ProcActionFuture(qqActionListener, true);
+		final Timer pollTimer = new Timer();
+		pollTimer.schedule(new TimerTask() {
+
+			@Override
+			public void run() {
+
+				QQActionFuture future = pollMsg(null, acceptor);
+				try {
+					QQActionEvent event1 = future.waitFinalEvent();
+
+					if (event1.getType() == QQActionEvent.Type.EVT_OK) {
+						JSONObject json = (JSONObject) event1.getTarget();
+						// System.out.println("pllmsg：   "+json);
+						LOG.debug(json.toString());
+						JSONArray data = json.optJSONArray("data");
+						JSONArray attachment = json.optJSONArray("attachment");
+						if (attachment != null) {
+							for (int i = 0; i < attachment.length(); i++) {
+								JSONObject item = attachment.optJSONObject(i);
+								String thumbnail600 = item.optString("thumbnail_600");
+							}
+						}
+						if (data != null) {
+							JSONObject firstItem = data.optJSONObject(0);
+							String senderId = firstItem.optString("sender_id");
+							if (senderId.equals("2645052603")) {
+								return;
+							}
+							String firstText = firstItem.optString("text");
+							boolean flag = false;
+							for (int i = 0; i < data.length(); i++) {
+
+								JSONObject item = data.optJSONObject(i);
+
+								String text = item.optString("text");
+								if (i > 0 && text.equals(reqMsg)) {
+									flag = true;
+									break;
+								}
+
+							}
+							if (flag) {
+								pollTimer.cancel();
+								pollTimer.purge();
+								outFuture.notifyActionEvent(QQActionEvent.Type.EVT_OK, firstText);
+								LOG.debug("       pllmsg：   " + firstText);
+							}
+						}
+
+					}else{
+						pollTimer.cancel();
+						pollTimer.purge();
+						outFuture.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, event1.getTarget());
+					}
+
+				} catch (QQException e) {
+					e.printStackTrace();
+				}
+			}
+		}, 1000, 200);
+
+		return outFuture;
 	}
 }
