@@ -61,6 +61,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	private JTextField jtfCard;
 	private JRadioButton jrb;
 
+	@SuppressWarnings("serial")
 	public WebQQClientUiTest(String user, String pwd, String wbUser, String wbPwd) {
 		setLayout(new FlowLayout());
 		QQAccount account = new QQAccount();
@@ -104,7 +105,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 						@Override
 						public void onActionEvent(QQActionEvent event) {
-							// TODO Auto-generated method stub
+							
 							if (event.getType() == EVT_OK) {
 								LOG.debug("搜索群成员成功");
 
@@ -135,7 +136,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 						@Override
 						public void onActionEvent(QQActionEvent event) {
-							// TODO Auto-generated method stub
+							
 							if (event.getType() == EVT_OK) {
 								LOG.debug("修改群名片成功");
 							}
@@ -162,7 +163,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 						@Override
 						public void onActionEvent(QQActionEvent event) {
-							// TODO Auto-generated method stub
+							
 							if (event.getType() == EVT_OK) {
 								LOG.debug("删除群成员成功");
 							}
