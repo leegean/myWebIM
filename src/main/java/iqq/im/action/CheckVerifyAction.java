@@ -64,6 +64,7 @@ public class CheckVerifyAction extends AbstractHttpAction {
 		Pattern p = Pattern.compile(QQConstants.REGXP_CHECK_VERIFY);
         Matcher m = p.matcher(response.getResponseString());
         if(m.find()){
+        	System.out.println(response.getResponseString());
         	String qqHex = m.group(3);
 			qqHex = qqHex.replaceAll("\\\\x", "");
         	QQActionEventArgs.CheckVerifyArgs args = new QQActionEventArgs.CheckVerifyArgs();

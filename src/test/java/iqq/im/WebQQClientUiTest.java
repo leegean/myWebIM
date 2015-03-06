@@ -237,8 +237,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				final String msg = jta.getText().trim();
-				if (msg.length() > 0)
-				getChatMsg(msg, "5175429989", null);
+				if (msg.length() > 0);
 			}
 
 			
@@ -248,30 +247,13 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setVisible(true);
 	}
-	private void getChatMsg(final String reqMsg,final String acceptor,  final QQActionListener listener) {
-		
-		client.sendWbMsg(reqMsg, acceptor, new QQActionListener() {
-
-			@Override
-			public void onActionEvent(QQActionEvent event) {
-
-				if (event.getType() == EVT_OK) {
-					LOG.debug("发送成功");
-					client.pollWbMsg(reqMsg,acceptor, listener);
-
-				}
-			}
-
-			
-		});
-}
 	/**
 	 * 程序入口
 	 * 
 	 */
 	public static void main(String[] args) {
 //		1002053815
-		WebQQClientUiTest test = new WebQQClientUiTest("569398403", "lee19861001", "569398403@qq.com", "leegean19861001");
+		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {
@@ -331,6 +313,8 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					case GROUP_MSG:
 						sendMsg.setType(QQMsg.Type.GROUP_MSG); 
 						sendMsg.setGroup(msg.getGroup());
+						sendMsg.addContentItem(new TextItem(chatContent)); // 添加文本内容
+						sendMsg.addContentItem(new FontItem()); // 使用默认字体
 						break;
 					default:
 						break;
@@ -338,20 +322,22 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					// QQ内容
 					if(msgType == QQMsg.Type.GROUP_MSG){
 						if(isLoginWb){
-							getChatMsg(chatContent, "5175429989", new QQActionListener() {
-								
-								@Override
-								public void onActionEvent(QQActionEvent event) {
-									// TODO Auto-generated method stub
-									String respMsg = (String)event.getTarget();
-											respMsg = respMsg.replace("小冰", "木头");
-											respMsg = respMsg.replace("微软", "木头");
-									sendMsg.addContentItem(new TextItem()); // 添加文本内容
-//									sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
-									sendMsg.addContentItem(new FontItem()); // 使用默认字体
-									client.sendMsg(sendMsg, null); // 调用接口发送消息
-								}
-							});
+							
+							client.getMsgDispatcher().pushActor(sendMsg);
+//							getChatMsg(chatContent, "5175429989", new QQActionListener() {
+//								
+//								@Override
+//								public void onActionEvent(QQActionEvent event) {
+//									// TODO Auto-generated method stub
+//									String respMsg = (String)event.getTarget();
+//											respMsg = respMsg.replace("小冰", "木头");
+//											respMsg = respMsg.replace("微软", "木头");
+//									sendMsg.addContentItem(new TextItem()); // 添加文本内容
+////									sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
+//									sendMsg.addContentItem(new FontItem()); // 使用默认字体
+//									client.sendMsg(sendMsg, null); // 调用接口发送消息
+//								}
+//							});
 						}
 					}
 					

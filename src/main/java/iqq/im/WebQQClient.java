@@ -29,6 +29,7 @@ import static iqq.im.event.QQActionEvent.Type.EVT_OK;
 import iqq.im.actor.QQActor;
 import iqq.im.actor.QQActorDispatcher;
 import iqq.im.actor.ThreadActorDispatcher;
+import iqq.im.actor.ThreadMsgDispatcher;
 import iqq.im.bean.QQAccount;
 import iqq.im.bean.QQBuddy;
 import iqq.im.bean.QQDiscuz;
@@ -98,6 +99,14 @@ public class WebQQClient implements QQClient, QQContext {
 	private Map<QQService.Type, QQService> services;
 	private Map<QQModule.Type, QQModule> modules;
 	private QQActorDispatcher actorDispatcher;
+	private ThreadMsgDispatcher msgDispatcher;
+	public ThreadMsgDispatcher getMsgDispatcher() {
+		return msgDispatcher;
+	}
+
+	public void setMsgDispatcher(ThreadMsgDispatcher msgDispatcher) {
+		this.msgDispatcher = msgDispatcher;
+	}
 	private QQAccount account;
 	private QQSession session;
 	private QQStore store;
@@ -141,6 +150,7 @@ public class WebQQClient implements QQClient, QQContext {
 		this.store = new QQStore();
 		this.notifyListener = notifyListener;
 		this.actorDispatcher = actorDispatcher;
+		this.msgDispatcher = new ThreadMsgDispatcher();
 		actorDispatcher.setServices(services);
 		
 		this.init();
@@ -241,6 +251,7 @@ public class WebQQClient implements QQClient, QQContext {
 			}
 
 			actorDispatcher.init(this);
+			msgDispatcher.init(this);
 			store.init(this);
 		} catch (QQException e) {
 			LOG.warn("init error:", e);
@@ -554,7 +565,7 @@ public class WebQQClient implements QQClient, QQContext {
 	}
 	public QQActionFuture sendWbMsg(String msg, String acceptor, QQActionListener qqActionListener) {
 		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
-		return procModule.sendMsg(qqActionListener, msg, acceptor);
+		return procModule.sendWbMsg(qqActionListener, msg, acceptor);
 	}
 	public QQActionFuture searchQmGroupMember(QmMemSearchCondition condition,QQActionListener qqActionListener) {
 		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
@@ -567,10 +578,6 @@ public class WebQQClient implements QQClient, QQContext {
 	public QQActionFuture deleteQmGroupMember(String group, ArrayList<String> memsDeleted, boolean acceptApply,QQActionListener qqActionListener) {
 		QmMgrModule mgrModule = (QmMgrModule) getModule(QQModule.Type.QM_MGR);
 		return mgrModule.deleteGroupMember(group, memsDeleted, acceptApply, qqActionListener);
-	}
-	public QQActionFuture pollWbMsg(String reqMsg, String acceptor, QQActionListener qqActionListener) {
-		WbProcModule procModule = (WbProcModule) getModule(QQModule.Type.WB_PROC);
-		return procModule.pollWbMsg(reqMsg, acceptor, qqActionListener);
 	}
 	
 	/**

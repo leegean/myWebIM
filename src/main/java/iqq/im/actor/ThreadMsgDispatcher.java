@@ -1,4 +1,4 @@
- /*
+/*
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
  * this work for additional information regarding copyright ownership.
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
- /**
+/**
  * Project  : WebQQCore
  * Package  : iqq.im.core
  * File     : QQEventDispatcher.java
@@ -25,15 +25,24 @@
  */
 package iqq.im.actor;
 
-
+import iqq.im.QQActionListener;
 import iqq.im.QQException;
+import iqq.im.WebQQClient;
 import iqq.im.bean.QQMsg;
+import iqq.im.bean.content.ContentItem;
+import iqq.im.bean.content.FontItem;
+import iqq.im.bean.content.TextItem;
+import iqq.im.bean.content.ContentItem.Type;
 import iqq.im.core.QQContext;
 import iqq.im.core.QQService;
+import iqq.im.event.QQActionEvent;
+import iqq.im.event.QQActionFuture;
 
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Consumer;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,49 +53,69 @@ import org.slf4j.LoggerFactory;
  *
  * @author solosky
  */
-public class ThreadMsgDispatcher implements  Runnable {
+public class ThreadMsgDispatcher implements Runnable {
 	private static final Logger LOG = LoggerFactory.getLogger(ThreadMsgDispatcher.class);
 	private BlockingQueue<QQMsg> msgQueue;
+	private WebQQClient webQQClient;
 	private Thread msgThread;
 
 	/**
 	 * 默认构造函数，不会自动启动action循环
 	 */
-	public ThreadMsgDispatcher(){
+	public ThreadMsgDispatcher() {
 		this.msgQueue = new LinkedBlockingQueue<QQMsg>();
 	}
-	
-	public void pushActor(QQMsg msg){
+
+	public void pushActor(QQMsg msg) {
 		this.msgQueue.add(msg);
 	}
-	
+
 	/**
 	 * 执行一个QQActor，返回是否继续下一个actor
 	 */
-	private boolean dispatchMsg(QQMsg msg){
+	private boolean dispatchMsg(QQMsg msg) {
 		try {
+			final QQMsg reqMsg = msg;
+			QQActionFuture future = webQQClient.sendWbMsg(msg.getText(), "5175429989", null);
+			
+			QQActionEvent event = future.waitFinalEvent();
 
-		
+			if (event.getType() == QQActionEvent.Type.EVT_OK) {
+				String chatContent = (String) event.getTarget();
+				chatContent = chatContent.replace("小冰", "木头");
+				chatContent = chatContent.replace("微软", "木头");
+				List<ContentItem> contentList = reqMsg.getContentList();
+				for (ContentItem contentItem : contentList) {
+					if(contentItem.getType() == Type.TEXT){
+						((TextItem)contentItem).setContent(chatContent);
+					}
+				}
+
+				reqMsg.addContentItem(new TextItem()); // 添加文本内容
+				webQQClient.sendMsg(reqMsg, null); // 调用接口发送消息
+				
+			}
 		} catch (Throwable e) {
 			LOG.warn("QQActor dispatchAction Error!", e);
 		}
-		return !(msg.getType()==QQMsg.Type.EXIT_MSG);
+		return !(msg.getType() == QQMsg.Type.EXIT_MSG);
 	}
-	
+
 	/** {@inheritDoc} */
 	@Override
-	public void run(){
+	public void run() {
 		try {
 			LOG.debug("QQActorDispatcher enter action loop...");
-			while(dispatchMsg(this.msgQueue.take())){}
+			while (dispatchMsg(this.msgQueue.take())) {
+			}
 			LOG.debug("QQActorDispatcher leave action loop...");
 		} catch (InterruptedException e) {
 			LOG.debug("QQActorDispatcher interrupted.");
 		}
 	}
 
-	public void init() throws QQException {
-		
+	public void init(WebQQClient webQQClient) throws QQException {
+		this.webQQClient = webQQClient;
 		msgQueue.clear();
 		msgThread = new Thread(this);
 		msgThread.setName("QQMsgDispatcher");
@@ -98,14 +127,12 @@ public class ThreadMsgDispatcher implements  Runnable {
 		msg.setType(QQMsg.Type.EXIT_MSG);
 		pushActor(msg);
 		try {
-			if(Thread.currentThread() != msgThread){
+			if (Thread.currentThread() != msgThread) {
 				msgThread.join();
 			}
 		} catch (InterruptedException e) {
 			throw new QQException(QQException.QQErrorCode.UNKNOWN_ERROR, e);
 		}
 	}
-	
-	
-	
+
 }

@@ -149,7 +149,7 @@ public class WbProcModule extends AbstractModule {
 		},verifyImage);
 	}
 
-	public QQActionFuture sendMsg(QQActionListener listener, String msg, String acceptor) {
+	public QQActionFuture sendWbMsg(QQActionListener listener, final String msg, final String acceptor) {
 		final ProcActionFuture future = new ProcActionFuture(listener, true);
 		final WbLoginModule loginModule = (WbLoginModule) getContext().getModule(QQModule.Type.WB_LOGIN);
 		loginModule.sendMsg(new QQActionListener() {
@@ -158,9 +158,9 @@ public class WbProcModule extends AbstractModule {
 			public void onActionEvent(QQActionEvent event) {
 				// TODO Auto-generated method stub
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
-					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, event.getTarget());
+					LOG.debug("发送成功");
+					pollWbMsg(msg, acceptor, future);
 				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
-					System.out.println("======prelogin出错=======");
 					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,  event.getTarget());
 				}
 			}
@@ -179,7 +179,6 @@ public class WbProcModule extends AbstractModule {
 				if (event.getType() == QQActionEvent.Type.EVT_OK) {
 					future.notifyActionEvent(QQActionEvent.Type.EVT_OK, event.getTarget());
 				} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
-					System.out.println("======prelogin出错=======");
 					future.notifyActionEvent(QQActionEvent.Type.EVT_ERROR,  event.getTarget());
 				}
 			}
@@ -187,8 +186,7 @@ public class WbProcModule extends AbstractModule {
 		return future;
 	}
 	
-	public QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final QQActionListener qqActionListener) {
-		final ProcActionFuture outFuture = new ProcActionFuture(qqActionListener, true);
+	public QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final ProcActionFuture outFuture) {
 		final Timer pollTimer = new Timer();
 		pollTimer.schedule(new TimerTask() {
 
@@ -238,7 +236,7 @@ public class WbProcModule extends AbstractModule {
 							}
 						}
 
-					}else{
+					}else if (event1.getType() == QQActionEvent.Type.EVT_ERROR){
 						pollTimer.cancel();
 						pollTimer.purge();
 						outFuture.notifyActionEvent(QQActionEvent.Type.EVT_ERROR, event1.getTarget());

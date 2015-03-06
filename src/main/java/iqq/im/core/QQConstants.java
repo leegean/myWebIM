@@ -167,8 +167,6 @@ public interface QQConstants {
 	public static final String URL_QM_SEATCH_GROUP_MEMBERS = "http://qun.qq.com/cgi-bin/qun_mgr/search_group_members";
 	public static final String URL_QM_SET_GROUP_CARD = "http://qun.qq.com/cgi-bin/qun_mgr/set_group_card";
 	public static final String URL_QM_DELETE_GROUP_MEMBER = "http://qun.qq.com/cgi-bin/qun_mgr/delete_group_member";
-	public static final String URL_WB_PRELOGIN = "http://login.sina.com.cn/sso/prelogin.php?entry=weibo&callback=sinaSSOController.preloginCallBack&su={0}&rsakt=mod&client=ssologin.js(v1.4.18)&_={1}";
-	public static final String URL_WB_LOGIN = "http://login.sina.com.cn/sso/login.php?client=ssologin.js(v1.4.18)&_={0}";
 	
 	
 	public static final String  WB_ENTRY = "mweibo";

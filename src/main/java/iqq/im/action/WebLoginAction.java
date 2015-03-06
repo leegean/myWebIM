@@ -30,9 +30,12 @@ import iqq.im.QQException;
 import iqq.im.QQException.QQErrorCode;
 import iqq.im.core.QQConstants;
 import iqq.im.core.QQContext;
+import iqq.im.core.QQService;
+import iqq.im.core.QQService.Type;
 import iqq.im.event.QQActionEvent;
 import iqq.im.http.QQHttpRequest;
 import iqq.im.http.QQHttpResponse;
+import iqq.im.service.ApacheHttpService;
 import iqq.im.util.QQEncryptor;
 
 import java.util.regex.Matcher;
@@ -100,17 +103,17 @@ public class WebLoginAction extends AbstractHttpAction {
 			js_ver:10038
 			login_sig:a4YzJkO9z19WM0-M6fZ9rRGyo7QhwGz7GjiQW4MiSdxldWj9uNf8D9D1DAZNlMqF
 		 */
-		
+		ApacheHttpService service = (ApacheHttpService)getContext().getSerivce(Type.HTTP);
 		//尝试登录，准备传递的参数值
 		QQHttpRequest req = createHttpRequest("GET", QQConstants.URL_UI_LOGIN);
 		req.addGetValue("u", username);
-		req.addGetValue("p", QQEncryptor.encrypt(uin, password, verifyCode));
+		req.addGetValue("p", QQEncryptor.encryptQm(password, verifyCode));
 		req.addGetValue("verifycode", verifyCode);
 		req.addGetValue("webqq_type", "10");
 		req.addGetValue("remember_uin","1");
 		req.addGetValue("login2qq", "1");
 		req.addGetValue("aid", "1003903");
-		req.addGetValue("u1", "http://web.qq.com/loginproxy.html?login2qq=1&webqq_type=10");
+		req.addGetValue("u1", "http://web2.qq.com/loginproxy.html?login2qq=1&webqq_type=10");
 		req.addGetValue("h", "1");
 		req.addGetValue("ptredirect", "0");
 		req.addGetValue("ptlang", "2052");
@@ -119,14 +122,18 @@ public class WebLoginAction extends AbstractHttpAction {
 		req.addGetValue("pttype", "1");
 		req.addGetValue("dumy", "");
 		req.addGetValue("fp", "loginerroralert");
-		req.addGetValue("action", "4-28-1632882");
+		req.addGetValue("action", "7-33-65291");
 		req.addGetValue("mibao_css", "m_webqq");
-		req.addGetValue("t", "1");
+		req.addGetValue("t", "2");
 		req.addGetValue("g", "1");
 		req.addGetValue("js_type", "0");
-		req.addGetValue("js_ver", "10038");
+		req.addGetValue("js_ver", "10114");
 		req.addGetValue("login_sig", getContext().getSession().getLoginSig());
 
+		req.addGetValue("pt_uistyle", "5");
+		req.addGetValue("pt_randsalt", "0");
+		req.addGetValue("pt_vcode_v1", "0");
+		req.addGetValue("pt_verifysession_v1", service.getCookie("verifysession",  QQConstants.URL_UI_LOGIN).getValue());
 		req.addHeader("Referer", QQConstants.REFFER);
 		return req;
 	}
