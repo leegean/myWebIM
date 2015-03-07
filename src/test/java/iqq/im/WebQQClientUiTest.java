@@ -253,7 +253,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	 */
 	public static void main(String[] args) {
 //		1002053815
-		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
+		WebQQClientUiTest test = new WebQQClientUiTest("2280410025", "lj19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {

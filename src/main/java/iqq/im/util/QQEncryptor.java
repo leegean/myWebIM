@@ -132,14 +132,15 @@ public class QQEncryptor {
 		return byte2HexString(data);
 	}
 
-	public static String encryptQm(String password, String verify) {
+	public static String encryptQm(long uin, String password, String verify) {
 		String su = "";
 		ScriptEngine engine = initScriptEngine();
 		if (engine != null) {
 			try {
 				// ";º ·"
 				String salt = String.valueOf(new char[] { (char) 0, (char) 0, (char) 0, (char) 0, (char) 59, (char) 186, (char) 32, (char) 183 });
-				su = (String) engine.eval( "Encryption.getEncryption('"+password+"','"+salt+"','"+verify+"')");
+				String byte2HexString = byte2HexString(long2bytes(uin));
+				su = (String) engine.eval( "getPassword('"+password+"','"+byte2HexString.toLowerCase()+"','"+verify+"')");
 			}catch (ScriptException e) {
 				
 				e.printStackTrace();

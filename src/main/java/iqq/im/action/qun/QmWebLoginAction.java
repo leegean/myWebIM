@@ -134,7 +134,7 @@ public class QmWebLoginAction extends AbstractHttpAction {
 		HttpService httpService = (HttpService) getContext().getSerivce(QQService.Type.HTTP);
 		QQHttpRequest req = createHttpRequest("GET", QQConstants.URL_QM_UI_LOGIN);
 		req.addGetValue("u", username);
-		req.addGetValue("p", QQEncryptor.encryptQm(password, verifyCode));
+		req.addGetValue("p", QQEncryptor.encryptQm(34,password, verifyCode));
 		req.addGetValue("verifycode", verifyCode);
 		req.addGetValue("aid", QQConstants.APPID);
 		req.addGetValue("u1", "http://qun.qq.com/tribe.html");
