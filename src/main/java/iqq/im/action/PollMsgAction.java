@@ -322,6 +322,7 @@ public class PollMsgAction extends AbstractHttpAction {
 		long fromUin = pollData.getLong("send_uin");
 		long groupCode = pollData.getLong("group_code");
 		QQGroup group = store.getGroupByCode(groupCode);
+		if(group==null)return null;
 		switch (msgType) {
 		case 32:
 			// 魔法、超级、涂鸦表情

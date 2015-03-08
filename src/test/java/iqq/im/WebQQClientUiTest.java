@@ -74,6 +74,13 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	private JTextField jtfVerify;
 	private JLabel verifyLabel;
 	private QQNotifyEvent verifyEvt;
+	private long loginWbTime;
+	public long getLoginWbTime() {
+		return loginWbTime;
+	}
+	public void setLoginWbTime(long loginWbTime) {
+		this.loginWbTime = loginWbTime;
+	}
 	@SuppressWarnings("serial")
 	public WebQQClientUiTest(String user, String pwd, String wbUser, String wbPwd) {
 		Container pane = getContentPane();
@@ -253,7 +260,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	 */
 	public static void main(String[] args) {
 //		1002053815
-		WebQQClientUiTest test = new WebQQClientUiTest("2280410025", "lj19861001", "569398403@qq.com", "leegean19861001");
+		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {
@@ -264,6 +271,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 
 				if (event.getType() == EVT_OK) {
 					isLoginWb = true;
+					loginWbTime = System.currentTimeMillis();
 					// 到这里就算是登录成功了
 					ArrayList<String> list = (ArrayList<String>) event.getTarget();
 					for (String string : list) {
@@ -313,7 +321,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					case GROUP_MSG:
 						sendMsg.setType(QQMsg.Type.GROUP_MSG); 
 						sendMsg.setGroup(msg.getGroup());
-						sendMsg.addContentItem(new TextItem(chatContent)); // 添加文本内容
+						sendMsg.addContentItem(new TextItem(chatContent.replace("@", "").replace("木头", ""))); // 添加文本内容
 						sendMsg.addContentItem(new FontItem()); // 使用默认字体
 						break;
 					default:
@@ -321,7 +329,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					}
 					// QQ内容
 					if(msgType == QQMsg.Type.GROUP_MSG){
-						if(isLoginWb){
+						if(isLoginWb&&msg.getDate().getTime()>loginWbTime){
 							
 							client.getMsgDispatcher().pushActor(sendMsg);
 //							getChatMsg(chatContent, "5175429989", new QQActionListener() {
@@ -435,10 +443,10 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 						@Override
 						public void onActionEvent(QQActionEvent event) {
 							if (event.getType() == EVT_OK) {
-								for (QQGroup g : client.getGroupList()) {
-									client.getGroupInfo(g, null);
-									System.out.println("Group: " + g.getName());
-								}
+//								for (QQGroup g : client.getGroupList()) {
+//									client.getGroupInfo(g, null);
+//									System.out.println("Group: " + g.getName());
+//								}
 							} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
 								System.out.println("** 群列表获取失败，处理重新获取");
 							}

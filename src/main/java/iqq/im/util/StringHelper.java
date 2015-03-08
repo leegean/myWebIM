@@ -80,7 +80,7 @@ public class StringHelper {
 	public static String stripHtmlSpecialChars(String html)
 	{
 		if(html==null)	return null;
-		 html=html.replaceAll("</?[^>]+>",""); 
+		 html=html.replace("</?[^>]+>",""); 
 		 html=html.replace("&nbsp;"," "); 
 		 
 		 return html;

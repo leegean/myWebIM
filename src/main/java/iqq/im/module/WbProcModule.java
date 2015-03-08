@@ -188,11 +188,17 @@ public class WbProcModule extends AbstractModule {
 	
 	public QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final ProcActionFuture outFuture) {
 		final Timer pollTimer = new Timer();
+		final long pollTime = System.currentTimeMillis();
 		pollTimer.schedule(new TimerTask() {
 
 			@Override
 			public void run() {
 
+				if(System.currentTimeMillis() - pollTime > 10000){
+					pollTimer.cancel();
+					pollTimer.purge();
+					return;
+				}
 				QQActionFuture future = pollMsg(null, acceptor);
 				try {
 					QQActionEvent event1 = future.waitFinalEvent();
@@ -246,7 +252,7 @@ public class WbProcModule extends AbstractModule {
 					e.printStackTrace();
 				}
 			}
-		}, 1000, 200);
+		}, 1000, 500);
 
 		return outFuture;
 	}
