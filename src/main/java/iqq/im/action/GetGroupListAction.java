@@ -49,7 +49,7 @@ public class GetGroupListAction extends AbstractHttpAction {
 
 		JSONObject json = new JSONObject();
 		json.put("vfwebqq", session.getVfwebqq());
-        json.put("hash", QQEncryptor.hash(account.getUin() + "", ptwebqq.getValue()));
+        json.put("hash", QQEncryptor.getHash(account.getUin() + "", ptwebqq.getValue()));
 
 		QQHttpRequest req = createHttpRequest("POST",
 				QQConstants.URL_GET_GROUP_NAME_LIST);

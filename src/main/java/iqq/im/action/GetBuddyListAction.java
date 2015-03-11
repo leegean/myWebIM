@@ -55,9 +55,9 @@ public class GetBuddyListAction extends AbstractHttpAction {
 		Cookie ptwebqq = httpService.getCookie("ptwebqq", QQConstants.URL_GET_USER_CATEGORIES);
 		
 		JSONObject json = new JSONObject();
-		json.put("h", "hello");
+//		json.put("h", "hello");
 		json.put("vfwebqq", session.getVfwebqq()); // 同上
-		json.put("hash", QQEncryptor.hash(account.getUin() + "", ptwebqq.getValue()));
+		json.put("hash", QQEncryptor.getHash(account.getUin() + "", ptwebqq.getValue()));
 
 		QQHttpRequest req = createHttpRequest("POST",
 				QQConstants.URL_GET_USER_CATEGORIES);
