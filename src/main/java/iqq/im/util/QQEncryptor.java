@@ -147,9 +147,22 @@ public class QQEncryptor {
 			}
 		}
 		return su;
+	}
+	public static String getHash(String uin, String ptwebqq) {
+		String su = "";
+		ScriptEngine engine = initScriptEngine();
+		if (engine != null) {
+			try {
+				// ";º ·"
+				su = (String) engine.eval( "getHash('"+uin+"','"+ptwebqq+"')");
+			}catch (ScriptException e) {
+				
+				e.printStackTrace();
+			}
+		}
+		return su;
 		
 	}
-
 	private static byte[] concat(byte[] bytes1, byte[] bytes2) {
 		byte[] big = new byte[bytes1.length + bytes2.length];
 		System.arraycopy(bytes1, 0, big, 0, bytes1.length);
