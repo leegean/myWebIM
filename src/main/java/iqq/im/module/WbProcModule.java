@@ -186,7 +186,7 @@ public class WbProcModule extends AbstractModule {
 		return future;
 	}
 	
-	public QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final ProcActionFuture outFuture) {
+	private QQActionFuture pollWbMsg(final String reqMsg,final String acceptor, final ProcActionFuture outFuture) {
 		final Timer pollTimer = new Timer();
 		final long pollTime = System.currentTimeMillis();
 		pollTimer.schedule(new TimerTask() {

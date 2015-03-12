@@ -4,19 +4,13 @@ import iqq.im.actor.ThreadActorDispatcher;
 import iqq.im.bean.QQAccount;
 import iqq.im.bean.QQBuddy;
 import iqq.im.bean.QQCategory;
-import iqq.im.bean.QQDiscuz;
 import iqq.im.bean.QQEmail;
-import iqq.im.bean.QQGroup;
-import iqq.im.bean.QQGroupSearchList;
 import iqq.im.bean.QQMsg;
 import iqq.im.bean.QQStatus;
 import iqq.im.bean.QmGroupMembers;
 import iqq.im.bean.QmMemSearchCondition;
 import iqq.im.bean.content.*;
-import iqq.im.core.QQConstants;
 import iqq.im.event.QQActionEvent;
-import iqq.im.event.QQActionEvent.Type;
-import iqq.im.event.QQActionFuture;
 import iqq.im.event.QQNotifyEvent;
 import iqq.im.event.QQNotifyEventArgs;
 import iqq.im.event.QQNotifyHandler;
@@ -33,8 +27,6 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import javax.imageio.ImageIO;
 import javax.swing.AbstractAction;
@@ -48,8 +40,6 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -221,18 +211,14 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 								LOG.debug("删除群成员成功");
 							}
 						}
-						
 					});
 				}
-
 			}
-
 		}));
 		add(new JButton(new AbstractAction("loginWb") {
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-
 				loginWb();
 			}
 		}));
@@ -246,8 +232,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 				final String msg = jta.getText().trim();
 				if (msg.length() > 0);
 			}
-
-			
 		}));
 		addWindowListener(this);
 		setSize(600, 400);
@@ -296,7 +280,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	@QQNotifyHandler(QQNotifyEvent.Type.CHAT_MSG)
 	public void processBuddyMsg(QQNotifyEvent event) throws QQException {
 		QQMsg msg = (QQMsg) event.getTarget();
-
 		System.out.println("[消息] " + msg.getFrom().getNickname() + "说:" + msg.packContentList());
 		System.out.print("消息内容: ");
 		List<ContentItem> items = msg.getContentList();
@@ -321,7 +304,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					case GROUP_MSG:
 						sendMsg.setType(QQMsg.Type.GROUP_MSG); 
 						sendMsg.setGroup(msg.getGroup());
-						sendMsg.addContentItem(new TextItem(chatContent.replace("@", "").replace("木头", ""))); // 添加文本内容
+						sendMsg.addContentItem(new TextItem(chatContent.replace("@", "").replace("诗月", ""))); // 添加文本内容
 						sendMsg.addContentItem(new FontItem()); // 使用默认字体
 						break;
 					default:
@@ -330,22 +313,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 					// QQ内容
 					if(msgType == QQMsg.Type.GROUP_MSG){
 						if(isLoginWb&&msg.getDate().getTime()>loginWbTime){
-							
 							client.getMsgDispatcher().pushActor(sendMsg);
-//							getChatMsg(chatContent, "5175429989", new QQActionListener() {
-//								
-//								@Override
-//								public void onActionEvent(QQActionEvent event) {
-//									// TODO Auto-generated method stub
-//									String respMsg = (String)event.getTarget();
-//											respMsg = respMsg.replace("小冰", "木头");
-//											respMsg = respMsg.replace("微软", "木头");
-//									sendMsg.addContentItem(new TextItem()); // 添加文本内容
-////									sendMsg.addContentItem(new FaceItem(0)); // QQ id为0的表情
-//									sendMsg.addContentItem(new FontItem()); // 使用默认字体
-//									client.sendMsg(sendMsg, null); // 调用接口发送消息
-//								}
-//							});
 						}
 					}
 					
@@ -382,7 +350,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 //		String code = new BufferedReader(new InputStreamReader(System.in)).readLine();
 		verifyEvt = event;
 		verifyLabel.setIcon(new ImageIcon(verify.image));
-		
 	}
 
 	@QQNotifyHandler(QQNotifyEvent.Type.WB_CAPACHA_VERIFY)

@@ -319,21 +319,29 @@ public class PollMsgAction extends AbstractHttpAction {
 		msg.setId(pollData.getLong("msg_id"));
 		msg.setId2(pollData.getLong("msg_id2"));
 		int msgType = pollData.getInt("msg_type");
+		long gin = pollData.getLong("from_uin");
 		long fromUin = pollData.getLong("send_uin");
 		long groupCode = pollData.getLong("group_code");
 		QQGroup group = store.getGroupByCode(groupCode);
-		if(group==null)return null;
+		long groupID= -1;
+		if(group==null){
+			group = new QQGroup();
+			group.setGin(gin);
+            group.setCode(groupCode);
+            // put to store
+            store.addGroup(group);
+		}
 		switch (msgType) {
-		case 32:
+		case 32:{
 			// 魔法、超级、涂鸦表情
+			groupID = pollData.getLong("t_gcode"); // 真实群号码
 			break;
+		}
 		case 43:
 			// 一般消息
-			long groupID = pollData.getLong("info_seq"); // 真实群号码
+			groupID = pollData.getLong("info_seq"); // 真实群号码
 
-			if (group.getGid() <= 0) {
-				group.setGid(groupID);
-			}
+			
 			msg.parseContentList(pollData.getJSONArray("content").toString());
 			msg.setType(QQMsg.Type.GROUP_MSG);
 			msg.setDate(new Date(pollData.getLong("time") * 1000));
@@ -341,7 +349,9 @@ public class PollMsgAction extends AbstractHttpAction {
 		default:
 			break;
 		}
-
+		if (group.getGid() <= 0) {
+			group.setGid(groupID);
+		}
 		msg.setGroup(group);
 		if (group != null) {
 			msg.setFrom(group.getMemberByUin(fromUin));
