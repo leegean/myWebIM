@@ -28,6 +28,7 @@ package iqq.im.actor;
 import iqq.im.QQActionListener;
 import iqq.im.QQException;
 import iqq.im.WebQQClient;
+import iqq.im.bean.QQGroup;
 import iqq.im.bean.QQMsg;
 import iqq.im.bean.content.ContentItem;
 import iqq.im.bean.content.FontItem;
@@ -38,8 +39,11 @@ import iqq.im.core.QQService;
 import iqq.im.event.QQActionEvent;
 import iqq.im.event.QQActionFuture;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingDeque;
@@ -55,8 +59,8 @@ import org.slf4j.LoggerFactory;
  *
  * @author solosky
  */
-public class ThreadMsgDispatcher implements Runnable {
-	private static final Logger LOG = LoggerFactory.getLogger(ThreadMsgDispatcher.class);
+public class ThreadMsgDispatcher_01 implements Runnable {
+	private static final Logger LOG = LoggerFactory.getLogger(ThreadMsgDispatcher_01.class);
 	private BlockingDeque<QQMsg> msgDeque;
 	private WebQQClient webQQClient;
 	private Thread msgThread;
@@ -64,27 +68,42 @@ public class ThreadMsgDispatcher implements Runnable {
 	/**
 	 * 默认构造函数，不会自动启动action循环
 	 */
-	public ThreadMsgDispatcher() {
+	public ThreadMsgDispatcher_01() {
 		this.msgDeque = new LinkedBlockingDeque<QQMsg>();
+		this.msgMap = new HashMap<Long, LinkedBlockingDeque<QQMsg>>();
 	}
 
+	private HashMap<Long, LinkedBlockingDeque<QQMsg>> msgMap;
 	public void pushActor(QQMsg msg) {
-		this.msgDeque.offer(msg);
+		
+		QQGroup group = msg.getGroup();
+		Long gin = group.getGin();
+		LinkedBlockingDeque<QQMsg> deque = msgMap.get(gin);
+		if(deque== null){
+			deque = new LinkedBlockingDeque<QQMsg>();
+			msgMap.put(gin, deque);
+		}
+		deque.offer(msg);
+		msgDeque.offer(msg);
 	}
 
 	/**
 	 * 执行一个QQActor，返回是否继续下一个actor
 	 */
 	private boolean dispatchMsg(QQMsg msg) {
-		
+//		Set<Entry<Long, LinkedBlockingDeque<QQMsg>>> entries = msgMap.entrySet();
+//		for (Entry<Long, LinkedBlockingDeque<QQMsg>> entry : entries) {
+//			Long gin = entry.getKey();
+//			LinkedBlockingDeque<QQMsg> deque = entry.getValue();
+//		}
 		try {
-			final QQMsg reqMsg = msg;
-			if(msgDeque.size()>=4){
-				msg = msgDeque.takeLast();
-				msgDeque.clear();
-			}
-			
-			QQActionFuture future = webQQClient.sendWbMsg(msg.getText(), "5175429989", null);
+//			final QQMsg reqMsg = msg;
+//			if(msgDeque.size()>=4){
+//				msg = msgDeque.takeLast();
+//				msgDeque.clear();
+//			}
+		final QQMsg reqMsg = msg;
+			QQActionFuture future = webQQClient.sendWbMsg(reqMsg.getText(), "5175429989", null);
 			QQActionEvent event = future.waitFinalEvent();
 			if (event.getType() == QQActionEvent.Type.EVT_OK) {
 				String chatContent = (String) event.getTarget();
@@ -96,7 +115,7 @@ public class ThreadMsgDispatcher implements Runnable {
 						((TextItem)contentItem).setContent(chatContent);
 					}
 				}
-				reqMsg.addContentItem(new TextItem()); // 添加文本内容
+//				reqMsg.addContentItem(new TextItem); // 添加文本内容
 				webQQClient.sendMsg(reqMsg, null); // 调用接口发送消息
 				
 			}else if(event.getType() == QQActionEvent.Type.EVT_ERROR){
@@ -119,6 +138,7 @@ public class ThreadMsgDispatcher implements Runnable {
 		} catch (InterruptedException e) {
 			LOG.debug("QQActorDispatcher interrupted.");
 		}
+		
 	}
 
 	public void init(WebQQClient webQQClient) throws QQException {

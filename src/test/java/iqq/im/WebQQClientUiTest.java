@@ -244,7 +244,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	 */
 	public static void main(String[] args) {
 //		1002053815
-		WebQQClientUiTest test = new WebQQClientUiTest("1002053815", "lj19861001", "569398403@qq.com", "leegean19861001");
+		WebQQClientUiTest test = new WebQQClientUiTest("2280410025", "lj19861001", "569398403@qq.com", "leegean19861001");
 	}
 
 	public void loginWb() {
@@ -397,7 +397,6 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 									for (QQBuddy b : buddyList) {
 										System.out.println("---- QQ nick:" + b.getNickname() + " markname:" + b.getMarkname() + " uin:" + b.getUin() + " isVip:" + b.isVip() + " vip_level:" + b.getVipLevel());
 									}
-
 								}
 							} else if (event.getType() == QQActionEvent.Type.EVT_ERROR) {
 								System.out.println("** 好友列表获取失败，处理重新获取");
