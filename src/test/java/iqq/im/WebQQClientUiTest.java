@@ -7,6 +7,7 @@ import iqq.im.bean.QQCategory;
 import iqq.im.bean.QQEmail;
 import iqq.im.bean.QQMsg;
 import iqq.im.bean.QQStatus;
+import iqq.im.bean.QQUser;
 import iqq.im.bean.QmGroupMembers;
 import iqq.im.bean.QmMemSearchCondition;
 import iqq.im.bean.content.*;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 
 import javax.imageio.ImageIO;
@@ -65,6 +67,7 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	private JLabel verifyLabel;
 	private QQNotifyEvent verifyEvt;
 	private long loginWbTime;
+	private HashSet<Long> msgCache = new HashSet<Long>();
 	public long getLoginWbTime() {
 		return loginWbTime;
 	}
@@ -280,6 +283,13 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 	@QQNotifyHandler(QQNotifyEvent.Type.CHAT_MSG)
 	public void processBuddyMsg(QQNotifyEvent event) throws QQException {
 		QQMsg msg = (QQMsg) event.getTarget();
+		long msgId = msg.getId();
+		if(msgCache.contains(msgId)){
+			return;
+		}else{
+			msgCache.add(msgId);
+		}
+		
 		System.out.println("[消息] " + msg.getFrom().getNickname() + "说:" + msg.packContentList());
 		System.out.print("消息内容: ");
 		List<ContentItem> items = msg.getContentList();
@@ -290,12 +300,15 @@ public class WebQQClientUiTest extends JFrame implements WindowListener {
 				System.out.print(" Picture:" + ((OffPicItem) item).getFilePath());
 			} else if (item.getType() == ContentItem.Type.TEXT) {
 				String chatContent = ((TextItem) item).getContent();
-				System.out.print(" Text:" + chatContent);
+				System.out.print(chatContent);
+				System.out.println();
 				int chatLen = chatContent.trim().length();
 				if (chatLen > 0 && chatLen < 100) {
 					// 组装QQ消息发送回去
 					final QQMsg sendMsg = new QQMsg();
+				sendMsg.setFrom(msg.getTo());
 					sendMsg.setTo(msg.getFrom()); // QQ好友UIN
+					sendMsg.setDate(msg.getDate());
 					iqq.im.bean.QQMsg.Type msgType = msg.getType();
 					switch (msgType) {
 					case BUDDY_MSG:

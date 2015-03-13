@@ -28,6 +28,7 @@ package iqq.im.actor;
 import iqq.im.QQActionListener;
 import iqq.im.QQException;
 import iqq.im.WebQQClient;
+import iqq.im.bean.QQGroup;
 import iqq.im.bean.QQMsg;
 import iqq.im.bean.content.ContentItem;
 import iqq.im.bean.content.FontItem;
@@ -38,9 +39,12 @@ import iqq.im.core.QQService;
 import iqq.im.event.QQActionEvent;
 import iqq.im.event.QQActionFuture;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.function.Consumer;
 
@@ -58,16 +62,31 @@ public class ThreadMsgDispatcher implements Runnable {
 	private BlockingQueue<QQMsg> msgQueue;
 	private WebQQClient webQQClient;
 	private Thread msgThread;
+	private HashMap<Long, LinkedBlockingDeque<QQMsg>> groupMsgMap;
 
 	/**
 	 * 默认构造函数，不会自动启动action循环
 	 */
 	public ThreadMsgDispatcher() {
 		this.msgQueue = new LinkedBlockingQueue<QQMsg>();
+		groupMsgMap = new HashMap<Long, LinkedBlockingDeque<QQMsg>>();
 	}
 
 	public void pushActor(QQMsg msg) {
-		this.msgQueue.add(msg);
+		QQGroup group = msg.getGroup();
+		Long gin = group.getGin();
+		LinkedBlockingDeque<QQMsg> groupMsgDeque = groupMsgMap.get(gin);
+		if(groupMsgDeque==null){
+			groupMsgDeque = new LinkedBlockingDeque<QQMsg>(5);
+			groupMsgMap.put(gin, groupMsgDeque);
+		}
+		if(!groupMsgDeque.offer(msg)){
+			QQMsg lastMsg = groupMsgDeque.peekLast();
+			groupMsgDeque.clear();
+			groupMsgDeque.offer(lastMsg);
+		}
+		msgQueue.offer(msg);
+		
 	}
 
 	/**
@@ -75,7 +94,37 @@ public class ThreadMsgDispatcher implements Runnable {
 	 */
 	private boolean dispatchMsg(QQMsg msg) {
 		try {
-			final QQMsg reqMsg = msg;
+			Collection<LinkedBlockingDeque<QQMsg>> deques = groupMsgMap.values();
+			QQMsg oldMsg = null;
+			LinkedBlockingDeque<QQMsg> oldDeque= null;
+			for (LinkedBlockingDeque<QQMsg> linkedBlockingDeque : deques) {
+				QQMsg tempOldMsg = linkedBlockingDeque.peek();
+//				if(linkedBlockingDeque.size()>=5){
+//					tempOldMsg = linkedBlockingDeque.peekLast();
+//					linkedBlockingDeque.clear();
+//				}else{
+//					tempOldMsg = linkedBlockingDeque.peek();	
+//				}
+				
+				if(oldMsg==null){
+					oldMsg = tempOldMsg;
+					oldDeque = linkedBlockingDeque;
+				}else{
+					if(tempOldMsg!=null){
+						long oldTime = oldMsg.getDate().getTime();
+						long tempTime = tempOldMsg.getDate().getTime();
+						if(oldTime>tempTime){
+							oldMsg = tempOldMsg;
+							oldDeque = linkedBlockingDeque;
+						}
+					}
+					
+				}
+				
+			}
+			final QQMsg reqMsg = oldDeque.poll();
+			if(reqMsg == null)return true;
+			LOG.debug(msg.getText());
 			QQActionFuture future = webQQClient.sendWbMsg(msg.getText(), "5175429989", null);
 			
 			QQActionEvent event = future.waitFinalEvent();
