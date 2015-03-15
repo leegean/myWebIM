@@ -11,7 +11,7 @@ import org.apache.http.HttpHost;
 import org.apache.http.client.utils.URIUtils;
 import org.omg.CORBA.DATA_CONVERSION;
 
-public class T07 {
+public class T_07 {
 
 	private static Timer offerTimer;
 	private static Timer takeTimer;
