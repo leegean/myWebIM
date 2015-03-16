@@ -52,31 +52,15 @@ import javax.swing.tree.TreePath;
 
 public class T_08 extends JFrame {
 
-	public static void main(String[] args) {
-		try {
-            // Set System L&F
-        UIManager.setLookAndFeel(
-            UIManager.getSystemLookAndFeelClassName());
-    } 
-    catch (UnsupportedLookAndFeelException e) {
-       // handle exception
-    }
-    catch (ClassNotFoundException e) {
-       // handle exception
-    }
-    catch (InstantiationException e) {
-       // handle exception
-    }
-    catch (IllegalAccessException e) {
-       // handle exception
-    }
+	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
+		// Set System L&F
+//		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		T_08 win = new T_08();
-		
-		
+
 		win.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
-				
+
 			}
 		});
 		win.setSize(600, 400);
@@ -111,6 +95,7 @@ public class T_08 extends JFrame {
 		treeUI.setLeftChildIndent(0);
 		treeUI.setRightChildIndent(0);
 		tree.setRootVisible(false);
+		tree.setOpaque(false);
 		tree.setCellRenderer(new UserRenderer());
 		tree.putClientProperty("JTree.lineStyle", "None");
 		tree.setExpandsSelectedPaths(true);
@@ -120,15 +105,14 @@ public class T_08 extends JFrame {
 		treeModel = new DefaultTreeModel(rootNode);
 		tree.setModel(treeModel);
 
-		
 		JScrollPane jsp = new JScrollPane(tree);
 		jsp.setOpaque(false);
 		jsp.setBorder(null);
 		jsp.setPreferredSize(new Dimension(300, 400));
-	MyPanelUI pui = new MyPanelUI();
-	JPanel treePanel = new JPanel();
-	treePanel.setUI(pui);
-	treePanel.add(jsp);
+		MyPanelUI pui = new MyPanelUI();
+		JPanel treePanel = new JPanel();
+		treePanel.setUI(pui);
+		treePanel.add(jsp);
 		add(treePanel);
 		add(new JButton(new AbstractAction("insert") {
 
