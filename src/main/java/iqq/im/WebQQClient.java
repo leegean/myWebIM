@@ -108,6 +108,9 @@ public class WebQQClient implements QQClient, QQContext {
 		this.msgDispatcher = msgDispatcher;
 	}
 	private QQAccount account;
+	public void setAccount(QQAccount account) {
+		this.account = account;
+	}
 	private QQSession session;
 	private QQStore store;
 	private QQNotifyListener notifyListener;
@@ -121,7 +124,7 @@ public class WebQQClient implements QQClient, QQContext {
 	 * @param notifyListener a {@link iqq.im.QQNotifyListener} object.
 	 * @param actorDispatcher a {@link iqq.im.actor.QQActorDispatcher} object.
 	 */
-	public WebQQClient(QQAccount account,
+	public WebQQClient(
 			QQNotifyListener notifyListener, QQActorDispatcher actorDispatcher) {
 		this.modules = new HashMap<QQModule.Type, QQModule>();
 		this.services = new HashMap<QQService.Type, QQService>();
@@ -145,7 +148,6 @@ public class WebQQClient implements QQClient, QQContext {
 
 		this.services.put(QQService.Type.HTTP, new ApacheHttpService());
 
-		this.account = account;
 		this.session = new QQSession();
 		this.store = new QQStore();
 		this.notifyListener = notifyListener;

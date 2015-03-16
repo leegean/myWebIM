@@ -72,7 +72,8 @@ public class WebQQClientTest {
 		account.setPassword(pwd);
 		account.setWbUsername(wbUser);
 		account.setWbPassword(wbPwd);
-		client = new WebQQClient(account, new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
+		client = new WebQQClient(new QQNotifyHandlerProxy(this), new ThreadActorDispatcher());
+		client.setAccount(account);
 	}
 
     /**
