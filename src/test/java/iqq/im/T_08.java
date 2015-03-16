@@ -24,6 +24,7 @@ import iqq.im.event.QQNotifyHandlerProxy;
 import java.awt.BorderLayout;
 import java.awt.CardLayout;
 import java.awt.Container;
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
@@ -64,13 +65,6 @@ import javax.swing.tree.TreePath;
 
 public class T_08 extends JFrame implements WindowListener{
 
-<<<<<<< HEAD
-	public static void main(String[] args) throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
-		// Set System L&F
-//		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		T_08 win = new T_08();
-
-=======
 	public static void main(String[] args) {
 		T_08 win = new T_08();
 		LookAndFeelInfo[] looks = UIManager.getInstalledLookAndFeels();
@@ -78,7 +72,6 @@ public class T_08 extends JFrame implements WindowListener{
 			System.out.println(lookAndFeelInfo.getClassName() + "       " + lookAndFeelInfo.getName());
 		}
 		System.out.println(UIManager.getCrossPlatformLookAndFeelClassName());
->>>>>>> origin/simpleMobile
 		win.addWindowListener(new WindowAdapter() {
 			@Override
 			public void windowClosing(WindowEvent e) {
@@ -116,6 +109,7 @@ public class T_08 extends JFrame implements WindowListener{
 	protected long loginWbTime;
 	private CardLayout cardLayout;
 	private Container rootPanel;
+	private JTree tree;
 	public T_08() {
 		try {
 			openIcon = new ImageIcon(ImageIO.read(new File("a.png")));
@@ -123,13 +117,12 @@ public class T_08 extends JFrame implements WindowListener{
 		} catch (IOException e2) {
 			e2.printStackTrace();
 		}
-<<<<<<< HEAD
 		JPanel contentPane = new JPanel();
 		setContentPane(contentPane);
 		setLayout(new FlowLayout());
 
 		tree = new JTree();
-		treeUI = ((BasicTreeUI) tree.getUI());
+		BasicTreeUI treeUI = ((BasicTreeUI) tree.getUI());
 		treeUI.setLeftChildIndent(0);
 		treeUI.setRightChildIndent(0);
 		tree.setRootVisible(false);
@@ -138,8 +131,6 @@ public class T_08 extends JFrame implements WindowListener{
 		tree.putClientProperty("JTree.lineStyle", "None");
 		tree.setExpandsSelectedPaths(true);
 		tree.setToggleClickCount(1);
-=======
->>>>>>> origin/simpleMobile
 
 		cardLayout = new CardLayout();
 		rootPanel = getContentPane();
@@ -224,18 +215,6 @@ loginPanel.add(new JLabel("账号："), gbc);
 		rootPanel.add(loginPanel, BorderLayout.CENTER);
 		tabPane = new JTabbedPane(JTabbedPane.TOP);
 
-<<<<<<< HEAD
-		JScrollPane jsp = new JScrollPane(tree);
-		jsp.setOpaque(false);
-		jsp.setBorder(null);
-		jsp.setPreferredSize(new Dimension(300, 400));
-		MyPanelUI pui = new MyPanelUI();
-		JPanel treePanel = new JPanel();
-		treePanel.setUI(pui);
-		treePanel.add(jsp);
-		add(treePanel);
-		add(new JButton(new AbstractAction("insert") {
-=======
 		JPanel contactPanel = createContactPanel();
 		JPanel groupPanel = createGroupPanel();
 		
@@ -251,7 +230,6 @@ loginPanel.add(new JLabel("账号："), gbc);
 		contentPanel.add(userPanel, BorderLayout.NORTH);
 		
 		contentPanel.add(new JButton(new AbstractAction("insert") {
->>>>>>> origin/simpleMobile
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
